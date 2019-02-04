@@ -54,11 +54,10 @@ var genCubes=function(){
   }
   cubeArr=Array();
   for(var i=0; i<cellQuadArr.length; i++){
-    var p=cellQuadArr[i].mp();
-   
+    var p=cellQuadArr[i].mp();   
     var t=Math.random()*4;
     var geo=new THREE.BoxGeometry(1,t,1);
-    var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,200,10)"), wireframe:false});
+    var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,200,10)"), wireframe:wireframeVal});
     mesh=new THREE.Mesh(geo, mat);
     mesh.position.x=p.x;
     mesh.position.y=t/2;
@@ -137,6 +136,6 @@ var constructPassage=function(){
     pathArr.push(mesh);
   }
   for(var i=0; i<pathArr.length; i++){
-    scene.add(pathArr[i]);   
+    scene.add(pathArr[i]);
   }
 }

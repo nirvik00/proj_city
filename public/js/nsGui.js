@@ -11,13 +11,16 @@ var guiControls=new function(){
   this.FSRComm=0.3;
   this.FSROffice=0.3;
   this.autoLoop=false;
+  //this.setWireframe=true;
 }
+
 datgui.add(guiControls, "gridL", 1, 5);
 datgui.add(guiControls, "gridH", 1, 5);
-datgui.add(guiControls,"FSRRes", 0.1,3);
-datgui.add(guiControls,"FSRComm", 0.1,3);
-datgui.add(guiControls,"FSROffice", 0.1,3);
-datgui.add(guiControls,"autoLoop");
+datgui.add(guiControls, "FSRRes", 0.1,3);
+datgui.add(guiControls, "FSRComm", 0.1,3);
+datgui.add(guiControls, "FSROffice", 0.1,3);
+datgui.add(guiControls, "autoLoop");
+//datgui.add(guiControls, "setWireframe");
 
 var customContainer = document.getElementById('moveGUI');
 customContainer.appendChild(datgui.domElement);

@@ -13,7 +13,7 @@ function nsQuad(a,b,c,d){
     this.p=a;
     this.q=b;
     this.r=c;
-    this.s=d;
+    this.   s=d;
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
@@ -55,9 +55,9 @@ function setPath(quad, name, arr){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,50,100)"), side:THREE.DoubleSide, wireframe:false});   
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,50,100)"), side:THREE.DoubleSide, wireframe:wireframeVal});   
         }else{
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,255)"), side:THREE.DoubleSide, wireframe:false});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
         }         
         var mesh=new THREE.Mesh(p, mat);
         return mesh;

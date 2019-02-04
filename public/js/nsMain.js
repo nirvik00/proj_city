@@ -1,10 +1,10 @@
-
-
 var scene3d=document.getElementById("scene3d");
 var infoPara=document.getElementById("information");
 
 var camera, scene, renderer, control;
 var COUNTER=0;
+var wireframeVal=false;
+
 
 var gridArr=Array();  
 var cubeArr=Array();
@@ -46,6 +46,7 @@ var mainLoop= function(){
   if(guiControls.autoLoop==true){
     genGrid();  
   }  
+
   requestAnimationFrame(mainLoop);
   controls.update();
   render();
