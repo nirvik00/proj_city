@@ -11,8 +11,8 @@ var genGrid =function(){
   gridArr=new Array();
   var a=guiControls.gridL;
   var c=guiControls.gridH;
-  for(var i=-1; i<0; i++){
-    for(var j=-1; j<0; j++){
+  for(var i=-5; i<5; i++){
+    for(var j=-5; j<5; j++){
       var p=new THREE.Geometry();
       p.vertices.push(new THREE.Vector3(0,0,0));
       p.vertices.push(new THREE.Vector3(a,0,0));
@@ -40,12 +40,11 @@ var genGrid =function(){
   for(var i=0; i<gridArr.length; i++){
     scene.add(gridArr[i]);
   }
-  
-  genCubes(ptArr,a,c);
-  constructPassage(cellQuadArr);
+  genCubes();
+  constructPassage();
 }
 
-var genCubes=function(ptArr){
+var genCubes=function(){
   var a=guiControls.gridL;
   var c=guiControls.gridH;
   for(var i=0; i<cubeArr.length; i++){
@@ -56,9 +55,10 @@ var genCubes=function(ptArr){
   cubeArr=Array();
   for(var i=0; i<cellQuadArr.length; i++){
     var p=cellQuadArr[i].mp();
+   
     var t=Math.random()*4;
     var geo=new THREE.BoxGeometry(1,t,1);
-    var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,200,10)")});
+    var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,200,10)"), wireframe:false});
     mesh=new THREE.Mesh(geo, mat);
     mesh.position.x=p.x;
     mesh.position.y=t/2;
@@ -68,22 +68,23 @@ var genCubes=function(ptArr){
   for(var i=0; i<cubeArr.length; i++){
     scene.add(cubeArr[i]);
   } 
-  
 }
 
-var constructPassage=function(quadArr){
-  for(var i=0; i<planeArr.length; i++){
-    planeArr[i].geometry.dispose();
-    planeArr[i].material.dispose();
-    scene.remove(planeArr[i]);
+var constructPassage=function(){
+  for(var i=0; i<pathArr.length; i++){
+    pathArr[i].geometry.dispose();
+    pathArr[i].material.dispose();
+    scene.remove(pathArr[i]);
   }
-  planeArr=Array();
-  
-  var w=(guiControls.gridL/2)-0.5;
-  var t=(guiControls.gridH/2)-0.5;
-  for(var i=0; i<quadArr.length; i++){
-    quad=quadArr[i];
-    var q=quad.mp();  
+  pathArr=Array();
+  var pathQuadArr=Array();
+  var w=(guiControls.gridL-1)/2;
+  var t=(guiControls.gridH-1)/2;
+
+  for(var i=0; i<cellQuadArr.length; i++){
+    var quad=cellQuadArr[i];
+    var q=quad.mp();
+    
     var a=quad.p;
     var b=quad.q;
     var c=quad.r;
@@ -91,11 +92,11 @@ var constructPassage=function(quadArr){
    /*
    * a=NE,b=SE,c=SW,d=NW
    */
-    var e=new nsPt(q.x-0.5,0,q.z-0.5);
+    var e=new nsPt(q.x-0.5,0,q.z-0.5);    
     var f=new nsPt(q.x+0.5,0,q.z-0.5);
     var g=new nsPt(q.x+0.5,0,q.z+0.5);
     var h=new nsPt(q.x-0.5,0,q.z+0.5);
-    var i=new nsPt(e.x,0,e.z-t);
+    var I=new nsPt(e.x,0,e.z-t);
     var j=new nsPt(f.x,0,f.z-t);
     var k=new nsPt(f.x+w,0,f.z);
     var l=new nsPt(g.x+w,0,g.z);
@@ -104,16 +105,38 @@ var constructPassage=function(quadArr){
     var o=new nsPt(h.x-w,0,h.z);
     var p=new nsPt(e.x-w,0,e.z);
     
-    var g0=new THREE.BoxGeometry(w,0,t);
-    var m0=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(200,0,0)"), side:THREE.DoubleSide, wireframe:false});
-    var me0=new THREE.Mesh(g0,m0);
-    me0.position.x=e.x-0.25;
-    me0.position.y=0;
-    me0.position.z=e.z-0.25;
-    planeArr.push(me0);
-  } 
-  for(var i=0; i<planeArr.length; i++){
-    scene.add(planeArr[i]);   
+    var q0=new nsQuad(a,I,e,p);
+    var q1=new nsQuad(I,j,f,e);
+    var q2=new nsQuad(j,b,k,f);
+    var q3=new nsQuad(f,k,l,g);
+    var q4=new nsQuad(g,l,c,m);
+    var q5=new nsQuad(h,g,m,n);
+    var q6=new nsQuad(o,h,n,d);
+    var q7=new nsQuad(p,e,h,o);
+    
+    pathQuadArr.push(q0);  
+    pathQuadArr.push(q1);  
+    pathQuadArr.push(q2);  
+    pathQuadArr.push(q3);  
+    pathQuadArr.push(q4);  
+    pathQuadArr.push(q5);  
+    pathQuadArr.push(q6);  
+    pathQuadArr.push(q7);  
   }
-  
+ 
+  for(var i=0; i<pathQuadArr.length; i++){
+    var t=Math.random();
+    var name;
+    if(t>0.5){
+      name="road";
+    }else{
+      name="green";
+    }
+    var path=new setPath(pathQuadArr[i], name);
+    var mesh=path.display();
+    pathArr.push(mesh);
+  }
+  for(var i=0; i<pathArr.length; i++){
+    scene.add(pathArr[i]);   
+  }
 }
