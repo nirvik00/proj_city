@@ -43,7 +43,9 @@ document.addEventListener("keypress", function(event){
 });
 
 var mainLoop= function(){
-  genGrid();
+  if(guiControls.autoLoop==true){
+    genGrid();  
+  }  
   requestAnimationFrame(mainLoop);
   controls.update();
   render();
