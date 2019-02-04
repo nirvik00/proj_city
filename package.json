@@ -1,0 +1,17 @@
+{
+  "name": "proj_city",
+  "version": "1.0.0",
+  "description": "app to create ideas for city app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "nirvik saha",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.4.9"
+  }
+}

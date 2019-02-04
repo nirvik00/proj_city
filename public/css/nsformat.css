@@ -1,0 +1,9 @@
+#container {
+    position: relative;
+  }
+  #container scene3d, #moveGUI, #informationDiv {
+    position: absolute;
+  }
+  scene3d {
+    border: 1px solid black;
+  }
