@@ -13,7 +13,7 @@ function nsQuad(a,b,c,d){
     this.p=a;
     this.q=b;
     this.r=c;
-    this.   s=d;
+    this.s=d;
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
@@ -62,4 +62,80 @@ function setPath(quad, name, arr){
         var mesh=new THREE.Mesh(p, mat);
         return mesh;
     }
+}
+
+
+// CUBE DECISIONS
+// determine the number of layers of buildings on site: three - max
+// three types of buildings: res, comm, office
+// max heights: 3, 7, 20
+
+function cubeDecisions(){
+    
+    var T=Math.random();
+    this.name=getName();
+    this.numLayers=getNumLayers();
+    this.maxHt=getMaxHt();
+    
+    this.getNumLayers=function(){
+        if(T<0.35){
+            this.numLayers=3;
+        }
+        else if(T>0.35 && t<0.7){
+            this.numLayers=2;
+        }else{
+            this.numLayers=1;
+        }
+        return this.numLayers;
+    }
+    
+    this.getMaxHt=function(){
+        var n=Math.random();
+        if(n<0.35){
+          this.maxHt=3;
+        }else if(n>0.35 && n<0.7){
+          this.maxHt=7;
+        }else{
+          this.maxHt=20;
+        }   
+        return this.maxHt;
+    }
+    
+    this.getName=function(){
+        var t=this.numLayers;
+        if(t==3){
+            var m=Math.random();
+            if(m<0.35){
+                this.name.push("res");      
+                this.name.push("comm");
+                this.name.push("office");
+            }else{
+                this.name.push("office");
+                this.name.push("comm");
+                this.name.push("res");      
+            }
+        }else if(t==2){
+            var m=Math.random();
+            if(m<0.35){
+                this.name.push("res");      
+                this.name.push("comm");
+            }else if(m>0.35 && m<0.7){
+                this.name.push("comm");      
+                this.name.push("res");
+            }else{
+                this.name.push("office");      
+                this.name.push("comm");
+            }
+        }else{
+            var m=Math.random();
+            if(m<0.35){
+                this.name.push("res");      
+            }else if(m>0.35 && m<0.7){
+                this.name.push("comm");      
+            }else{
+                this.name.push("office");      
+            }
+        }
+        return this.name;
+    } 
 }
