@@ -9,6 +9,7 @@ var COUNTER=0;
 var gridArr=Array();  
 var cubeArr=Array();
 var cellQuadArr=Array();
+var planeArr=Array();
 
 
 var init=function(){
