@@ -43,6 +43,7 @@ document.addEventListener("keypress", function(event){
 });
 
 var mainLoop= function(){
+  genGrid();
   requestAnimationFrame(mainLoop);
   controls.update();
   render();
