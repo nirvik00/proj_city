@@ -17,7 +17,7 @@ var init=function(){
   scene.background=new THREE.Color("rgb(255,255,255)");
   
   camera=new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 1, 1000);
-  camera.lookAt(new THREE.Vector3(0,0,0));
+  //camera.lookAt(new THREE.Vector3(0,0,0));
   camera.position.x=10;
   camera.position.y=10;
   camera.position.z=10;
@@ -47,12 +47,24 @@ var mainLoop= function(){
   if(guiControls.autoLoop==true){
     genGrid();  
   }  
-
+  if(guiControls.show_OnlyGround==true){
+    for(var i=0; i<cubeArr.length; i++){
+      scene.remove(cubeArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<cubeArr.length; i++){
+      scene.add(cubeArr[i]);  
+    }    
+  }
+  if(guiControls.show_Information==false){
+    infoPara.hidden=true;  
+  } else{
+    infoPara.hidden=false;  
+  }
   requestAnimationFrame(mainLoop);
   controls.update();
   render();
 }
-
 var render=function(){
   renderer.render(scene, camera);
 }

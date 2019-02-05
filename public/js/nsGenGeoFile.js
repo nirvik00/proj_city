@@ -13,8 +13,10 @@ var genGrid = function() {
   gridArr = new Array();
   var a = guiControls.gridL;
   var c = guiControls.gridH;
-  for (var i = -5; i < 5; i++) {
-    for (var j = -5; j < 5; j++) {
+  var numL=guiControls.numL;
+  var numH=guiControls.numH;
+  for (var i = -numL; i < numL; i++) {
+    for (var j = -numH; j < numH; j++) {
       var p = new THREE.Geometry();
       p.vertices.push(new THREE.Vector3(0, 0, 0));
       p.vertices.push(new THREE.Vector3(a, 0, 0));
@@ -44,7 +46,7 @@ var genGrid = function() {
     }
   }
   for (var i = 0; i < gridArr.length; i++) {
-    scene.add(gridArr[i]);
+   // scene.add(gridArr[i]);
   }
   genCubes();
   constructPassage();
@@ -137,11 +139,14 @@ var constructPassage = function() {
   for (var i = 0; i < pathQuadArr.length; i++) {
     var t = Math.random();
     var name;
-    if (t > 0.5) {
+    if (t < 0.35) {
       name = "road";
-    } else {
+    } else if(t>0.35 && t<0.75){
+      name = "path";
+    } else{
       name = "green";
     }
+    
     var path = new setPath(pathQuadArr[i], name);
     var mesh = path.display();
     pathArr.push(mesh);

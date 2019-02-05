@@ -56,10 +56,12 @@ function setPath(quad, name, arr){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,50,100)"), side:THREE.DoubleSide, wireframe:wireframeVal});   
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,150,100)"), side:THREE.DoubleSide, wireframe:wireframeVal});   
+        }else if (name==="path"){
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(178,255,102)"), side:THREE.DoubleSide, wireframe:wireframeVal});
         }else{
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
-        }         
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,155,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+        }
         var mesh=new THREE.Mesh(p, mat);
         return mesh;
     }
@@ -192,20 +194,20 @@ function makeBuildings(quad, numlyr, types, maxht){
 }
 
 function getBuildingMaterialFromType(type){
-    this.mat=this.mat = new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(255,255,255)"),
+    this.mat=this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
         wireframe:wireframeVal});;
     if(type=="res"){
-        this.mat = new THREE.MeshBasicMaterial({
-            color: new THREE.Color("rgb(255,0,0)"),
-            wireframe: wireframeVal});        
+        this.mat = new THREE.MeshBasicMaterial ({
+        color: new THREE.Color("rgb(102,153,255)"),
+         wireframe: wireframeVal});        
     }else if(type=="comm"){
-        this.mat = new THREE.MeshBasicMaterial({
-            color: new THREE.Color("rgb(0,255,0)"),
-            wireframe: wireframeVal});        
+        this.mat = new THREE.MeshBasicMaterial ({
+        color: new THREE.Color("rgb(178,102,102)"),
+        wireframe: wireframeVal});        
     }else if(type=="office"){
-        this.mat = new THREE.MeshBasicMaterial({
-            color: new THREE.Color("rgb(0,0,255)"),
-            wireframe:wireframeVal});
+        this.mat = new THREE.MeshBasicMaterial ({
+        color: new THREE.Color("rgb(255,102,102)"),
+        wireframe:wireframeVal});
     }
     return this.mat
 }
