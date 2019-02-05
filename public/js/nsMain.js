@@ -5,12 +5,16 @@ var camera, scene, renderer, control;
 var COUNTER=0;
 var wireframeVal=false;
 
-
 var gridArr=Array();  
+var resCubeArr=Array();
+var commCubeArr=Array();
+var officeCubeArr=Array();
 var cubeArr=Array();
 var cellQuadArr=Array();
 var pathArr=Array();
-
+var roadArr=Array();
+var greenArr=Array();
+var groundArr=Array();
 
 var init=function(){
   scene=new THREE.Scene();
@@ -45,8 +49,10 @@ document.addEventListener("keypress", function(event){
 
 var mainLoop= function(){
   if(guiControls.autoLoop==true){
+
     genGrid();  
   }  
+  /*
   if(guiControls.show_OnlyGround==true){
     for(var i=0; i<cubeArr.length; i++){
       scene.remove(cubeArr[i]);  
@@ -56,11 +62,74 @@ var mainLoop= function(){
       scene.add(cubeArr[i]);  
     }    
   }
+  */
+  
+  if(guiControls.show_Green==false){
+    for(var i=0; i<greenArr.length; i++){
+      scene.remove(greenArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<greenArr.length; i++){
+      scene.add(greenArr[i]);  
+    }    
+  }
+    
+  if(guiControls.show_Path==false){
+    for(var i=0; i<pathArr.length; i++){
+      scene.remove(pathArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<pathArr.length; i++){
+      scene.add(pathArr[i]);  
+    }    
+  }
+      
+  if(guiControls.show_Road==false){
+    for(var i=0; i<roadArr.length; i++){
+      scene.remove(roadArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<roadArr.length; i++){
+      scene.add(roadArr[i]);  
+    }    
+  }
+  
+  if(guiControls.show_Residences==true && guiControls.show_OnlyGround==false){
+    for(var i=0; i<resCubeArr.length; i++){
+      scene.add(resCubeArr[i]);  
+    }
+  }else{
+    for(var i=0; i<resCubeArr.length; i++){
+      scene.remove(resCubeArr[i]);  
+    }        
+  }
+  
+  if(guiControls.show_Commercial==true && guiControls.show_OnlyGround==false){
+    for(var i=0; i<commCubeArr.length; i++){
+      scene.add(commCubeArr[i]);  
+    } 
+  }else{
+    for(var i=0; i<commCubeArr.length; i++){
+      scene.remove(commCubeArr[i]);  
+    }       
+  }
+  
+  if(guiControls.show_Office==true && guiControls.show_OnlyGround==false){
+    for(var i=0; i<officeCubeArr.length; i++){
+      scene.add(officeCubeArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<officeCubeArr.length; i++){
+      scene.remove(officeCubeArr[i]);  
+    }  
+  }
+  
   if(guiControls.show_Information==false){
     infoPara.hidden=true;  
   } else{
     infoPara.hidden=false;  
   }
+  
   requestAnimationFrame(mainLoop);
   controls.update();
   render();

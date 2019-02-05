@@ -62,23 +62,51 @@ var genCubes = function() {
     cubeArr[i].material.dispose();
     scene.remove(cubeArr[i]);
   }
+    
+  for (var i = 0; i < resCubeArr.length; i++) {
+    resCubeArr[i].geometry.dispose();
+    resCubeArr[i].material.dispose();
+    scene.remove(resCubeArr[i]);
+  }
+    
+  for (var i = 0; i < commCubeArr.length; i++) {
+    commCubeArr[i].geometry.dispose();
+    commCubeArr[i].material.dispose();
+    scene.remove(commCubeArr[i]);
+  }
+    
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    officeCubeArr[i].geometry.dispose();
+    officeCubeArr[i].material.dispose();
+    scene.remove(officeCubeArr[i]);
+  }
   
   cubeArr = Array();
+  resCubeArr=Array();
+  commCubeArr=Array();
+  officeCubeArr=Array();
+  
   for (var i = 0; i < cellQuadArr.length; i++) {
     var deci= new CubeDecisions();
     var numLayers=deci.getNumLayers();
     var type= deci.getType();    
     var maxHt=deci.getMaxHt();
-    var quad=cellQuadArr[i];
-    var mesharr=(new makeBuildings(quad, numLayers, type, maxHt)).genBuilding();
-    for(var j=0; j<mesharr.length; j++){
-      cubeArr.push(mesharr[j]);  
-    }    
+    var quad=cellQuadArr[i];   
+    var MK=new makeBuildings(quad, numLayers, type, maxHt);MK.genBuilding();
   }
-  
+  for (var i = 0; i < resCubeArr.length; i++) {
+    scene.add(resCubeArr[i]);
+  }
+  for (var i = 0; i < commCubeArr.length; i++) {
+    scene.add(commCubeArr[i]);
+  }
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    scene.add(officeCubeArr[i]);
+  }
   for (var i = 0; i < cubeArr.length; i++) {
     scene.add(cubeArr[i]);
   }
+  
 };
 
 //generate the passage
@@ -88,7 +116,25 @@ var constructPassage = function() {
     pathArr[i].material.dispose();
     scene.remove(pathArr[i]);
   }
+  for (var i = 0; i < roadArr.length; i++) {
+    roadArr[i].geometry.dispose();
+    roadArr[i].material.dispose();
+    scene.remove(roadArr[i]);
+  }
+  for (var i = 0; i < greenArr.length; i++) {
+    greenArr[i].geometry.dispose();
+    greenArr[i].material.dispose();
+    scene.remove(greenArr[i]);
+  }
+  for (var i = 0; i < groundArr.length; i++) {
+    groundArr[i].geometry.dispose();
+    groundArr[i].material.dispose();
+    scene.remove(groundArr[i]);
+  }
   pathArr = Array();
+  roadArr = Array();
+  greenArr = Array();
+  groundArr = Array();
   var pathQuadArr = Array();
   var w = (guiControls.gridL - 1) / 2;
   var t = (guiControls.gridH - 1) / 2;
@@ -147,12 +193,19 @@ var constructPassage = function() {
       name = "green";
     }
     
-    var path = new setPath(pathQuadArr[i], name);
-    var mesh = path.display();
-    pathArr.push(mesh);
+    var PA = new setPath(pathQuadArr[i], name);
+    PA.generateGround();
   }
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
-  
+  for (var i = 0; i < roadArr.length; i++) {
+    scene.add(roadArr[i]);
+  }
+  for (var i = 0; i < greenArr.length; i++) {
+    scene.add(greenArr[i]);
+  }
+  for (var i = 0; i < groundArr.length; i++) {
+    scene.add(groundArr[i]);
+  }
 };

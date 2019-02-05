@@ -41,7 +41,7 @@ function nsDis(a,b){
 function setPath(quad, name, arr){
     this.quad=quad;
     this.name=name;
-    this.display=function(){
+    this.generateGround=function(){
         var a=quad.p;
         var b=quad.q;
         var c=quad.r;
@@ -57,13 +57,20 @@ function setPath(quad, name, arr){
         var mat;
         if(name==="road"){
             mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,150,100)"), side:THREE.DoubleSide, wireframe:wireframeVal});   
+            var mesh=new THREE.Mesh(p, mat);   
+            roadArr.push(mesh); 
         }else if (name==="path"){
             mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(178,255,102)"), side:THREE.DoubleSide, wireframe:wireframeVal});
-        }else{
+            var mesh=new THREE.Mesh(p, mat);
+            pathArr.push(mesh);    
+        }else if (name=="green"){
             mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,155,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            var mesh=new THREE.Mesh(p, mat);    
+            greenArr.push(mesh);
+        }else{
+            var mesh=new THREE.Mesh(p, mat);    
+            groundArr.push(mesh);
         }
-        var mesh=new THREE.Mesh(p, mat);
-        return mesh;
     }
 }
 
@@ -187,9 +194,16 @@ function makeBuildings(quad, numlyr, types, maxht){
             mesh.position.x = p.x;
             mesh.position.y = (selfHt/2) + prevHt;
             mesh.position.z = p.z;    
-            meshArr.push(mesh);
+            if(this.types[i]=="res"){
+                resCubeArr.push(mesh);
+            }else if(this.types[i]=="comm"){
+                commCubeArr.push(mesh);
+            }else if(this.types[i]=="office"){
+                officeCubeArr.push(mesh);
+            }else{
+                cubeArr.push(mesh);    
+            }
         }
-        return meshArr;
     }
 }
 
