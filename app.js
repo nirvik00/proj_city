@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 
 //index route
 app.get('/', (req, res)=>{
-  const title='PLUGS: Planning Urban Growth & Simulation'
+  const title='PLUGS'
   res.render('index',{
     title:title
   });
