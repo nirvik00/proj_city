@@ -158,8 +158,10 @@ function CubeDecisions(){
                 this.types.push("res");      
             }else if(m>0.35 && m<0.7){
                 this.types.push("comm");      
-            }else{
+            }else if(m>0.35 && m<0.9){
                 this.types.push("office");      
+            }else{
+                this.types.push("evac");      
             }
         }
         return this.types;
@@ -181,6 +183,9 @@ function makeBuildings(quad, numlyr, types, maxht){
         var meshArr=Array();
         for(var i=0; i<this.types.length; i++){
             var selfHt=parseInt(Math.random()*2 + 1);
+            if(types[i]=="evac"){
+                selfHt=1;
+            }
             var prevHt=0;
             if(i>0){
                 for(var j=0; j<htarr.length; j++){
@@ -188,7 +193,7 @@ function makeBuildings(quad, numlyr, types, maxht){
                 }                
             } 
             htarr.push(selfHt);
-            var geox = new THREE.BoxGeometry(1, selfHt, 1);  
+            var geox = new THREE.BoxGeometry(1, selfHt, 1);
             var matx=getBuildingMaterialFromType(this.types[i]);
             var mesh = new THREE.Mesh(geox, matx);
             mesh.position.x = p.x;
@@ -200,8 +205,8 @@ function makeBuildings(quad, numlyr, types, maxht){
                 commCubeArr.push(mesh);
             }else if(this.types[i]=="office"){
                 officeCubeArr.push(mesh);
-            }else{
-                cubeArr.push(mesh);    
+            }else{ //evacuation
+                evacArr.push(mesh);    
             }
         }
     }
@@ -221,6 +226,10 @@ function getBuildingMaterialFromType(type){
     }else if(type=="office"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(255,102,102)"),
+        wireframe:wireframeVal});
+    }else{//evac
+        this.mat = new THREE.MeshBasicMaterial ({
+        color: new THREE.Color("rgb(50,50,50)"),
         wireframe:wireframeVal});
     }
     return this.mat

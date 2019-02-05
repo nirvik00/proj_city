@@ -57,10 +57,10 @@ var genCubes = function() {
   var a = guiControls.gridL;
   var c = guiControls.gridH;
   
-  for (var i = 0; i < cubeArr.length; i++) {
-    cubeArr[i].geometry.dispose();
-    cubeArr[i].material.dispose();
-    scene.remove(cubeArr[i]);
+  for (var i = 0; i < evacArr.length; i++) {
+    evacArr[i].geometry.dispose();
+    evacArr[i].material.dispose();
+    scene.remove(evacArr[i]);
   }
     
   for (var i = 0; i < resCubeArr.length; i++) {
@@ -81,7 +81,7 @@ var genCubes = function() {
     scene.remove(officeCubeArr[i]);
   }
   
-  cubeArr = Array();
+  evacArr = Array();
   resCubeArr=Array();
   commCubeArr=Array();
   officeCubeArr=Array();
@@ -103,10 +103,9 @@ var genCubes = function() {
   for (var i = 0; i < officeCubeArr.length; i++) {
     scene.add(officeCubeArr[i]);
   }
-  for (var i = 0; i < cubeArr.length; i++) {
-    scene.add(cubeArr[i]);
-  }
-  
+  for (var i = 0; i < evacArr.length; i++) {
+    scene.add(evacArr[i]);
+  }  
 };
 
 //generate the passage

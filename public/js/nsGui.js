@@ -10,6 +10,8 @@ var guiControls=new function(){
   this.gridL=2.5;
   this.gridH=2.5;
   
+  this.evacuation_density=0.05;
+  
   this.ratio_Road=0.25;
   this.ratio_Path=0.50;
   this.ratio_Green=0.25;
@@ -29,10 +31,12 @@ var guiControls=new function(){
   this.autoLoop=false;
   
   this.show_OnlyGround=false;
+  
   this.show_Road=true;
   this.show_Green=true;
   this.show_Path=true;
   
+  this.show_Evacuation=true;
   this.show_Residences=true;
   this.show_Commercial=true;
   this.show_Office=true;
@@ -43,6 +47,9 @@ datgui.add(guiControls, "numL", 1, 5);
 datgui.add(guiControls, "numH", 1, 5);
 datgui.add(guiControls, "gridL", 1, 5);
 datgui.add(guiControls, "gridH", 1, 5);
+
+datgui.add(guiControls, "evacuation_density", .001, 0.1);
+
 
 datgui.add(guiControls, "ratio_Road", 0.1,1);
 datgui.add(guiControls, "ratio_Path", 0.1,1);
@@ -64,6 +71,7 @@ datgui.add(guiControls, "show_Green");
 datgui.add(guiControls, "show_Road");
 datgui.add(guiControls, "show_Path");
 
+datgui.add(guiControls, "show_Evacuation");
 datgui.add(guiControls, "show_Residences");
 datgui.add(guiControls, "show_Commercial");
 datgui.add(guiControls, "show_Office");

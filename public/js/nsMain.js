@@ -6,10 +6,10 @@ var COUNTER=0;
 var wireframeVal=false;
 
 var gridArr=Array();  
+var evacArr=Array();  
 var resCubeArr=Array();
 var commCubeArr=Array();
 var officeCubeArr=Array();
-var cubeArr=Array();
 var cellQuadArr=Array();
 var pathArr=Array();
 var roadArr=Array();
@@ -110,6 +110,16 @@ var mainLoop= function(){
   }else{
     for(var i=0; i<officeCubeArr.length; i++){
       scene.remove(officeCubeArr[i]);  
+    }  
+  }
+  
+  if(guiControls.show_Evacuation==true && guiControls.show_OnlyGround==false){
+    for(var i=0; i<evacArr.length; i++){
+      scene.add(evacArr[i]);  
+    }    
+  }else{
+    for(var i=0; i<evacArr.length; i++){
+      scene.remove(evacArr[i]);  
     }  
   }
   
