@@ -34,6 +34,7 @@ var init=function(){
 
 document.addEventListener("keypress", function(event){
   if(event.keyCode===13){
+    console.log("new iteration: "+COUNTER);
     COUNTER++;
     var source=infoPara.innerHTML;
     source+= "\nchange "+COUNTER;

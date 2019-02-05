@@ -1,3 +1,4 @@
+
 function nsPt(a,b,c){
     this.x=a;
     this.y=b;
@@ -70,18 +71,18 @@ function setPath(quad, name, arr){
 // three types of buildings: res, comm, office
 // max heights: 3, 7, 20
 
-function cubeDecisions(){
+function CubeDecisions(){
     
     var T=Math.random();
-    this.name=getName();
-    this.numLayers=getNumLayers();
-    this.maxHt=getMaxHt();
+    this.numLayers;
+    this.types=Array();
+    this.maxHt;
     
     this.getNumLayers=function(){
         if(T<0.35){
             this.numLayers=3;
         }
-        else if(T>0.35 && t<0.7){
+        else if(T>0.35 && T<0.7){
             this.numLayers=2;
         }else{
             this.numLayers=1;
@@ -97,45 +98,114 @@ function cubeDecisions(){
           this.maxHt=7;
         }else{
           this.maxHt=20;
-        }   
+        }
         return this.maxHt;
     }
     
-    this.getName=function(){
+    this.getType=function(){
         var t=this.numLayers;
         if(t==3){
             var m=Math.random();
-            if(m<0.35){
-                this.name.push("res");      
-                this.name.push("comm");
-                this.name.push("office");
+            if(m<0.16){
+                this.types.push("res");      
+                this.types.push("comm");
+                this.types.push("office");
+            }else if(m>0.16 && m<0.32){
+                this.types.push("res");
+                this.types.push("office");
+                this.types.push("comm");      
+            }else if(m>0.32 && m<0.48){
+                this.types.push("comm");
+                this.types.push("office");
+                this.types.push("res");      
+            }else if(m>0.48 && m<0.60){
+                this.types.push("comm");
+                this.types.push("res"); 
+                this.types.push("office");
+            }else if(m>0.60 && m<0.72){
+                this.types.push("office");
+                this.types.push("comm");
+                this.types.push("res"); 
             }else{
-                this.name.push("office");
-                this.name.push("comm");
-                this.name.push("res");      
+                this.types.push("office");
+                this.types.push("res");                 
+                this.types.push("comm");                
             }
         }else if(t==2){
             var m=Math.random();
             if(m<0.35){
-                this.name.push("res");      
-                this.name.push("comm");
+                this.types.push("res");      
+                this.types.push("comm");
             }else if(m>0.35 && m<0.7){
-                this.name.push("comm");      
-                this.name.push("res");
+                this.types.push("comm");      
+                this.types.push("res");
             }else{
-                this.name.push("office");      
-                this.name.push("comm");
+                this.types.push("office");      
+                this.types.push("comm");
             }
         }else{
             var m=Math.random();
             if(m<0.35){
-                this.name.push("res");      
+                this.types.push("res");      
             }else if(m>0.35 && m<0.7){
-                this.name.push("comm");      
+                this.types.push("comm");      
             }else{
-                this.name.push("office");      
+                this.types.push("office");      
             }
         }
-        return this.name;
+        return this.types;
     } 
+}
+
+
+// make the cube from properties
+function makeBuildings(quad, numlyr, types, maxht){
+    this.quad=quad;
+    this.numLayers=numlyr;
+    this.types=types;
+    this.maxHt=maxht;
+    this.pt=this.quad.mp();
+    this.genBuilding=function(){
+        var n = this.maxHt/ this.types.length;
+        var p=this.pt;
+        var htarr=Array();
+        var meshArr=Array();
+        for(var i=0; i<this.types.length; i++){
+            var selfHt=parseInt(Math.random()*2 + 1);
+            var prevHt=0;
+            if(i>0){
+                for(var j=0; j<htarr.length; j++){
+                    prevHt+=htarr[j];    
+                }                
+            } 
+            htarr.push(selfHt);
+            var geox = new THREE.BoxGeometry(1, selfHt, 1);  
+            var matx=getBuildingMaterialFromType(this.types[i]);
+            var mesh = new THREE.Mesh(geox, matx);
+            mesh.position.x = p.x;
+            mesh.position.y = (selfHt/2) + prevHt;
+            mesh.position.z = p.z;    
+            meshArr.push(mesh);
+        }
+        return meshArr;
+    }
+}
+
+function getBuildingMaterialFromType(type){
+    this.mat=this.mat = new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(255,255,255)"),
+        wireframe:wireframeVal});;
+    if(type=="res"){
+        this.mat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color("rgb(255,0,0)"),
+            wireframe: wireframeVal});        
+    }else if(type=="comm"){
+        this.mat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color("rgb(0,255,0)"),
+            wireframe: wireframeVal});        
+    }else if(type=="office"){
+        this.mat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color("rgb(0,0,255)"),
+            wireframe:wireframeVal});
+    }
+    return this.mat
 }

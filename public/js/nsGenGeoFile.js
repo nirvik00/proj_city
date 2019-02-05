@@ -55,31 +55,25 @@ var genCubes = function() {
   var a = guiControls.gridL;
   var c = guiControls.gridH;
   
-  var deci=cubeDecisions
-  console.log(deci.getName());
-  console.log(deci.getNumLayers());
-  console.log(deci.getMaxHt());
-  
   for (var i = 0; i < cubeArr.length; i++) {
     cubeArr[i].geometry.dispose();
     cubeArr[i].material.dispose();
     scene.remove(cubeArr[i]);
   }
+  
   cubeArr = Array();
   for (var i = 0; i < cellQuadArr.length; i++) {
-    var p = cellQuadArr[i].mp();
-    var t = Math.random() * 4;
-    var geo = new THREE.BoxGeometry(1, t, 1);
-    var mat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("rgb(255,200,10)"),
-      wireframe: wireframeVal
-    });
-    mesh = new THREE.Mesh(geo, mat);
-    mesh.position.x = p.x;
-    mesh.position.y = t / 2;
-    mesh.position.z = p.z;
-    cubeArr.push(mesh);
+    var deci= new CubeDecisions();
+    var numLayers=deci.getNumLayers();
+    var type= deci.getType();    
+    var maxHt=deci.getMaxHt();
+    var quad=cellQuadArr[i];
+    var mesharr=(new makeBuildings(quad, numLayers, type, maxHt)).genBuilding();
+    for(var j=0; j<mesharr.length; j++){
+      cubeArr.push(mesharr[j]);  
+    }    
   }
+  
   for (var i = 0; i < cubeArr.length; i++) {
     scene.add(cubeArr[i]);
   }
@@ -105,9 +99,9 @@ var constructPassage = function() {
     var b = quad.q;
     var c = quad.r;
     var d = quad.s;
-    /*
-     * a=NE,b=SE,c=SW,d=NW
-     */
+    
+    // a=NE,b=SE,c=SW,d=NW
+    
     var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
     var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
     var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
@@ -139,6 +133,7 @@ var constructPassage = function() {
     pathQuadArr.push(q6);
     pathQuadArr.push(q7);
   }
+  
   for (var i = 0; i < pathQuadArr.length; i++) {
     var t = Math.random();
     var name;
@@ -154,4 +149,5 @@ var constructPassage = function() {
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
+  
 };
