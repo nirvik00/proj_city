@@ -52,18 +52,7 @@ var mainLoop= function(){
 
     genGrid();  
   }  
-  /*
-  if(guiControls.show_OnlyGround==true){
-    for(var i=0; i<cubeArr.length; i++){
-      scene.remove(cubeArr[i]);  
-    }    
-  }else{
-    for(var i=0; i<cubeArr.length; i++){
-      scene.add(cubeArr[i]);  
-    }    
-  }
-  */
-  
+
   if(guiControls.show_Green==false){
     for(var i=0; i<greenArr.length; i++){
       scene.remove(greenArr[i]);  
