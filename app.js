@@ -1,18 +1,28 @@
 const express = require('express');
 const exphbs=require('express-handlebars');
 const bodyParser=require('body-parser');
+const methodOverride=require('method-override');
 const mongoose=require('mongoose');
 
 const app=express();
 app.use(express.static(__dirname+'/public'));
 
-//connect to mongoose
+//*db config
+const db=require('./config/database');
+
 mongoose.Promise=global.Promise;
-mongoose.connect('mongodb://localhost/plugs-dev',{
-  //useMongoClient : true
-})
-.then(()=> console.log('Mongo DB connected...'))
-.catch(err => console.log(err));
+if(process.env.NODE_ENV === 'production'){
+  mongoose.connect(
+    'mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+  .then(()=> console.log('Mongo DB connected...'))
+  .catch(err => console.log(err));
+}else{
+  mongoose.connect(
+    'mongodb://localhost/plugs-dev')
+  .then(()=> console.log('Mongo DB connected...'))
+  .catch(err => console.log(err));
+      
+}
 
 //load idea model
 require('./models/Idea');
@@ -27,6 +37,9 @@ app.set('view engine', 'handlebars');
 //body parser middleware
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+//method-override middleware
+app.use(methodOverride('_method'));
 
 
 //index route
@@ -52,8 +65,26 @@ app.get('/ideas/add', (req, res)=>{
   res.render('ideas/add');
 });
 
+//edit idea form
+app.get('/ideas/edit/:id', (req, res)=>{
+  Idea.findOne({
+    _id:req.params.id
+  })
+  .then(idea =>{
+    res.render('ideas/edit', {
+      idea:idea
+    });  
+  });
+});
+
+
+//ideas index page
 app.get('/ideas', (req, res)=>{
-  res.send("ok");
+  Idea.find({})
+  .sort({date:'desc'})
+  .then(ideas =>{
+    res.render('ideas/index', {ideas:ideas});  
+  });  
 });
 
 //process form
@@ -86,7 +117,36 @@ app.post('/ideas', (req, res)=>{
   }
 });
 
-const port=5000;
+//edit form process
+app.put('/ideas/:id', (req, res) =>{
+  Idea.findOne({
+    _id:req.params.id
+  })
+  .then(idea =>{
+    idea.title=req.body.title;
+    idea.title=req.body.details;
+    
+    idea.save()
+    .then(idea=>{
+      res.redirect('/ideas');
+    })
+  });
+});
+
+//delete idea
+app.delete('/ideas/:id', (req, res) =>{
+  Idea.remove({_id: req.params.id})
+  .then(()=>{
+    res.redirect('/ideas');
+  });
+});
+
+
+app.get('/user/login', (req, res)=>{
+  
+});
+
+const port=  process.env.PORT || 5000;
 app.listen(port, ()=>{
   console.log(`Server started on port ${port}`);
 });
