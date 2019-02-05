@@ -7,9 +7,6 @@ const mongoose=require('mongoose');
 const app=express();
 app.use(express.static(__dirname+'/public'));
 
-//*db config
-const db=require('./config/database');
-
 mongoose.Promise=global.Promise;
 if(process.env.NODE_ENV === 'production'){
   mongoose.connect(
