@@ -5,7 +5,12 @@ const methodOverride=require('method-override');
 const mongoose=require('mongoose');
 
 const app=express();
-app.use(express.static(__dirname+'/public'));
+
+process.env.PWD = process.cwd()
+//console.log(process.env.PWD);
+app.use('/public',express.static(process.env.PWD+'/public'));
+//console.log(process.env.PWD+'/public');
+//app.use(express.static(__dirname+'/public'));
 
 mongoose.Promise=global.Promise;
 if(process.env.NODE_ENV === 'production'){
