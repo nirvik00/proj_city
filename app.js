@@ -126,8 +126,7 @@ app.put('/ideas/:id', (req, res) =>{
   })
   .then(idea =>{
     idea.title=req.body.title;
-    idea.title=req.body.details;
-    
+    idea.details=req.body.details;    
     idea.save()
     .then(idea=>{
       res.redirect('/ideas');
