@@ -1,9 +1,16 @@
+
+//
+//  BEGIN GUI
+//
+
+
 /* GUI variables
 * gridLe
 * gridWi
 * gridHi
 */
 var datgui= new dat.GUI({ autoPlace: false });
+
 var guiControls=new function(){
   this.numL=2;
   this.numH=2;
@@ -43,6 +50,7 @@ var guiControls=new function(){
   
   this.show_Information=false;
 }
+
 datgui.add(guiControls, "numL", 1, 5);
 datgui.add(guiControls, "numH", 1, 5);
 datgui.add(guiControls, "gridL", 1, 5);
@@ -81,7 +89,9 @@ datgui.add(guiControls, "show_Information");
 var customContainer = document.getElementById('moveGUI');
 customContainer.appendChild(datgui.domElement);
 
-
+//
+//  END OF GUI
+//
 
 
 // generate the grids
