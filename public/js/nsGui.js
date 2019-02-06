@@ -3,6 +3,7 @@
 * gridWi
 * gridHi
 */
+/*
 var datgui= new dat.GUI({ autoPlace: false });
 var guiControls=new function(){
   this.numL=2;
@@ -80,3 +81,4 @@ datgui.add(guiControls, "show_Information");
 
 var customContainer = document.getElementById('moveGUI');
 customContainer.appendChild(datgui.domElement);
+*/
