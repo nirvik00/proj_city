@@ -73,6 +73,8 @@ The Markov decision process (MDP) is constructed based on the possible building 
 
 <div align="center">
 <img src="/public/imgs/plugsSol02.jpg" height="500" width="835">
+<img src="/public/imgs/plugsEqn1.jpg" height="625" width="1200">
+<img src="/public/imgs/plugsEqn2.jpg" height="625" width="1200">
 </div>
 
 The agent is a logical construct which is programmed to interact and modify the environment. The agent may update properties of a cell by discrete actions based on rules from Table 1 and 2. A set of all possible changes are the states of the cell and the probability of going from one state to another is stored as a multi-dimensional array known as the transition matrix. The environment responds to change in state of cells by assigning a numerical reward. For each iteration, a score is measured by cumulative rewards gathered by the agent. </br>
@@ -95,8 +97,16 @@ This provides an illustration of the learning strategy. To extend this technique
 
 <div align="center">
 <img src="/public/imgs/plugsFigure1.jpg" height="800" width="635">
-<img src="/public/imgs/plugsEqn1.jpg" height="625" width="1200">
-<img src="/public/imgs/plugsEqn2.jpg" height="625" width="1200">
+</div>
+
+<div align="center" style="font-size:25px; font-family: times, serif;">Circulation</div>
+
+<div align="center"><img src="/public/imgs/plugsAbout02.jpg" height="400" width="800"></div>
+
+<div align="center" style="font-size:25px; font-family: times, serif;">Activity and Space Allocation</div>
+
+<div align="center">
+<img src="/public/imgs/plugsAbout01.jpg" height="400" width="800">
 </div>
 
 The urban simulation is executed by the agent which allocates population to a block and updates cells of the block to accommodate the growth. The overall architecture of the system is shown in Figure-4. A matrix or array of numbers to identify the block and population number is saved in persistent memory. The agent allocates population by parsing this and querying the ruleset shown in Table 1. During an iteration, the population is incremented and spill-over is computed by interpreting the ruleset as:</br>
@@ -115,19 +125,6 @@ e.	8-10: Preferred / discouraged proportion of block types</br>
 f.	11-13: Preferred / discouraged distance of each from street</br>
 g.	14-19: Preferred / discouraged activity for each</br>
  </br>
-
-</br></br>
-
-<div align="center" style="font-size:25px; font-family: times, serif;">Circulation</div>
-<div align="center"><img src="/public/imgs/plugsAbout02.jpg" height="400" width="800"></div>
-</br></br>
-<div align="center" style="font-size:25px; font-family: times, serif;">Activity and Space Allocation</div>
-<div align="center">
-<img src="/public/imgs/plugsAbout01.jpg" height="400" width="800">
-</div>
-
-</br></br>
-
 </br></br>
 <div align="center" style="font-size:25px; font-family: times, serif;">Note on Reinforcement Learning</div> 
 </br>
