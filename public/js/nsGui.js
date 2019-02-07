@@ -82,3 +82,46 @@ datgui.add(guiControls, "show_Information");
 var customContainer = document.getElementById('moveGUI');
 customContainer.appendChild(datgui.domElement);
 */
+
+
+/*
+
+var guiControls=new function(){
+  this.numL=2;
+  this.numH=2;
+  this.gridL=2.5;
+  this.gridH=2.5;
+    
+  this.ratio_Road=0.25;
+  this.ratio_Path=0.50;
+  this.ratio_Green=0.25;
+  
+  this.evacuation_density=0.05;
+  this.FSRRes=0.3;
+  this.FSRComm=0.3;
+  this.FSROffice=0.3;
+  
+  this.minHt=3;
+  this.midHt=7;
+  this.maxHt=20;
+  
+  this.ratio_Res_Comm=0.3;
+  this.ratio_Comm_Off=0.3;
+  this.ratio_Off_Res=0.3;
+  
+  this.autoLoop=false;
+  
+  this.show_OnlyGround=false;
+  
+  this.show_Road=true;
+  this.show_Green=true;
+  this.show_Path=true;
+  
+  this.show_Evacuation=true;
+  this.show_Residences=true;
+  this.show_Commercial=true;
+  this.show_Office=true;
+  
+  this.show_Information=false;
+}
+*/

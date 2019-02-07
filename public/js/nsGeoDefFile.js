@@ -1,4 +1,3 @@
-
 function nsPt(a,b,c){
     this.x=a;
     this.y=b;
@@ -81,7 +80,6 @@ function setPath(quad, name, arr){
 // max heights: 3, 7, 20
 
 function CubeDecisions(){
-    
     var T=Math.random();
     this.numLayers;
     this.types=Array();
@@ -137,8 +135,8 @@ function CubeDecisions(){
                 this.types.push("res"); 
             }else{
                 this.types.push("office");
-                this.types.push("res");                 
-                this.types.push("comm");                
+                this.types.push("res"); 
+                this.types.push("comm");
             }
         }else if(t==2){
             var m=Math.random();

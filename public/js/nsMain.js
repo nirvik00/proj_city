@@ -21,7 +21,6 @@ var init=function(){
   scene.background=new THREE.Color("rgb(255,255,255)");
   
   camera=new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 1, 1000);
-  //camera.lookAt(new THREE.Vector3(0,0,0));
   camera.position.x=10;
   camera.position.y=10;
   camera.position.z=10;
@@ -48,12 +47,11 @@ document.addEventListener("keypress", function(event){
 });
 
 var mainLoop= function(){
-  if(guiControls.autoLoop==true){
-
+  if(genGuiControls.AUTOLOOP==true){
     genGrid();  
   }  
 
-  if(guiControls.show_Green==false){
+  if(groundGuiControls.show_Green==false){
     for(var i=0; i<greenArr.length; i++){
       scene.remove(greenArr[i]);  
     }    
@@ -63,7 +61,7 @@ var mainLoop= function(){
     }    
   }
     
-  if(guiControls.show_Path==false){
+  if(groundGuiControls.show_Path==false){
     for(var i=0; i<pathArr.length; i++){
       scene.remove(pathArr[i]);  
     }    
@@ -73,7 +71,7 @@ var mainLoop= function(){
     }    
   }
       
-  if(guiControls.show_Road==false){
+  if(groundGuiControls.show_Road==false){
     for(var i=0; i<roadArr.length; i++){
       scene.remove(roadArr[i]);  
     }    
@@ -83,7 +81,7 @@ var mainLoop= function(){
     }    
   }
   
-  if(guiControls.show_Residences==true && guiControls.show_OnlyGround==false){
+  if(bldgGuiControls.show_Residences==true && groundGuiControls.show_Only_Ground==false){
     for(var i=0; i<resCubeArr.length; i++){
       scene.add(resCubeArr[i]);  
     }
@@ -93,7 +91,7 @@ var mainLoop= function(){
     }        
   }
   
-  if(guiControls.show_Commercial==true && guiControls.show_OnlyGround==false){
+  if(bldgGuiControls.show_Commercial==true && groundGuiControls.show_Only_Ground==false){
     for(var i=0; i<commCubeArr.length; i++){
       scene.add(commCubeArr[i]);  
     } 
@@ -103,7 +101,7 @@ var mainLoop= function(){
     }       
   }
   
-  if(guiControls.show_Office==true && guiControls.show_OnlyGround==false){
+  if(bldgGuiControls.show_Office==true && groundGuiControls.show_Only_Ground==false){
     for(var i=0; i<officeCubeArr.length; i++){
       scene.add(officeCubeArr[i]);  
     }    
@@ -113,7 +111,7 @@ var mainLoop= function(){
     }  
   }
   
-  if(guiControls.show_Evacuation==true && guiControls.show_OnlyGround==false){
+  if(bldgGuiControls.show_Evacuation==true && groundGuiControls.show_Only_Ground==false){
     for(var i=0; i<evacArr.length; i++){
       scene.add(evacArr[i]);  
     }    
@@ -123,7 +121,7 @@ var mainLoop= function(){
     }  
   }
   
-  if(guiControls.show_Information==false){
+  if(genGuiControls.show_Information==false){
     infoPara.hidden=true;  
   } else{
     infoPara.hidden=false;  
@@ -133,6 +131,7 @@ var mainLoop= function(){
   controls.update();
   render();
 }
+
 var render=function(){
   renderer.render(scene, camera);
 }
