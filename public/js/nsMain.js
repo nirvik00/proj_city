@@ -5,6 +5,11 @@ var camera, scene, renderer, control;
 var COUNTER=0;
 var wireframeVal=false;
 
+var networkNodesArr= Array();
+var networkEdgesArr=Array();
+var nodeArr=Array(); //mesh of nodes
+var edgeArr=Array(); //mesh of node-edges
+
 var gridArr=Array();  
 var evacArr=Array();  
 var resCubeArr=Array();
@@ -15,11 +20,6 @@ var pathArr=Array();
 var roadArr=Array();
 var greenArr=Array();
 var groundArr=Array();
-
-var varCellNumLe=2;
-var varCellNumDe=2;
-var varCellLe=2;
-var varCellDe=2;
 
 
 var init=function(){
@@ -53,7 +53,6 @@ document.addEventListener("keypress", function(event){
 });
 
 var mainLoop= function(){
-
   varCellNumLe=gridGuiControls.num_Length;
   varCellNumDe=gridGuiControls.num_Depth;
   varCellLe=gridGuiControls.cell_Length;
@@ -155,6 +154,25 @@ var mainLoop= function(){
     infoPara.hidden=false;  
   }
   
+  if(gridGuiControls.show_Network==true){
+    for(var i=0; i<nodeArr.length; i++){
+      scene.add(nodeArr[i]);
+    }
+  } else{
+    for(var i=0; i<nodeArr.length; i++){
+      scene.remove(nodeArr[i]);
+    }
+  }
+    
+  if(gridGuiControls.show_Grid==true){
+    for(var i=0; i<gridArr.length; i++){
+      scene.add(gridArr[i]);
+    }
+  } else{
+    for(var i=0; i<gridArr.length; i++){
+      scene.remove(gridArr[i]);
+    }
+  }
   requestAnimationFrame(mainLoop);
   controls.update();
   render();

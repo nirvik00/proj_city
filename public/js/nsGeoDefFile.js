@@ -9,6 +9,21 @@ function nsEdge(a,b){
     this.q=b;
 }
 
+function nsNetworkNode(a,b,c){
+    this.x=a;
+    this.y=b;
+    this.z=c;
+}
+
+function nsNetworkEdge(a,b){
+    this.p=a;
+    this.q=b;
+    this.edgeWt=0;
+    this.setCost=function(c){
+        this.edgeWt=c;
+    }
+}
+
 function nsQuad(a,b,c,d){
     this.p=a;
     this.q=b;
@@ -17,6 +32,10 @@ function nsQuad(a,b,c,d){
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
+    }
+    this.type="";
+    this.setType=function(t){
+        this.type=t;
     }
 }
 

@@ -1,3 +1,9 @@
+// GUI 
+var varCellNumLe=2;
+var varCellNumDe=2;
+var varCellLe=2;
+var varCellDe=2;
+
 
 var datgui=new dat.GUI({ autoPlace: false });
   
@@ -7,12 +13,18 @@ var gridGuiControls=new function(){
   this.num_Depth=2;
   this.cell_Length=2.5;
   this.cell_Depth=2.5;
+  this.show_Grid=false;
+  this.show_Network=false;
 }
+
 var cellGUI=datgui.addFolder('gridGuiControls');
-var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
-var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
-var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
-var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+var cellNumLe = cellGUI.add(gridGuiControls, "num_Length",1,5);
+var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth",1,5);
+var cellLe = cellGUI.add(gridGuiControls, "cell_Length",1,5);
+var cellDe = cellGUI.add(gridGuiControls, "cell_Depth",1,5);
+cellGUI.add(gridGuiControls,"show_Grid");
+cellGUI.add(gridGuiControls,"show_Network");
+
 
 varCellNumLe=gridGuiControls.num_Length;
 varCellNumDe=gridGuiControls.num_denpth;
@@ -81,9 +93,10 @@ datgui.close();
 //  END OF GUI
 //
 
+
+
 // generate the grids
 var genGrid = function() {
-  
   varCellNumLe=gridGuiControls.num_Length;
   varCellNumDe=gridGuiControls.num_Depth;
   varCellLe=gridGuiControls.cell_Length;
@@ -96,11 +109,11 @@ var genGrid = function() {
     gridArr[i].material.dispose();
     scene.remove(gridArr[i]);
   }
-  ptArr = new Array();
-  cellQuadArr = new Array();
-  gridArr = new Array();
+  ptArr = Array();
+  cellQuadArr = Array();
+  gridArr = Array();
   var a = varCellNumLe;
-  var c =  varCellNumDe;
+  var c = varCellNumDe;
   var numL=varCellNumLe;
   var numH=varCellNumDe;
   for (var i = -numL; i < numL; i++) {
@@ -134,11 +147,52 @@ var genGrid = function() {
     }
   }
   for (var i = 0; i < gridArr.length; i++) {
-   // scene.add(gridArr[i]);
+    scene.add(gridArr[i]);
   }
+  genNetwork();
   genCubes();
   constructPassage();
 };
+// generate NETWORK
+var genNetwork=function(){
+  varCellNumLe=gridGuiControls.num_Length;
+  varCellNumDe=gridGuiControls.num_Depth;
+  varCellLe=gridGuiControls.cell_Length;
+  varCellDe=gridGuiControls.cell_Depth;
+
+  for(var i=0; i<nodeArr.length; i++){
+    nodeArr[i].geometry.dispose();
+    nodeArr[i].material.dispose();
+    scene.remove(nodeArr[i]);
+  }
+  nodeArr=Array();
+  
+  networkNodesArr = new Array();
+  var a = varCellNumLe;
+  var c = varCellNumDe;
+  var numL=varCellNumLe;
+  var numH=varCellNumDe;
+  for (var i = -numL; i < numL+1; i++) {
+    for (var j = -numH; j < numH+1; j++) {
+      var networkNode = new nsNetworkNode(i * a, 0, j * c);
+      networkNodesArr.push(networkNode);
+    }
+  }
+  for(var i=0; i<networkNodesArr.length; i++){
+    var node=networkNodesArr[i];
+    var geoNode=new THREE.SphereGeometry(0.25,32,32);
+    var nodeMat=new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(50,50,50)")} );
+    var nodeMesh=new THREE.Mesh(geoNode, nodeMat);
+    nodeMesh.position.x=node.x;
+    nodeMesh.position.y=node.y;
+    nodeMesh.position.z=node.z;
+    nodeArr.push(nodeMesh);
+  }
+  for(var i=0; i<nodeArr.length; i++){
+    scene.add(nodeArr[i]);
+  }
+}
+
 
 //generate the cubes
 var genCubes = function() {
@@ -279,7 +333,7 @@ var constructPassage = function() {
     var PA = new setPath(pathQuadArr[i], name);
     PA.generateGround();
   }
-  
+    
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
@@ -293,3 +347,4 @@ var constructPassage = function() {
     scene.add(groundArr[i]);
   }
 };
+
