@@ -68,9 +68,8 @@ var genGuiControls=new function(){
   this.AUTOLOOP=false;
   this.show_Information=false;  
 }
-var genGUI=datgui.addFolder('genGuiControls');
-genGUI.add(genGuiControls, "AUTOLOOP");
-genGUI.add(genGuiControls, "show_Information");
+datgui.add(genGuiControls, "show_Information");
+datgui.add(genGuiControls, "AUTOLOOP");
 
 var customContainer = document.getElementById('moveGUI');
 customContainer.appendChild(datgui.domElement);
