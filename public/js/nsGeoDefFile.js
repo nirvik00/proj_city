@@ -55,7 +55,7 @@ function setPath(quad, name, arr){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,150,100)"), side:THREE.DoubleSide, wireframe:wireframeVal});   
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,150,100)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){

@@ -1,9 +1,6 @@
 
-
 var datgui=new dat.GUI({ autoPlace: false });
-
-
-
+  
 //cell-grid gui controls
 var gridGuiControls=new function(){
   this.num_Length=2;
@@ -12,10 +9,15 @@ var gridGuiControls=new function(){
   this.cell_Depth=2.5;
 }
 var cellGUI=datgui.addFolder('gridGuiControls');
-cellGUI.add(gridGuiControls, "num_Length", 1, 5);
-cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
-cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
-cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
+var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
+var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
+var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+
+varCellNumLe=gridGuiControls.num_Length;
+varCellNumDe=gridGuiControls.num_denpth;
+varCellLe=gridGuiControls.cell_Length;
+varCellDe=gridGuiControls.cell_Depth;
 
 //ground gui controls
 var groundGuiControls=new function(){
@@ -81,6 +83,12 @@ datgui.close();
 
 // generate the grids
 var genGrid = function() {
+  
+  varCellNumLe=gridGuiControls.num_Length;
+  varCellNumDe=gridGuiControls.num_Depth;
+  varCellLe=gridGuiControls.cell_Length;
+  varCellDe=gridGuiControls.cell_Depth;
+  
   var axes = new THREE.AxesHelper(5);
   scene.add(axes);
   for (var i = 0; i < gridArr.length; i++) {
@@ -91,10 +99,10 @@ var genGrid = function() {
   ptArr = new Array();
   cellQuadArr = new Array();
   gridArr = new Array();
-  var a = gridGuiControls.cell_Length;
-  var c = gridGuiControls.cell_Depth;
-  var numL=gridGuiControls.num_Length;
-  var numH=gridGuiControls.num_Depth;
+  var a = varCellNumLe;
+  var c =  varCellNumDe;
+  var numL=varCellNumLe;
+  var numH=varCellNumDe;
   for (var i = -numL; i < numL; i++) {
     for (var j = -numH; j < numH; j++) {
       var p = new THREE.Geometry();
@@ -134,8 +142,6 @@ var genGrid = function() {
 
 //generate the cubes
 var genCubes = function() {
-  var a = gridGuiControls.grid_Le;
-  var c = gridGuiControls.grid_De;
   
   for (var i = 0; i < evacArr.length; i++) {
     evacArr[i].geometry.dispose();
@@ -215,8 +221,8 @@ var constructPassage = function() {
   greenArr = Array();
   groundArr = Array();
   var pathQuadArr = Array();
-  var w = (gridGuiControls.cell_Length - 1) / 2;
-  var t = (gridGuiControls.cell_Depth - 1) / 2;
+  var w = (varCellNumLe - 1) / 2;
+  var t = (varCellNumDe - 1) / 2;
 
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
@@ -270,10 +276,10 @@ var constructPassage = function() {
     } else{
       name = "green";
     }
-    
     var PA = new setPath(pathQuadArr[i], name);
     PA.generateGround();
   }
+  
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }

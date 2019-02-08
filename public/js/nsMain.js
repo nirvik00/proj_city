@@ -16,6 +16,12 @@ var roadArr=Array();
 var greenArr=Array();
 var groundArr=Array();
 
+var varCellNumLe=2;
+var varCellNumDe=2;
+var varCellLe=2;
+var varCellDe=2;
+
+
 var init=function(){
   scene=new THREE.Scene();
   scene.background=new THREE.Color("rgb(255,255,255)");
@@ -47,6 +53,28 @@ document.addEventListener("keypress", function(event){
 });
 
 var mainLoop= function(){
+
+  varCellNumLe=gridGuiControls.num_Length;
+  varCellNumDe=gridGuiControls.num_Depth;
+  varCellLe=gridGuiControls.cell_Length;
+  varCellDe=gridGuiControls.cell_Depth;
+  
+  cellNumLe.onChange(function(){
+    genGrid();  
+  });
+  
+  cellNumDe.onChange(function(){
+    genGrid();  
+  });
+    
+  cellLe.onChange(function(){
+    genGrid();  
+  });
+    
+  cellDe.onChange(function(){
+    genGrid();  
+  });
+  
   if(genGuiControls.AUTOLOOP==true){
     genGrid();  
   }  
