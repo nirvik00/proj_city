@@ -1,3 +1,4 @@
+
 function nsPt(a,b,c){
     this.x=a;
     this.y=b;
@@ -13,6 +14,38 @@ function nsNetworkNode(a,b,c){
     this.x=a;
     this.y=b;
     this.z=c;
+    this.res=0.5;
+    this.comm=0.25;
+    this.office=0.25;
+    this.neutral=0.25;
+    this.type="res";
+    if(this.res>this.comm && this.res>this.office){
+        this.type="res";
+    }else if(this.office>this.comm && this.office>this.res){
+        this.type="office";
+    }else if(this.comm>this.res && this.comm>this.office){
+        this.type="comm";
+    }else{
+        var t=Math.random();
+        if(t<0.33){
+            this.type="res";
+        }else if(t>0.3 && t<0.66){
+            this.type="comm"
+        }else{
+            this.type="office"
+        }
+    }
+    this.geoNode=new THREE.SphereGeometry(0.25,32,32);
+    this.matNode; 
+    this.nodeMesh;
+    this.getObj=function(){        
+        this.matNode=getBuildingMaterialFromType(this.type);
+        this.nodeMesh=new THREE.Mesh(this.geoNode, this.matNode);
+        this.nodeMesh.position.x=this.x;
+        this.nodeMesh.position.y=this.y;
+        this.nodeMesh.position.z=this.z;    
+        return this.nodeMesh;
+    }    
 }
 
 function nsNetworkEdge(a,b){
@@ -22,6 +55,17 @@ function nsNetworkEdge(a,b){
     this.setCost=function(c){
         this.edgeWt=c;
     }
+}
+
+function nsTile(a,b,c,d){
+    this.p=a;
+    this.q=b;
+    this.r=c;
+    this.s=d;
+    this.res=0.25;
+    this.comm=0.25;
+    this.office=0.25;
+    this.neutral=0.25;   
 }
 
 function nsQuad(a,b,c,d){
@@ -235,7 +279,7 @@ function getBuildingMaterialFromType(type){
     if(type=="res"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(102,153,255)"),
-         wireframe: wireframeVal});        
+        wireframe: wireframeVal});        
     }else if(type=="comm"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(178,102,102)"),

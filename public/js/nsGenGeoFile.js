@@ -180,13 +180,7 @@ var genNetwork=function(){
   }
   for(var i=0; i<networkNodesArr.length; i++){
     var node=networkNodesArr[i];
-    var geoNode=new THREE.SphereGeometry(0.25,32,32);
-    var nodeMat=new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(50,50,50)")} );
-    var nodeMesh=new THREE.Mesh(geoNode, nodeMat);
-    nodeMesh.position.x=node.x;
-    nodeMesh.position.y=node.y;
-    nodeMesh.position.z=node.z;
-    nodeArr.push(nodeMesh);
+    nodeArr.push(node.getObj());
   }
   for(var i=0; i<nodeArr.length; i++){
     scene.add(nodeArr[i]);
