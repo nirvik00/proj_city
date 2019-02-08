@@ -43,7 +43,6 @@ app.use(bodyParser.json());
 //method-override middleware
 app.use(methodOverride('_method'));
 
-
 //index route
 app.get('/', (req, res)=>{
   const title='PLUGS'
@@ -56,6 +55,12 @@ app.get('/', (req, res)=>{
 app.get('/about', (req, res)=>{
   res.render('about');
 });
+
+//explanation route
+app.get('/explanation', (req, res)=>{
+  res.render('explanation');
+});
+
 
 //concept route
 app.get('/concept',(req, res)=>{

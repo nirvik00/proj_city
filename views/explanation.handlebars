@@ -1,0 +1,111 @@
+<div id="mydiv" style="font-size:50px; font-family: times, serif;">PLUGS &nbsp; &nbsp;<a style="font-size:30px">version 1.0.0</a></div>
+<h4>Planning Urban Growth & Simulation : AI for urban policy & form generation</h4>
+
+</br></br>
+<div style="font-size:15px; font-style:italic;">Cities are complex systems whose infrastructural, economic and social components are strongly interrelated and therefore difficult to understand in isolation. The many problems associated with urban growth and global sustainability, however, are typically treated as independent issues. This frequently results in ineffective policy and often leads to unfortunate and sometimes disastrous unintended consequences. Policies meant to control population movements and the spread of slums in megacities, or to reverse urban decay, have largely proven ineffective or counterproductive, despite huge expenditure.</div>
+<br>
+<p>
+- Bettencourt, Luís & West, Geoffrey. (2010). A unified theory of urban living. Nature. 467. 912-3. 
+</p>
+<br>
+<p>
+This research explores Planning Urban Growth Simulator (PLUGS), a computational methodology to generate design strategy from physical constraints of the region, design primitives or moves and desired attributes. PLUGS assists in design and decision-making by virtually simulating the urban design process and learning from the results to find an optimized solution based on an user-defined objective function. Formulation of the problem and a computational solution relies on reinforcement learning, specifically, deep Q-learning and epsilon-greedy approach to place buildings and activities by generating urban policy. It demonstrates that a common methodology can be applied to generate rulesets and process them to automate large-scale urban planning problems. The output is in the form of geometric objects which can be evaluated for daylighting, energy consumption, heat island effect and other performance criteria.
+</p>
+
+<br>
+<p>
+Using urban simulation, a strategy is projected to the virtual environment by an agent which allows a planner to study the behavior of the model with respect to a range of constraints. Various design moves are cast into a Markov Decision Process and traversed by an agent using Markov chain Monte Carlo process. Each traversal provides a set of states or design moves that is interpreted as a strategy (ruleset) for placing building types and their activities. The concept of discounted rewards is used to balance exploration of the possible solutions against exploitation of the easiest available alternative to accumulate rewards. An important feature of this technique is that extensive data collection is <em>not required</em> to develop strategies. It relies on a reward-maximization policy to iteratively guide the agent and effectively simulates the data to learn from past iterations. It identifies ideal planning scenarios to guide given a user defined objective function by exposing coefficients of various parameters through a GUI. Since the states of the MDP are simply an abstract data type, various types of constraints can be integrated into the simulation by positioning them appropriately in the MDP. This allows a generalization to other contexts by suitably altering constraints and updating the reward allocation module. 
+</p>
+<br>
+
+<p>
+An interactive graphical user interface allows the user to input numerical or boolean fields. The inputs received from the interface are coefficients of various attributes of the system. The user may dynamically alter the objective function at runtime by manipulating these attributes. The internal mechanism generates a policy or ruleset for plotting buildings. Once a policy is generated, a procedural model is developed using computational geometry algorithms, Q-learning and epsilon-greedy. The paper provides a comprehensive explanation of the proposed processes, domains of utilization,scope for generalization, and illustration of results.
+</p>
+<br>
+
+
+</br></br>
+<div align="center" style="font-size:25px; font-family: times, serif;">Implementation</div> 
+  We propose that design of urban spaces can be conducted virtually using agent-based simulation where the data is simulated and employ Q-learning to develop design strategy as a set of rules analogous to urban policy. The proposed approach aids design by searching for urban policy based on favorable attributes as input and provide techniques to generate building geometry. Taken together they provide a comprehensive design tool but they are treated as distinct modules because they control different aspects of decision-making process in design. Mechanisms employed to optimize urban policy are based on analysis and control of McMC rollouts and procedural geometry techniques to generate building extents based on the policy.
+  </br></br>
+  We propose a methodology with the following salient features:</br>
+   1.	It is an open-ended framework to process design objectives.</br>
+  2.	The objective function (table-2) is parametric where the coefficients can be interactively adjusted to input local design objectives.</br>
+  3.	It adapts to changes in built form as the region is populated.</br>
+  4.	Once the ruleset is formed, it can be used to procedurally generate the geometry of buildings.</br></br>
+  
+The proposal relies on inputs provided by the designer based on their interpretation of desirable qualities of space. The input fields (Table 2) used here are indicative of the possible relationships that can be processed. An agent is used to simulate thousands of scenarios and save each set of actions at the end of an iteration. This facilitates the development of the best set of actions based on discounted rewards, which can be interpreted as a ruleset, design strategy or urban policy.</br></br>
+
+The process is interactive because each criteria of the objective function is exposed to the user through coefficients which allow the designer to suppress or magnify a desirable trait. In the simulation module, generation of geometric form is representative of the gross urban morphology to be expected as a result of the propagating the rules. In the proposed agent-based simulation, the population growth and the relationship to other elements of the built environment (Table-2) are mapped as a set of states. This initial ruleset is propagated over a number of  iterations by a transition matrix. The population is incremented based on a logistic function for growth and mapped to accommodate the activity type and geometry. The population growth can be substituted for floor space ratio because it provides a measure for the amount of building volume required.</br></br>
+
+2. Agent-based Urban Simulation</br>
+This module is setup as a virtual reconstruction of the physical environment of circulation network and sites to host buildings. The inputs are a set of favorable attributes that the urban environment must exhibit. The goal of this module is to find rules that can be applied to the environment resulting in building geometry with appropriate functional and formal typologies (figure 3). These rules can be used to inform urban design strategy or policy and govern the development process. </br></br>
+
+Since design objectives are highly subjective depending on context and local preferences, data regarding appropriate geometry and its ability to meet desired attributes can be difficult to acquire. The virtual experiment mimics urban development over time and produces simulated data which can be used to find the policy for desired attributes for urban spaces. The search for an appropriate ruleset or urban planning strategy is developed using reinforcement learning (figure 2), a type of machine learning technique that enables an agent to learn in an interactive environment by trial and error using feedback from its own actions and experiences. For each action, the environment provides a reward or punishment to propagate positive and negative behavior. Based on this, a set of actions or action model is determined to maximize the cumulative rewards of the agent. Using figure-1 and table-2, key terms used to describe the elements of this technique are: </br></br>
+-	Action: Transition from one state to another.</br>
+-	Agent: Computational abstraction which takes an action. Considered as an array which collects the nodes on the MDP visited.</br>
+-	State: Current situation of the agent. It is given by the cell it occupies and the building height and type it places on that cell. </br></br>
+-	Action: Transition from one state to another.</br>
+-	Environment: Physical world in which the agent operates and includes abstract data structures to represent block, parcel, cell. Each have a geometric representation to allow visualization along with other attributes shown in Figure 1. The cell is most important because the agent interacts with it. Overall, the environment forces the agent to act and confers rewards based on the interactive objective function (Table -2).</br>
+-	Reward: Feedback from the environment. </br>
+-	Policy:  It is the strategy that the agent takes to find the next action. It maps agent’s states to actions.</br>
+-	Value: Future reward that an agent would receive by taking an action in a particular state. 
+</br></br>
+The Markov decision process (MDP) is constructed based on the possible building heights and functional typologies (figure-1) that can be used to populate a cell. Markov chain Monte Carlo (McMC) simulation is run by the agent represented by stochastic tree-traversal on the MDP. Rewards are calculated based on the agent’s action from each state. Thus, the most favorable next state from all possible states are found. This set of best moves forms the ruleset for the design objective given the environment. Due to automation and interactive capabilities, a vast number of design scenarios can be studied and rules, urban planning strategy can be found.
+</br></br>
+<div align="center">
+<img src="/public/imgs/plugsSol02.jpg" height="500" width="835">
+<img src="/public/imgs/plugsEqn1.jpg" height="625" width="1200">
+<img src="/public/imgs/plugsEqn2.jpg" height="625" width="1200">
+</div>
+
+The agent is a logical construct which is programmed to interact and modify the environment. The agent may update properties of a cell by discrete actions based on rules from Table 1 and 2. A set of all possible changes are the states of the cell and the probability of going from one state to another is stored as a multi-dimensional array known as the transition matrix. The environment responds to change in state of cells by assigning a numerical reward. For each iteration, a score is measured by cumulative rewards gathered by the agent. </br>
+
+The process of learning is the determination of reward-maximization policy or the most optimal transition matrix. The transition matrix is initialized with a minimum value. The agent stochastically changes states during an iteration and a temporary matrix is constructed to store the state transitions. Rewards are computed based on the objective function. Upon improvement, the transition matrix is updated to reflect the best action for each state. Computationally, dynamic programming or Monte-Carlo simulation can be used to update the matrix. This process is repeated using greedy or evolutionary algorithms until the policy cannot be improved. </br>
+
+Discounted rewards inform the agent’s actions to achieve the objectives. This is based on Bellman’s equation (figure 2) and the agent calculates rewards for a series of subsequent actions from a state before determining its transition. This ensures that the agent can discard an immediately available high reward in favor of long-term success.</br>
+A trivial Solution can be developed using:</br></br>
+Set of states  si: {A,B,C,D,E,F,G,H,I}</br>
+Set of actions ai: {up, down, left, right}</br>
+Starting state: {A}</br>
+End State: {I}</br>
+Reward: R(s,a)</br>
+Discounted Reward:Q(state, action) = Q(s,a,s’)=R(s,a)+∑129_(𝑖=1)^𝑇▒〖𝛾^(𝑖−1) 𝑟_𝑖 〗</br>
+
+</br>
+The diagram below (Figure 2) explains the process of computing discounted rewards and best moves from each state. The agent having plotted an intermediate configuration of occupied cells must then plot a route with minimum cost from cells {0,0} to {6,6}. The set of cells, not in the path, are partly occupied to ensure minimum connectivity and maximum land utilization. The problem of finding the route is cast as an MDP where states are the cells and the transition function is the set of subsequent cells that the agent must travel to from {0,0} to the final cell {6,6}. Using the Q-learning method the path (set of linked cells) is found and the direction from each cell to a path is also found.</br>
+
+This provides an illustration of the learning strategy. To extend this technique to urban planning, the constraints and states are abstracted into numerical, logical and geometric constraints (Table 1, 2). The method of constructing the MDP and process of updating policy matrix follows the basic principles are shown.</br>
+
+<div align="center">
+<img src="/public/imgs/plugsFigure1.jpg" height="800" width="635">
+</div>
+
+<div align="center" style="font-size:25px; font-family: times, serif;">Concepts, Preliminaries & Terminology
+</div> 
+</br>
+
+<p align=>
+Reinforcement learning is a type of machine learning technique that enables an agent to learn in an interactive environment by trial and error using feedback from its own actions and experiences. Reinforcement learning uses rewards and punishment as signals for positive and negative behavior with the goal to find a suitable action model to maximize the cumulative rewards of the agent. </br>
+Key terms used to describe the elements of RL are:</br>
+-	Action: Set of possible moves allowed by the Markov decision tree.</br>
+-	Agent: Computational abstraction which takes an action. </br>
+-	Environment: Physical world in which the agent operates and includes abstract data structures to represent block, parcel, cell. Each have a geometric representation to allow visualization along with other attributes shown in Figure 1. The cell is most important because the agent interacts with it. The environment forces the agent to take action and confers rewards based on the interactive objective function (Table -2).</br>
+-	State: Current situation of the agent given by the cell it occupies and the building height and type it places on that cell. This can be expanded to include a vast range of possibilities.
+-	Reward: Feedback from the environment. </br>
+-	Policy:  It is the strategy that the agent takes to find the next action. It maps agent’s states to actions</br>
+-	Value: Future reward that an agent would receive by taking an action in a particular state 
+</br>
+An intuitive understanding of reinforcement learning can be best explained through PacMan (or a creative gameplay like Pong, Chess or Go). The goal of the agent (PacMan) is to eat the food in the grid while avoiding the ghosts. PacMan receives rewards for eating and punished for being eating. The states are the location of PacMan in the grid world and the total cumulative award is PacMan winning the world. In order to build an optimal policy, the agent faces the dilemma of exploring new states while maximizing its reward. This is the exploration vs exploitation trade-off.</br>
+</br>
+Markov Decision Processes (MDPs) : are mathematical frameworks to describe an environment in RL. An MDP consists of a set of finite environment states S, a set of possible actions A(s) in each state, a real valued reward function R(s) and a transition model P(s’,s | a) is the probability of going to state s’ from state s by taking action a. Any prior knowledge of the world is not assumed and model-free RL methods are used in such cases.</br>
+</br>
+Learning with commonly used model free approach:</br>
+-	Q-learning is an off-policy method where the agent learns by feedback based on action. Q-values are updated by allowing an agent to take action a in state s. Updating the value of the transition matrix is the most important part of the Q-learning algorithm. </br>
+o	Q-learning update rule: Q(st, at) = (1- A).Q(st, at) + A(rt + Y.max(Q(st+1, a))</br>
+-	SARSA (state action reward state action) is an on policy method where it learns the value based on its current action derived from its current policy.</br>
+-	Deep Q networks & Deep Deterministic Policy Gradient are model-free, off-policy, actor-critic algorithm for high dimensional, continuous action spaces.</br>
+</br>
+Reinforcement learning requires a lot of data, therefore it is most applicable in domains where simulated data is readily available like gameplay or architectural design. Note the difference from the two other paradigms of Machine Learning (supervised and unsupervised) where regression and classification is based on data accumulated whereas in RL there is no data before the game is played on the site is populated.</br>
+
+</br></br></br></br></br></br></br></br></br></br></br></br></br>

@@ -5,17 +5,17 @@ var datgui=new dat.GUI({ autoPlace: false });
 
 
 //cell-grid gui controls
-var cellGuiControls=new function(){
+var gridGuiControls=new function(){
   this.num_Length=2;
   this.num_Depth=2;
-  this.grid_Length=2.5;
-  this.grid_Depth=2.5;
+  this.cell_Length=2.5;
+  this.cell_Depth=2.5;
 }
-var cellGUI=datgui.addFolder('cellGuiControls');
-cellGUI.add(cellGuiControls, "num_Length", 1, 5);
-cellGUI.add(cellGuiControls, "num_Depth", 1, 5);
-cellGUI.add(cellGuiControls, "grid_Length", 1, 5);
-cellGUI.add(cellGuiControls, "grid_Depth", 1, 5);
+var cellGUI=datgui.addFolder('gridGuiControls');
+cellGUI.add(gridGuiControls, "num_Length", 1, 5);
+cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
+cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
+cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
 
 //ground gui controls
 var groundGuiControls=new function(){
@@ -92,10 +92,10 @@ var genGrid = function() {
   ptArr = new Array();
   cellQuadArr = new Array();
   gridArr = new Array();
-  var a = cellGuiControls.grid_Length;
-  var c = cellGuiControls.grid_Depth;
-  var numL=cellGuiControls.num_Length;
-  var numH=cellGuiControls.num_Depth;
+  var a = gridGuiControls.cell_Length;
+  var c = gridGuiControls.cell_Depth;
+  var numL=gridGuiControls.num_Length;
+  var numH=gridGuiControls.num_Depth;
   for (var i = -numL; i < numL; i++) {
     for (var j = -numH; j < numH; j++) {
       var p = new THREE.Geometry();
@@ -135,8 +135,8 @@ var genGrid = function() {
 
 //generate the cubes
 var genCubes = function() {
-  var a = cellGuiControls.grid_Le;
-  var c = cellGuiControls.grid_De;
+  var a = gridGuiControls.grid_Le;
+  var c = gridGuiControls.grid_De;
   
   for (var i = 0; i < evacArr.length; i++) {
     evacArr[i].geometry.dispose();
@@ -216,8 +216,8 @@ var constructPassage = function() {
   greenArr = Array();
   groundArr = Array();
   var pathQuadArr = Array();
-  var w = (cellGuiControls.grid_Length - 1) / 2;
-  var t = (cellGuiControls.grid_Depth - 1) / 2;
+  var w = (gridGuiControls.cell_Length - 1) / 2;
+  var t = (gridGuiControls.cell_Depth - 1) / 2;
 
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
@@ -227,9 +227,8 @@ var constructPassage = function() {
     var b = quad.q;
     var c = quad.r;
     var d = quad.s;
-    
-    // a=NE,b=SE,c=SW,d=NW
-    
+        
+    // a=NE,b=SE,c=SW,d=NW    
     var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
     var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
     var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
