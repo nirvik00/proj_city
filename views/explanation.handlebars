@@ -25,39 +25,80 @@ An interactive graphical user interface allows the user to input numerical or bo
 
 
 </br></br>
-<div align="center" style="font-size:25px; font-family: times, serif;">Implementation</div>
+<div align="center" style="font-size:25px; font-family: times, serif;">
+    Proposed Approach
+</div>
+<br>
 <p>
   We propose that design of urban spaces can be conducted virtually using agent-based simulation where the data is simulated and employ Q-learning to develop design strategy as a set of rules analogous to urban policy. The proposed approach aids design by searching for urban policy based on favorable attributes as input and provide techniques to generate building geometry. Taken together they provide a comprehensive design tool but they are treated as distinct modules because they control different aspects of decision-making process in design. Mechanisms employed to optimize urban policy are based on analysis and control of McMC rollouts and procedural geometry techniques to generate building extents based on the policy.
   </br></br>
-  We propose a methodology with the following salient features:</br>
-   1.	It is an open-ended framework to process design objectives.</br>
-  2.	The objective function (table-2) is parametric where the coefficients can be interactively adjusted to input local design objectives.</br>
-  3.	It adapts to changes in built form as the region is populated.</br>
-  4.	Once the ruleset is formed, it can be used to procedurally generate the geometry of buildings.</br></br>
+  We propose a methodology with the following salient features:
+  <ol>
+    <li>
+        It is an open-ended framework to process design objectives.
+    </li>
+    <li>
+        The objective function (table-2) is parametric where the coefficients can be interactively adjusted to input local design objectives.
+    </li>
+
+    <li>
+        It adapts to changes in built form as the region is populated.
+    </li>
   
+    <li>
+        Once the ruleset is formed, it can be used to procedurally generate the geometry of buildings.
+    </li>
+  </ol>
+
+</br>
 The proposal relies on inputs provided by the designer based on their interpretation of desirable qualities of space. The input fields (Table 2) used here are indicative of the possible relationships that can be processed. An agent is used to simulate thousands of scenarios and save each set of actions at the end of an iteration. This facilitates the development of the best set of actions based on discounted rewards, which can be interpreted as a ruleset, design strategy or urban policy.</br></br>
 
 The process is interactive because each criteria of the objective function is exposed to the user through coefficients which allow the designer to suppress or magnify a desirable trait. In the simulation module, generation of geometric form is representative of the gross urban morphology to be expected as a result of the propagating the rules. In the proposed agent-based simulation, the population growth and the relationship to other elements of the built environment (Table-2) are mapped as a set of states. This initial ruleset is propagated over a number of  iterations by a transition matrix. The population is incremented based on a logistic function for growth and mapped to accommodate the activity type and geometry. The population growth can be substituted for floor space ratio because it provides a measure for the amount of building volume required.</br></br>
+</p>
 
-2. Agent-based Urban Simulation</br>
+<div align="center" style="font-size:25px; font-family: times, serif;">
+    Agent-based Urban Simulation
+</div> 
+<br>
+<p>
 This module is setup as a virtual reconstruction of the physical environment of circulation network and sites to host buildings. The inputs are a set of favorable attributes that the urban environment must exhibit. The goal of this module is to find rules that can be applied to the environment resulting in building geometry with appropriate functional and formal typologies (figure 3). These rules can be used to inform urban design strategy or policy and govern the development process. </br></br>
 
-Since design objectives are highly subjective depending on context and local preferences, data regarding appropriate geometry and its ability to meet desired attributes can be difficult to acquire. The virtual experiment mimics urban development over time and produces simulated data which can be used to find the policy for desired attributes for urban spaces. The search for an appropriate ruleset or urban planning strategy is developed using reinforcement learning (figure 2), a type of machine learning technique that enables an agent to learn in an interactive environment by trial and error using feedback from its own actions and experiences. For each action, the environment provides a reward or punishment to propagate positive and negative behavior. Based on this, a set of actions or action model is determined to maximize the cumulative rewards of the agent. Using figure-1 and table-2, key terms used to describe the elements of this technique are: </br></br>
--	Action: Transition from one state to another.</br>
--	Agent: Computational abstraction which takes an action. Considered as an array which collects the nodes on the MDP visited.</br>
--	State: Current situation of the agent. It is given by the cell it occupies and the building height and type it places on that cell. </br></br>
--	Action: Transition from one state to another.</br>
--	Environment: Physical world in which the agent operates and includes abstract data structures to represent block, parcel, cell. Each have a geometric representation to allow visualization along with other attributes shown in Figure 1. The cell is most important because the agent interacts with it. Overall, the environment forces the agent to act and confers rewards based on the interactive objective function (Table -2).</br>
--	Reward: Feedback from the environment. </br>
--	Policy:  It is the strategy that the agent takes to find the next action. It maps agent’s states to actions.</br>
--	Value: Future reward that an agent would receive by taking an action in a particular state. 
-</br></br>
+Since design objectives are highly subjective depending on context and local preferences, data regarding appropriate geometry and its ability to meet desired attributes can be difficult to acquire. The virtual experiment mimics urban development over time and produces simulated data which can be used to find the policy for desired attributes for urban spaces. The search for an appropriate ruleset or urban planning strategy is developed using reinforcement learning (figure 2), a type of machine learning technique that enables an agent to learn in an interactive environment by trial and error using feedback from its own actions and experiences. For each action, the environment provides a reward or punishment to propagate positive and negative behavior. Based on this, a set of actions or action model is determined to maximize the cumulative rewards of the agent. 
+<br><br>
+Using figure-1 and table-2, key terms used to describe the elements of this technique are:
+<ul>
+    <li>    
+        Action: Transition from one state to another.
+    </li>
+    <li>
+        Agent: Computational abstraction which takes an action. Considered as an array which collects the nodes on the MDP visited.
+    </li>
+    <li>
+        State: Current situation of the agent. It is given by the cell it occupies and the building height and type it places on that cell.
+    </li>
+    <li>
+        Action: Transition from one state to another.        
+    </li>
+    <li>
+        Environment: Physical world in which the agent operates and includes abstract data structures to represent block, parcel, cell. Each have a geometric representation to allow visualization along with other attributes shown in Figure. The cell is most important because the agent interacts with it. Overall, the environment forces the agent to act and confers rewards based on the interactive objective function (Table -2).
+    </li>
+    <li>
+        Reward: Feedback from the environment.
+    </li>
+    <li>
+        Policy:  It is the strategy that the agent takes to find the next action. It maps agent’s states to actions.
+    </li>
+    <li>
+        Value: Future reward that an agent would receive by taking an action in a particular state. 
+    </li>
+</ul>
+</br>
 The Markov decision process (MDP) is constructed based on the possible building heights and functional typologies (figure-1) that can be used to populate a cell. Markov chain Monte Carlo (McMC) simulation is run by the agent represented by stochastic tree-traversal on the MDP. Rewards are calculated based on the agent’s action from each state. Thus, the most favorable next state from all possible states are found. This set of best moves forms the ruleset for the design objective given the environment. Due to automation and interactive capabilities, a vast number of design scenarios can be studied and 
 rules, urban planning strategy can be found.
 </br></br>
 </p> 
 
-
+<br>
 <div align="center" style="font-size:25px; font-family: times, serif;">Data Structure & Agent Actions
 </div> 
 
@@ -65,6 +106,7 @@ rules, urban planning strategy can be found.
 <img src="/public/imgs/plugsFigure1.jpg" height="800" width="635">
 </div>
 
+<br>
 <div align="center" style="font-size:25px; font-family: times, serif;">Process Overview
 </div> 
 
@@ -75,13 +117,14 @@ rules, urban planning strategy can be found.
 </br></br></br></br>
 <div align="center" style="font-size:25px; font-family: times, serif;">Progress of Agent Actions based on Feeback from the Environment
 </div> 
+<br>
 
 <div align="center">
 <img src="/public/imgs/plugsSol02.jpg" height="300" width="835">
 </div>
 
 </br></br></br></br>
-<div align="center" style="font-size:25px; font-family: times, serif;">Overall System
+<div align="center" style="font-size:25px; font-family: times, serif;">System Design
 </div>
 
 <div align="center">
@@ -89,7 +132,11 @@ rules, urban planning strategy can be found.
 <img src="/public/imgs/plugsEqn2.jpg" height="625" width="1200">
 </div> 
 
-<br><br>
+<br><br><br>
+<div align="center" style="font-size:25px; font-family: times, serif;">Agent- Environment Interaction
+</div> 
+
+<br>
 <p>
 The agent is a logical construct which is programmed to interact and modify the environment. The agent may update properties of a cell by discrete actions based on rules from Table 1 and 2. A set of all possible changes are the states of the cell and the probability of going from one state to another is stored as a multi-dimensional array known as the transition matrix. The environment responds to change in state of cells by assigning a numerical reward. For each iteration, a score is measured by cumulative rewards gathered by the agent. </br>
 
@@ -127,8 +174,6 @@ This provides an illustration of the learning strategy. To extend this technique
 <div align="center" style="font-size:25px; font-family: times, serif;">Trivial Example
 </div> 
 
-</br>
-
 <div align="center">
 <img src="/public/imgs/plugsFigure2.jpg" height="450" width="635">
 </div>
@@ -137,8 +182,7 @@ This provides an illustration of the learning strategy. To extend this technique
 
 <div align="center" style="font-size:25px; font-family: times, serif;">Concepts, Preliminaries & Terminology
 </div> 
-
-<br><br>
+<br>
 <p>
 Reinforcement learning is a type of machine learning technique that enables an agent to learn in an interactive environment by trial and error using feedback from its own actions and experiences. Reinforcement learning uses rewards and punishment as signals for positive and negative behavior with the goal to find a suitable action model to maximize the cumulative rewards of the agent. </br></br>
 Key terms used to describe the elements of RL are:</br>
