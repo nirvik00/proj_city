@@ -94,7 +94,6 @@ datgui.close();
 //
 
 
-
 // generate the grids
 var genGrid = function() {
   varCellNumLe=gridGuiControls.num_Length;
@@ -112,8 +111,8 @@ var genGrid = function() {
   ptArr = Array();
   cellQuadArr = Array();
   gridArr = Array();
-  var a = varCellNumLe;
-  var c = varCellNumDe;
+  var a = varCellLe;
+  var c = varCellDe;
   var numL=varCellNumLe;
   var numH=varCellNumDe;
   for (var i = -numL; i < numL; i++) {
@@ -140,9 +139,9 @@ var genGrid = function() {
       ptArr.push(nspt);
 
       var p0 = new nsPt(i * a, 0, j * c);
-      var p1 = new nsPt(i * a + a, 0, j * c);
-      var p2 = new nsPt(i * a + a, 0, j * c + c);
-      var p3 = new nsPt(i * a, 0, j * c + c);
+      var p1 = new nsPt((i * a) + a, 0, j * c);
+      var p2 = new nsPt((i * a) + a, 0, (j * c) + c);
+      var p3 = new nsPt(i * a, 0, (j * c) + c);
       cellQuadArr.push(new nsQuad(p0, p1, p2, p3));
     }
   }
@@ -151,10 +150,11 @@ var genGrid = function() {
   }
   genNetwork();
   genCubes();
-  constructPassage();
+  constructGroundTiles();
 };
+
 // generate NETWORK
-var genNetwork=function(){
+var genNetwork=function() {
   varCellNumLe=gridGuiControls.num_Length;
   varCellNumDe=gridGuiControls.num_Depth;
   varCellLe=gridGuiControls.cell_Length;
@@ -165,11 +165,11 @@ var genNetwork=function(){
     nodeArr[i].material.dispose();
     scene.remove(nodeArr[i]);
   }
+
   nodeArr=Array();
-  
   networkNodesArr = new Array();
-  var a = varCellNumLe;
-  var c = varCellNumDe;
+  var a = varCellLe;
+  var c = varCellDe;
   var numL=varCellNumLe;
   var numH=varCellNumDe;
   for (var i = -numL; i < numL+1; i++) {
@@ -186,7 +186,6 @@ var genNetwork=function(){
     scene.add(nodeArr[i]);
   }
 }
-
 
 //generate the cubes
 var genCubes = function() {
@@ -243,7 +242,7 @@ var genCubes = function() {
 };
 
 //generate the passage
-var constructPassage = function() {
+var constructGroundTiles = function() {
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
     pathArr[i].material.dispose();
@@ -275,25 +274,26 @@ var constructPassage = function() {
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
     var q = quad.mp();
-
     var a = quad.p;
     var b = quad.q;
     var c = quad.r;
     var d = quad.s;
-        
+    
+    
+    
     // a=NE,b=SE,c=SW,d=NW    
     var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
     var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
     var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
     var h = new nsPt(q.x - 0.5, 0, q.z + 0.5);
-    var I = new nsPt(e.x, 0, e.z - t);
-    var j = new nsPt(f.x, 0, f.z - t);
-    var k = new nsPt(f.x + w, 0, f.z);
-    var l = new nsPt(g.x + w, 0, g.z);
-    var m = new nsPt(g.x, 0, g.z + t);
-    var n = new nsPt(h.x, 0, h.z + t);
-    var o = new nsPt(h.x - w, 0, h.z);
-    var p = new nsPt(e.x - w, 0, e.z);
+    var I = new nsPt(e.x, 0, a.z);
+    var j = new nsPt(f.x, 0, b.z);
+    var k = new nsPt(b.x, 0, f.z);
+    var l = new nsPt(b.x, 0, g.z);
+    var m = new nsPt(g.x, 0, c.z);
+    var n = new nsPt(h.x, 0, d.z);
+    var o = new nsPt(d.x, 0, h.z);
+    var p = new nsPt(a.x, 0, e.z);
 
     var q0 = new nsQuad(a, I, e, p);
     var q1 = new nsQuad(I, j, f, e);
@@ -342,3 +342,26 @@ var constructPassage = function() {
   }
 };
 
+
+var debugSphere=function(p){
+  var geox = new THREE.SphereGeometry(.5,10,10);
+  var matx = new THREE.MeshBasicMaterial ({
+    color: new THREE.Color("rgb(102,153,255)"),
+    wireframe: wireframeVal});
+  var mesh = new THREE.Mesh(geox, matx);
+  mesh.position.x = p.x;
+  mesh.position.y = p.y;
+  mesh.position.z = p.z; 
+  scene.add(mesh);
+}
+
+var debugQuad=function(p,q,r,s){
+  var geox = new THREE.Geometry();
+  geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+  geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+  geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
+  geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
+  var matx=new THREE.LineBasicMaterial( { color: 0x0000ff } );
+  var line = new THREE.Line( geox, matx);
+  scene.add(line);
+}

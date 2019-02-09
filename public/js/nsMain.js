@@ -21,7 +21,6 @@ var roadArr=Array();
 var greenArr=Array();
 var groundArr=Array();
 
-
 var init=function(){
   scene=new THREE.Scene();
   scene.background=new THREE.Color("rgb(255,255,255)");

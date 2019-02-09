@@ -45,7 +45,7 @@ function nsNetworkNode(a,b,c){
         this.nodeMesh.position.y=this.y;
         this.nodeMesh.position.z=this.z;    
         return this.nodeMesh;
-    }    
+    }
 }
 
 function nsNetworkEdge(a,b){
