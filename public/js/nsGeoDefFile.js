@@ -61,9 +61,35 @@ function nsNetworkEdge(a,b){
     this.getNode1=function(){return this.node1; }
     
     this.edgeWt=0;
-    
-    this.setCost=function(c){
-        this.edgeWt=c;
+    this.cost=0;   
+    this.updateCost=function(){
+        var costResRes = groundGuiControls.cost_Res_Res;
+        var costCommComm = groundGuiControls.cost_Comm_Comm;
+        var costOfficeOffice = groundGuiControls.cost_Office_Office;
+        var costResComm = groundGuiControls.cost_Res_Comm;        
+        var costOfficeRes = groundGuiControls.cost_Office_Res;
+        var costOfficeComm = groundGuiControls.cost_Office_Comm;        
+        if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
+            this.cost=costOfficeOffice;
+        }
+        else if(this.node0.getType()==="res" && this.node1.getType()==="res"){
+            this.cost=costResRes;
+        }
+        else if(this.node0.getType()==="comm" && this.node1.getType()==="comm"){
+            this.cost=costCommComm;
+        }
+        else if((this.node0.getType()==="res" && this.node1.getType()==="comm")||(this.node0.getType()==="comm" && this.node1.getType()==="res")){
+            this.cost=costResComm;
+        }
+        else if((this.node0.getType()==="res" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="res")){
+            this.cost=costOfficeRes;
+        }
+        else if((this.node0.getType()==="comm" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="comm")){
+            this.cost=costOfficeComm;
+        }
+        else{
+            this.cost=0.0;
+        }
     }
     //set type of edge:{green, path, road} based on two node-types at each end
     this.type="other";
@@ -87,8 +113,8 @@ function nsNetworkEdge(a,b){
     this.getObj=function(){
        // console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
-        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
-        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
+        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.15, this.p.z ));
+        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.15, this.q.z ));
         var material = getPathMaterialFromType(this.type);
         var line = new THREE.Line(path, material);
         return line;

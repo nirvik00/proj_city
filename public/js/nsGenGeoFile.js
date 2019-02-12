@@ -29,17 +29,23 @@ varCellDe = gridGuiControls.cell_Depth;
 
 //ground gui controls
 var groundGuiControls = new function() {
-  this.cost_Green = 0.1;
-  this.cost_Path = 0.25;
-  this.cost_Road = 0.75;
+  this.cost_Res_Res = 0.1;
+  this.cost_Res_Comm = 0.2;
+  this.cost_Comm_Comm = 0.3;
+  this.cost_Office_Res = 0.5;
+  this.cost_Office_Comm = 0.75;
+  this.cost_Office_Office = 1.0;
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
 }();
 var groundGUI = datgui.addFolder("groundGuiControls");
-groundGUI.add(groundGuiControls, "cost_Green", 0.1, 1);
-groundGUI.add(groundGuiControls, "cost_Path", 0.1, 1);
-groundGUI.add(groundGuiControls, "cost_Road", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Res_Res", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Res_Comm", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Comm_Comm", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Office_Res", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Office_Comm", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Office_Office", 0.1, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
@@ -149,17 +155,16 @@ var genGrid = function() {
     scene.add(gridArr[i]);
   }
   initNetwork();
-  genCubes();
-  constructGroundTiles();
-
-  updateNetworkEdges();
+  //genCubes();
+  //constructRandomGroundTiles();
+  //findMinCost();
 };
 
 // generate NETWORK
 //construct networkEdgesArr
 function initNetwork() {
-  networkEdgesArr = Array();
-  networkNodesArr=Array();
+  networkEdgesArr = [];
+  networkNodesArr=[];
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
     var p = quad.p;
@@ -171,10 +176,10 @@ function initNetwork() {
     var e1 = new nsNetworkEdge(q, r);
     var e2 = new nsNetworkEdge(r, s);
     var e3 = new nsNetworkEdge(s, p);
-    var t0 = checkNetworkEdgeRepetition(e0);
-    var t1 = checkNetworkEdgeRepetition(e1);
-    var t2 = checkNetworkEdgeRepetition(e2);
-    var t3 = checkNetworkEdgeRepetition(e3);
+    var t0 = checkNetworkEdgeRepetition(networkEdgesArr, e0);
+    var t1 = checkNetworkEdgeRepetition(networkEdgesArr, e1);
+    var t2 = checkNetworkEdgeRepetition(networkEdgesArr, e2);
+    var t3 = checkNetworkEdgeRepetition(networkEdgesArr, e3);
     if (t0 === false) {
       networkEdgesArr.push(e0);
     }
@@ -227,6 +232,13 @@ function initNetwork() {
   for(var i=0; i<networkEdgesArr.length; i++){
     networkEdgesArr[i].updateType();
   }
+
+  //update cost of network edges
+  for(var i=0; i<networkEdgesArr.length; i++){
+    networkEdgesArr[i].updateCost();
+  }
+
+  //next function
   genNetworkGeometry();
 }
 
@@ -265,12 +277,12 @@ function genNetworkGeometry(){
 
 
 //check if the network edge already exists in networkEdgesArr
-function checkNetworkEdgeRepetition(e0) {
+function checkNetworkEdgeRepetition(arr, e0) {
   var sum = 0;
-  if (networkEdgesArr.length > 0) {
-    for (var i = 0; i < networkEdgesArr.length; i++) {
-      var a = networkEdgesArr[i].getP();
-      var b = networkEdgesArr[i].getQ();
+  if (arr.length > 0) {
+    for (var i = 0; i < arr.length; i++) {
+      var a = arr[i].getP();
+      var b = arr[i].getQ();
       var p = e0.getP();
       var q = e0.getQ();
       var T = 0.0001;
@@ -291,10 +303,12 @@ function checkNetworkEdgeRepetition(e0) {
 
 // network node creation from edge - repetition
 function getNetworkNodes(e){
+  
   var sum0=0;
   var sum1=0;
   var n0=e.getNode0();
   var n1=e.getNode1();
+
   var p=n0.getPt();
   var q=n1.getPt();
   
@@ -322,8 +336,8 @@ function getNetworkNodes(e){
   }
 }
 
-//generate the passage: returnNodeType
-var constructGroundTiles = function() {
+//generate the passage: returnNodeType RANDOMLY
+var constructRandomGroundTiles = function() {
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
     pathArr[i].material.dispose();
@@ -426,6 +440,9 @@ var constructGroundTiles = function() {
   }
 };
 
+
+
+
 //generate the cubes
 var genCubes = function() {
   for (var i = 0; i < evacArr.length; i++) {
@@ -489,35 +506,187 @@ function utilDi(a, b) {
 }
 
 
-function updateNetworkEdges(){
-  tempNetworkEdgesArr=Array();
-  tmpResNodesArr=new Array();
+function findMinCost(){
+  var costResRes = groundGuiControls.cost_Res_Res;
+  var costResComm = groundGuiControls.cost_Res_Comm;
+  var costCommComm = groundGuiControls.cost_Comm_Comm;
+  var costOfficeRes = groundGuiControls.cost_Office_Res;
+  var costOfficeComm = groundGuiControls.cost_Office_Comm;
+  var costOfficeOffice = groundGuiControls.cost_Office_Office;
+  for (var i=0;i<networkEdgesArr.length; i++) {
+    var e=networkEdgesArr[i]; e.updateCost(); e.updateType();
+    console.log(e.cost + ", "+e.node0.getType() + ", "+e.node1.getType());
+  }
+  //sort all edges by weight
+  var sortedNetworkEdges=new Array();
+  var sortable =new Array();
+  for (var i=0;i<networkEdgesArr.length; i++) {
+      sortable.push([networkEdgesArr[i], networkEdgesArr[i].cost]);
+  }
+  sortable.sort(function(a, b) {
+      return a[1] - b[1];
+  });
+  networkEdgesArr=Array();
+  for (var i=0;i<sortable.length; i++) {
+    networkEdgesArr.push(sortable[i][0]);
+  }
+  sortable=[];
+  // end of sorting
+
+
+  //get all nodes of res type
+  var reqResNodes=[];
   for(var i=0; i<networkNodesArr.length; i++){
-    if(networkNodesArr[i].getType()==="res"){
-      tmpResNodesArr.push(networkNodesArr[i]);
-    }
+    if(networkNodesArr[i].getType()==="res") reqResNodes.push(networkNodesArr[i]);
   }
-  //console.log("number of residential nodes = "+tmpResNodesArr.length );
+  console.log("length of initial array : " + reqResNodes.length);
 
-  //step1. convert any edge with both nodes as res into green
-  var sum1=0;
-  for(var i=0; i<tmpResNodesArr.length; i++){
-    var e=networkEdgesArr[i];
-    var n0=e.getNode0();
-    var n1=e.getNode1();
-    if(n0==="res" && n1==="res"){ 
-      e.setType("green")
-      sum1++;
-    };
-  }
- // console.log("edges converted to green : "+sum1);
-}
-
-//get connected nodes at min value
-function checkResConnectivity(n0){
+  
+  //get all nodes of res type
+  var tmpEdges=[];
   for(var i=0; i<networkEdgesArr.length; i++){
-    var e=networkEdgesArr[i];
-    var n0=e.getNode0();
-    var n1=e.getnode1();
+    var e=networkEdgesArr[i]; var n0=e.getNode0().getPt(); var n1=e.getNode1().getPt();    
+    var t=checkNetworkEdgeRepetition(tmpEdges, e);
+    if(t==false) {      
+      tmpEdges.push(e);
+    }
+    //remove nodes which have been found
+    //if length of remaininig nodes are > 1
+    if(reqResNodes.length>0){
+      //console.log("length of array : " + reqResNodes.length);
+      for(var j=0; j<reqResNodes.length; j++){
+        var n2=reqResNodes[j].getPt();
+        if(utilDi(n2,n0) < 0.01){
+          reqResNodes.splice(j,1);
+          break;
+        }
+        if(utilDi(n2,n1) < 0.01){
+          reqResNodes.splice(j,1);
+          break;
+        }
+      }
+    }else{
+      break;
+    }    
   }
+  reqResNodes=[];
+  for(var i=0; i<tmpEdges.length; i++){
+    var f=tmpEdges[i]; var n0=f.getNode0().getPt(); var n1=f.getNode1().getPt();    
+    for(var j=0; j<networkEdgesArr.length; j++){
+      var e=networkEdgesArr[j]; var n2=e.getNode0().getPt(); var n3=e.getNode1().getPt();   if(utilDi(n0,n2)<0.01 && utilDi(n1,n3)<0.01){
+        networkEdgesArr[j].setType("green");
+      }
+    }      
+  }
+  tmpEdges=[];
+  genNetworkGeometry();
 }
+
+
+
+
+
+//generate the passage: returnNodeType 
+var constructGroundTiles = function() {
+  for (var i = 0; i < pathArr.length; i++) {
+    pathArr[i].geometry.dispose();
+    pathArr[i].material.dispose();
+    scene.remove(pathArr[i]);
+  }
+  for (var i = 0; i < roadArr.length; i++) {
+    roadArr[i].geometry.dispose();
+    roadArr[i].material.dispose();
+    scene.remove(roadArr[i]);
+  }
+  for (var i = 0; i < greenArr.length; i++) {
+    greenArr[i].geometry.dispose();
+    greenArr[i].material.dispose();
+    scene.remove(greenArr[i]);
+  }
+  for (var i = 0; i < groundArr.length; i++) {
+    groundArr[i].geometry.dispose();
+    groundArr[i].material.dispose();
+    scene.remove(groundArr[i]);
+  }
+  pathArr = Array();
+  roadArr = Array();
+  greenArr = Array();
+  groundArr = Array();
+  var pathQuadArr = Array();
+  var w = (varCellNumLe - 1) / 2;
+  var t = (varCellNumDe - 1) / 2;
+
+  for (var i = 0; i < cellQuadArr.length; i++) {
+    var quad = cellQuadArr[i];
+    var q = quad.mp();
+    var a = quad.p;
+    var b = quad.q;
+    var c = quad.r;
+    var d = quad.s;
+
+    // a=NE,b=SE,c=SW,d=NW
+    var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
+    var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
+    var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
+    var h = new nsPt(q.x - 0.5, 0, q.z + 0.5);
+    var I = new nsPt(e.x, 0, a.z);
+    var j = new nsPt(f.x, 0, b.z);
+    var k = new nsPt(b.x, 0, f.z);
+    var l = new nsPt(b.x, 0, g.z);
+    var m = new nsPt(g.x, 0, c.z);
+    var n = new nsPt(h.x, 0, d.z);
+    var o = new nsPt(d.x, 0, h.z);
+    var p = new nsPt(a.x, 0, e.z);
+
+    var q0 = new nsQuad(a, I, e, p);
+    var q1 = new nsQuad(I, j, f, e);
+    var q2 = new nsQuad(j, b, k, f);
+    var q3 = new nsQuad(f, k, l, g);
+    var q4 = new nsQuad(g, l, c, m);
+    var q5 = new nsQuad(h, g, m, n);
+    var q6 = new nsQuad(o, h, n, d);
+    var q7 = new nsQuad(p, e, h, o);
+
+    pathQuadArr.push(q0);
+    pathQuadArr.push(q1);
+    pathQuadArr.push(q2);
+    pathQuadArr.push(q3);
+    pathQuadArr.push(q4);
+    pathQuadArr.push(q5);
+    pathQuadArr.push(q6);
+    pathQuadArr.push(q7);
+  }
+
+  for (var i = 0; i < pathQuadArr.length; i++) {
+    var p=pathQuadArr[i].mp();
+    var minD=1000000000;
+    var name="";
+    for (var j=0; j<networkEdgesArr.length; j++){
+      var q=networkEdgesArr[j].getMp();
+      var d=utilDi(p,q);
+      if(d<minD){
+        minD=d;
+        name=networkEdgesArr[j].getType();
+      }
+    }
+    console.log(name);
+    var PA = new setPath(pathQuadArr[i], name);
+    PA.generateGround();
+  }
+
+  for (var i = 0; i < pathArr.length; i++) {
+    scene.add(pathArr[i]);
+  }
+
+  for (var i = 0; i < roadArr.length; i++) {
+    scene.add(roadArr[i]);
+  }
+
+  for (var i = 0; i < greenArr.length; i++) {
+    scene.add(greenArr[i]);
+  }
+
+  for (var i = 0; i < groundArr.length; i++) {
+    scene.add(groundArr[i]);
+  }
+};

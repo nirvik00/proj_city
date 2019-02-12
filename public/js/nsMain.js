@@ -2,11 +2,11 @@ var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 
 var camera, scene, renderer, control;
-var COUNTER = 0;
+var ITERATION = 1;var COUNTER = 0;
 var wireframeVal = false;
 
-var networkNodesArr = Array();
-var networkEdgesArr = Array();
+var networkNodesArr = [];
+var networkEdgesArr = [];
 var tempNetworkEdgesArr = Array();
 var nodeArr = Array(); //network mesh of nodes
 var edgeArr = Array(); //network mesh of node-edges
@@ -50,12 +50,29 @@ var init = function() {
 
 document.addEventListener("keypress", function(event) {
   if (event.keyCode === 13) {
-    console.log("new iteration: " + COUNTER);
-    COUNTER++;
+    //enter key event
+    console.log("optimize iteration: (ENTER)" + COUNTER);
+    findMinCost();
+    genCubes();
+    constructGroundTiles();
+    
     var source = infoPara.innerHTML;
-    source += "\nchange " + COUNTER;
-    infoPara.innerHTML = source;
+    source += "\noptimize: " + COUNTER;
+    infoPara.innerHTML = source;    
+    COUNTER++;
+  }
+  if (event.keyCode === 32) {
+    //enter key event
+    console.log("new iteration: (SPACE) " + ITERATION);
     genGrid();
+    genCubes();
+    constructRandomGroundTiles();
+    
+    var source = infoPara.innerHTML;
+    source += "\nnew Iteration " +   ITERATION;
+    infoPara.innerHTML = source;    
+    ITERATION++;
+    COUNTER=0;
   }
 });
 
