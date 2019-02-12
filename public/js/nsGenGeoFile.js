@@ -1,6 +1,6 @@
 // GUI
-var varCellNumLe = 1;
-var varCellNumDe = 1;
+var varCellNumLe = 2;
+var varCellNumDe = 2;
 var varCellLe = 2;
 var varCellDe = 2;
 
@@ -8,21 +8,19 @@ var datgui = new dat.GUI({ autoPlace: false });
 
 //cell-grid gui controls
 var gridGuiControls = new function() {
-  this.num_Length = 1;
-  this.num_Depth = 1;
+  this.num_Length = 2;
+  this.num_Depth = 2;
   this.cell_Length = 3;
   this.cell_Depth = 3;
   this.show_Grid = false;
-  this.show_Network = false;
 }();
-
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
 var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
 var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
 cellGUI.add(gridGuiControls, "show_Grid");
-cellGUI.add(gridGuiControls, "show_Network");
+
 
 varCellNumLe = gridGuiControls.num_Length;
 varCellNumDe = gridGuiControls.num_denpth;
@@ -31,22 +29,21 @@ varCellDe = gridGuiControls.cell_Depth;
 
 //ground gui controls
 var groundGuiControls = new function() {
-  this.ratio_Green = 0.25;
-  this.ratio_Path = 0.5;
-  this.ratio_Road = 0.25;
+  this.cost_Green = 0.1;
+  this.cost_Path = 0.25;
+  this.cost_Road = 0.75;
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
-  this.show_Only_Ground = false;
 }();
 var groundGUI = datgui.addFolder("groundGuiControls");
-groundGUI.add(groundGuiControls, "ratio_Green", 0.1, 1);
-groundGUI.add(groundGuiControls, "ratio_Path", 0.1, 1);
-groundGUI.add(groundGuiControls, "ratio_Road", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Green", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Path", 0.1, 1);
+groundGUI.add(groundGuiControls, "cost_Road", 0.1, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
-groundGUI.add(groundGuiControls, "show_Only_Ground");
+
 
 //building gui controls
 var bldgGuiControls = new function() {
@@ -77,9 +74,15 @@ buildingGUI.add(bldgGuiControls, "show_Office");
 
 // main functions about the generation
 var genGuiControls = new function() {
-  this.AUTOLOOP = false;
+  this.hide_Ground = true;
+  this.hide_Buildings = true;
+  this.show_Network = true;
   this.show_Information = false;
+  this.AUTOLOOP = false;
 }();
+datgui.add(genGuiControls, "hide_Ground");
+datgui.add(genGuiControls, "hide_Buildings");
+datgui.add(genGuiControls, "show_Network");
 datgui.add(genGuiControls, "show_Information");
 datgui.add(genGuiControls, "AUTOLOOP");
 
@@ -145,14 +148,18 @@ var genGrid = function() {
   for (var i = 0; i < gridArr.length; i++) {
     scene.add(gridArr[i]);
   }
-  initGenNetwork();
+  initNetwork();
   genCubes();
   constructGroundTiles();
+
+  updateNetworkEdges();
 };
 
 // generate NETWORK
-function initGenNetwork() {
+//construct networkEdgesArr
+function initNetwork() {
   networkEdgesArr = Array();
+  networkNodesArr=Array();
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
     var p = quad.p;
@@ -181,15 +188,51 @@ function initGenNetwork() {
       networkEdgesArr.push(e3);
     }
   }
-  updateNetworkNodes();
-  for (var i = 0; i < nodeArr.length; i++) {
-    scene.add(nodeArr[i]);
+  
+  //construct networkNodesArr
+  networkNodesArr=Array();
+  for(var i=0; i<networkEdgesArr.length; i++){
+    getNetworkNodes(networkEdgesArr[i]);
   }
-  for (var i = 0; i < edgeArr.length; i++) {
-    scene.add(edgeArr[i]);
+
+  // set type of node array
+  for(var i=0; i<networkNodesArr.length; i++){
+    networkNodesArr[i].setType();
   }
+
+  //set this node to networkEdges
+  for(var i=0; i<networkEdgesArr.length; i++){
+    var e=networkEdgesArr[i];
+    var n0=e.getNode0(); var p=n0.getPt();
+    var n1=e.getNode1(); var q=n1.getPt();
+    for(var j=0; j<networkNodesArr.length; j++){
+      var n2=networkNodesArr[j]; var r=n2.getPt();
+      var d02=utilDi(p,r);
+      if(d02<0.001){
+        networkEdgesArr[i].setNode0(networkNodesArr[j]);
+        break;
+      }
+    }
+    for(var j=0; j<networkNodesArr.length; j++){
+      var n2=networkNodesArr[j]; var r=n2.getPt();
+      var d01=utilDi(q,r);
+      if(d01<0.001){
+        networkEdgesArr[i].setNode1(networkNodesArr[j]);
+        break;
+      }
+    }
+  }
+
+ //update type of networkedges
+  for(var i=0; i<networkEdgesArr.length; i++){
+    networkEdgesArr[i].updateType();
+  }
+  genNetworkGeometry();
 }
-function updateNetworkNodes(){
+
+//for network: nodes and edges
+//set property of nodes to res, comm, off
+function genNetworkGeometry(){
   for (var i = 0; i < nodeArr.length; i++) {
     nodeArr[i].geometry.dispose();
     nodeArr[i].material.dispose();
@@ -200,37 +243,28 @@ function updateNetworkNodes(){
     edgeArr[i].material.dispose();
     scene.remove(edgeArr[i]);
   }
-  nodeArr = Array();
   edgeArr=Array();
   for(var i=0; i<networkEdgesArr.length; i++){
     var e=networkEdgesArr[i];
-    var n0=e.getNode0();
-    var n1=e.getNode1();
-    var type="";
-    if(n0.getType()==="other"){
-      setNodeType(n0);
-      var mesh=n0.getObj();
-      nodeArr.push(mesh);
-    }
-    if(n1.getType()==="other"){
-      setNodeType(n1);
-      var mesh=n1.getObj();
-      nodeArr.push(mesh);
-    }
     edgeArr.push(e.getObj());
-  }  
-}
-function setNodeType(n0){
-  var t=Math.random();
-  if(t<0.3){
-    n0.setType("res");
-  }else if(t>0.3 && t<0.75){
-    n0.setType("comm");
-  }else{
-    n0.setType("office");
+  }
+  for(var i=0; i<edgeArr.length; i++){  
+    scene.add(edgeArr[i]); 
+  }
+
+  nodeArr = Array();
+  for(var i=0; i<networkNodesArr.length; i++){
+    var n0=networkNodesArr[i];
+    nodeArr.push(n0.getObj());
+  }
+  for(var i=0; i<nodeArr.length; i++){
+    scene.add(nodeArr[i]);
   }
 }
 
+
+
+//check if the network edge already exists in networkEdgesArr
 function checkNetworkEdgeRepetition(e0) {
   var sum = 0;
   if (networkEdgesArr.length > 0) {
@@ -252,6 +286,39 @@ function checkNetworkEdgeRepetition(e0) {
     return false;
   } else {
     return true;
+  }
+}
+
+// network node creation from edge - repetition
+function getNetworkNodes(e){
+  var sum0=0;
+  var sum1=0;
+  var n0=e.getNode0();
+  var n1=e.getNode1();
+  var p=n0.getPt();
+  var q=n1.getPt();
+  
+  if(networkEdgesArr.length>0){
+    for(var i=0; i<networkNodesArr.length; i++){
+      var n2=networkNodesArr[i].getPt();
+      if(utilDi(n0,n2) < 0.01){
+        sum0++;
+        break;
+      }
+    }
+    if(sum0==0){
+      networkNodesArr.push(n0);
+    }
+    for(var i=0; i<networkNodesArr.length; i++){
+      var n2=networkNodesArr[i].getPt();
+      if(utilDi(n1,n2) < 0.01){
+        sum1++;
+        break;
+      }
+    }
+    if(sum1==0){
+      networkNodesArr.push(n1);
+    }
   }
 }
 
@@ -327,7 +394,7 @@ var constructGroundTiles = function() {
   }
 
   for (var i = 0; i < pathQuadArr.length; i++) {
-    var name = returnNodeType(nodeArr, pathQuadArr[i]);
+    var name="";
     var t = Math.random();
     if (name === "" || name == "") {
       if (t < 0.35) {
@@ -357,24 +424,6 @@ var constructGroundTiles = function() {
   for (var i = 0; i < groundArr.length; i++) {
     scene.add(groundArr[i]);
   }
-};
-
-var returnNodeType = function(dupNodeArr, ele) {
-  var minD = 1000000;
-  var name = "";
-  for (var i = 0; i < dupNodeArr.length; i++) {
-    var node = dupNodeArr[i];
-    var x = node.x;
-    var y = node.y;
-    var z = node.z;
-    var p = new nsPt(x, y, z);
-    var q = ele.mp();
-    var D = utilDi(p, q);
-    if (D < minD) {
-      name = node.getType();
-    }
-  }
-  return name;
 };
 
 //generate the cubes
@@ -437,4 +486,38 @@ function utilDi(a, b) {
       (a.y - b.y) * (a.y - b.y) +
       (a.z - b.z) * (a.z - b.z)
   );
+}
+
+
+function updateNetworkEdges(){
+  tempNetworkEdgesArr=Array();
+  tmpResNodesArr=new Array();
+  for(var i=0; i<networkNodesArr.length; i++){
+    if(networkNodesArr[i].getType()==="res"){
+      tmpResNodesArr.push(networkNodesArr[i]);
+    }
+  }
+  //console.log("number of residential nodes = "+tmpResNodesArr.length );
+
+  //step1. convert any edge with both nodes as res into green
+  var sum1=0;
+  for(var i=0; i<tmpResNodesArr.length; i++){
+    var e=networkEdgesArr[i];
+    var n0=e.getNode0();
+    var n1=e.getNode1();
+    if(n0==="res" && n1==="res"){ 
+      e.setType("green")
+      sum1++;
+    };
+  }
+ // console.log("edges converted to green : "+sum1);
+}
+
+//get connected nodes at min value
+function checkResConnectivity(n0){
+  for(var i=0; i<networkEdgesArr.length; i++){
+    var e=networkEdgesArr[i];
+    var n0=e.getNode0();
+    var n1=e.getnode1();
+  }
 }

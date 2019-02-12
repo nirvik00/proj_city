@@ -14,13 +14,19 @@ function nsNetworkNode(a,b,c){
     this.x=a;
     this.y=b;
     this.z=c;
-    this.res=0.5;
-    this.comm=0.25;
-    this.office=0.25;
-    this.neutral=0.25;
     this.type="other";
-    this.setType=function(t){
-        this.type=t;
+    this.getPt=function(){
+        return new nsPt(this.x, this.y, this.z);
+    }
+    this.setType=function(){
+        var t=Math.random();
+        if(t<0.35){
+            this.type="res";
+        }else if(t>=0.35 && t<0.7){
+            this.type="comm";
+        }else{
+            this.type="office";   
+        }
     };
     this.getType=function(){
         return this.type;
@@ -39,13 +45,17 @@ function nsNetworkNode(a,b,c){
 }
 
 function nsNetworkEdge(a,b){
-    this.p=a;
-    this.q=b;
+    this.p=a; //nsPt
+    this.q=b; //nsPt
     this.getP=function(){return this.p;}
     this.getQ=function(){return this.q;}
+    this.getMp=function(){ return new nsPt((this.p.x+this.q.x)/2 , (this.p.y+this.q.y)/2, (this.p.z+this.q.z)/2 ); }
     
     this.node0=new nsNetworkNode(this.p.x,this.p.y,this.p.z);
     this.node1=new nsNetworkNode(this.q.x,this.q.y,this.q.z);
+
+    this.setNode0=function(n0){this.node0=n0;}
+    this.setNode1=function(n1){this.node1=n1;}
     
     this.getNode0=function(){return this.node0; }
     this.getNode1=function(){return this.node1; }
@@ -55,38 +65,35 @@ function nsNetworkEdge(a,b){
     this.setCost=function(c){
         this.edgeWt=c;
     }
-    
-    this.getObj=function(){
-        var path = new THREE.Geometry();
-        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.1, this.p.z ));
-        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.1, this.q.z ));
-        var material;
-        if(this.node0.getType()==="res" && this.node1.getType()==="res"){
-            material = getPathMaterialFromType("green");
+    //set type of edge:{green, path, road} based on two node-types at each end
+    this.type="other";
+    this.setType=function(name){
+        this.type=name;
+    }
+    this.getType=function(){
+        return this.type;
+    }
+    this.updateType=function(){
+       if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
+            this.type="road";
         }
-        else if((this.node0.getType()==="comm" && this.node1.getType()==="res") || (this.node0.getType()==="res" && this.node1.getType()==="comm")){ 
-            material = getPathMaterialFromType("green");
-        }
-        else if(this.node0.getType()==="comm" && this.node1.getType()==="comm"){ 
-            material = getPathMaterialFromType("path");
-        }
-        else if((this.node0.getType()==="comm" && this.node1.getType()==="office") || (this.node0.getType()==="office" && this.node1.getType()==="comm")){ 
-            material = getPathMaterialFromType("path");
-        }
-        else if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
-            material = getPathMaterialFromType("road");
-        }
-        else if((this.node0.getType()==="res" && this.node1.getType()==="office") || (this.node0.getType()==="office" && this.node1.getType()==="res")){ 
-            material = getPathMaterialFromType("path");
+        else if(this.node0.getType()==="res" && this.node1.getType()==="res"){
+            this.type="green";
         }
         else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,255)")});
+            this.type="path";
         }
+    }
+    this.getObj=function(){
+       // console.log(this.node0.getType() + ", "+ this.node1.getType());
+        var path = new THREE.Geometry();
+        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
+        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
+        var material = getPathMaterialFromType(this.type);
         var line = new THREE.Line(path, material);
         return line;
     }    
 }
-
 
 function nsTile(a,b,c,d){
     this.p=a;
@@ -156,19 +163,18 @@ function setPath(quad, name){
             mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
-        }else if (name=="green"){
+        }else if(name==="green"){
             mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
-        }else{
+        }
+        else{
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,100,250)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
-            groundArr.push(mesh);
+            greenArr.push(mesh);
         }
     }
 }
-
-
-
 
 // CUBE DECISIONS
 // determine the number of layers of buildings on site: three - max
@@ -262,7 +268,6 @@ function CubeDecisions(){
     } 
 }
 
-
 // make the cube from properties
 function makeBuildings(quad, numlyr, types, maxht){
     this.quad=quad;
@@ -329,22 +334,18 @@ function getBuildingMaterialFromType(type){
     return this.mat
 }
 
-
-
 function getPathMaterialFromType(name){
     var mat;
     if(name==="road"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
     }else if (name==="path"){
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,255,0)")});
-    }else if (name=="green"){
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,150,0)")}); 
+    }
+    else{
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
-    }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,255)")});
     }
     return mat;
 }
-
 
 var debugSphere=function(p){
     var geox = new THREE.SphereGeometry(.5,10,10);

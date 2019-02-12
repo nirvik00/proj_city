@@ -7,8 +7,11 @@ var wireframeVal = false;
 
 var networkNodesArr = Array();
 var networkEdgesArr = Array();
-var nodeArr = Array(); //mesh of nodes
-var edgeArr = Array(); //mesh of node-edges
+var tempNetworkEdgesArr = Array();
+var nodeArr = Array(); //network mesh of nodes
+var edgeArr = Array(); //network mesh of node-edges
+var greenEdgeArr=Array(); //network mesh of green edge
+
 
 var gridArr = Array();
 var evacArr = Array();
@@ -87,9 +90,11 @@ var mainLoop = function() {
       scene.remove(greenArr[i]);
     }
   } else {
-    for (var i = 0; i < greenArr.length; i++) {
-      scene.add(greenArr[i]);
-    }
+    if(genGuiControls.hide_Ground==false){
+      for (var i = 0; i < greenArr.length; i++) {
+        scene.add(greenArr[i]);
+      }
+    }    
   }
 
   if (groundGuiControls.show_Path == false) {
@@ -97,8 +102,10 @@ var mainLoop = function() {
       scene.remove(pathArr[i]);
     }
   } else {
-    for (var i = 0; i < pathArr.length; i++) {
-      scene.add(pathArr[i]);
+    if(genGuiControls.hide_Ground==false){
+      for (var i = 0; i < pathArr.length; i++) {
+        scene.add(pathArr[i]);
+      }
     }
   }
 
@@ -107,14 +114,28 @@ var mainLoop = function() {
       scene.remove(roadArr[i]);
     }
   } else {
-    for (var i = 0; i < roadArr.length; i++) {
-      scene.add(roadArr[i]);
+    if(genGuiControls.hide_Ground==false){
+      for (var i = 0; i < roadArr.length; i++) {
+        scene.add(roadArr[i]);
+      }
     }
   }
 
+  if(genGuiControls.hide_Ground==true){
+    for (var i = 0; i < greenArr.length; i++) {
+      scene.remove(greenArr[i]);
+    }
+    for (var i = 0; i < pathArr.length; i++) {
+      scene.remove(pathArr[i]);
+    }
+    for (var i = 0; i < roadArr.length; i++) {
+      scene.remove(roadArr[i]);
+    }
+  }
+  
   if (
     bldgGuiControls.show_Residences == true &&
-    groundGuiControls.show_Only_Ground == false
+    genGuiControls.hide_Buildings == false
   ) {
     for (var i = 0; i < resCubeArr.length; i++) {
       scene.add(resCubeArr[i]);
@@ -127,7 +148,7 @@ var mainLoop = function() {
 
   if (
     bldgGuiControls.show_Commercial == true &&
-    groundGuiControls.show_Only_Ground == false
+    genGuiControls.hide_Buildings == false
   ) {
     for (var i = 0; i < commCubeArr.length; i++) {
       scene.add(commCubeArr[i]);
@@ -140,7 +161,7 @@ var mainLoop = function() {
 
   if (
     bldgGuiControls.show_Office == true &&
-    groundGuiControls.show_Only_Ground == false
+    genGuiControls.hide_Buildings == false
   ) {
     for (var i = 0; i < officeCubeArr.length; i++) {
       scene.add(officeCubeArr[i]);
@@ -153,7 +174,7 @@ var mainLoop = function() {
 
   if (
     bldgGuiControls.show_Evacuation == true &&
-    groundGuiControls.show_Only_Ground == false
+    genGuiControls.hide_Buildings == false
   ) {
     for (var i = 0; i < evacArr.length; i++) {
       scene.add(evacArr[i]);
@@ -170,7 +191,7 @@ var mainLoop = function() {
     infoPara.hidden = false;
   }
 
-  if (gridGuiControls.show_Network == true) {
+  if (genGuiControls.show_Network == true) {
     for (var i = 0; i < nodeArr.length; i++) {
       scene.add(nodeArr[i]);
     }
