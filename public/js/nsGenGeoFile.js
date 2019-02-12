@@ -1,91 +1,89 @@
-// GUI 
-var varCellNumLe=2;
-var varCellNumDe=2;
-var varCellLe=2;
-var varCellDe=2;
+// GUI
+var varCellNumLe = 1;
+var varCellNumDe = 1;
+var varCellLe = 2;
+var varCellDe = 2;
 
+var datgui = new dat.GUI({ autoPlace: false });
 
-var datgui=new dat.GUI({ autoPlace: false });
-  
 //cell-grid gui controls
-var gridGuiControls=new function(){
-  this.num_Length=2;
-  this.num_Depth=2;
-  this.cell_Length=2.5;
-  this.cell_Depth=2.5;
-  this.show_Grid=false;
-  this.show_Network=false;
-}
+var gridGuiControls = new function() {
+  this.num_Length = 1;
+  this.num_Depth = 1;
+  this.cell_Length = 3;
+  this.cell_Depth = 3;
+  this.show_Grid = false;
+  this.show_Network = false;
+}();
 
-var cellGUI=datgui.addFolder('gridGuiControls');
-var cellNumLe = cellGUI.add(gridGuiControls, "num_Length",1,5);
-var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth",1,5);
-var cellLe = cellGUI.add(gridGuiControls, "cell_Length",1,5);
-var cellDe = cellGUI.add(gridGuiControls, "cell_Depth",1,5);
-cellGUI.add(gridGuiControls,"show_Grid");
-cellGUI.add(gridGuiControls,"show_Network");
+var cellGUI = datgui.addFolder("gridGuiControls");
+var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
+var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
+var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
+var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+cellGUI.add(gridGuiControls, "show_Grid");
+cellGUI.add(gridGuiControls, "show_Network");
 
-
-varCellNumLe=gridGuiControls.num_Length;
-varCellNumDe=gridGuiControls.num_denpth;
-varCellLe=gridGuiControls.cell_Length;
-varCellDe=gridGuiControls.cell_Depth;
+varCellNumLe = gridGuiControls.num_Length;
+varCellNumDe = gridGuiControls.num_denpth;
+varCellLe = gridGuiControls.cell_Length;
+varCellDe = gridGuiControls.cell_Depth;
 
 //ground gui controls
-var groundGuiControls=new function(){
-  this.ratio_Green=0.25;
-  this.ratio_Path=0.50;
-  this.ratio_Road=0.25;
-  this.show_Green=true;
-  this.show_Path=true;
-  this.show_Road=true;
-  this.show_Only_Ground=false;
-}
-var groundGUI=datgui.addFolder('groundGuiControls');
-groundGUI.add(groundGuiControls, "ratio_Green", 0.1,1);
-groundGUI.add(groundGuiControls, "ratio_Path", 0.1,1);
-groundGUI.add(groundGuiControls, "ratio_Road", 0.1,1);
+var groundGuiControls = new function() {
+  this.ratio_Green = 0.25;
+  this.ratio_Path = 0.5;
+  this.ratio_Road = 0.25;
+  this.show_Green = true;
+  this.show_Path = true;
+  this.show_Road = true;
+  this.show_Only_Ground = false;
+}();
+var groundGUI = datgui.addFolder("groundGuiControls");
+groundGUI.add(groundGuiControls, "ratio_Green", 0.1, 1);
+groundGUI.add(groundGuiControls, "ratio_Path", 0.1, 1);
+groundGUI.add(groundGuiControls, "ratio_Road", 0.1, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
 groundGUI.add(groundGuiControls, "show_Only_Ground");
 
 //building gui controls
-var bldgGuiControls=new function(){
-  this.evacuation_density=0.05;
-  this.res_FSR=0.3;
-  this.comm_FSR=0.3;
-  this.office_FSR=0.3;
-  this.min_Ht=3;
-  this.mid_Ht=7;
-  this.max_Ht=20;
-  this.show_Evacuation=true;
-  this.show_Residences=true;
-  this.show_Commercial=true;
-  this.show_Office=true;
-}
-var buildingGUI=datgui.addFolder('bldgGuiControls');
-buildingGUI.add(bldgGuiControls, "evacuation_density", .001, 0.1);
-buildingGUI.add(bldgGuiControls, "res_FSR", 0.1,3);
-buildingGUI.add(bldgGuiControls, "comm_FSR", 0.1,3);
-buildingGUI.add(bldgGuiControls, "office_FSR", 0.1,3);
-buildingGUI.add(bldgGuiControls, "min_Ht",1,5);
-buildingGUI.add(bldgGuiControls, "mid_Ht",5,12);
-buildingGUI.add(bldgGuiControls, "max_Ht",12,25);
+var bldgGuiControls = new function() {
+  this.evacuation_density = 0.05;
+  this.res_FSR = 0.3;
+  this.comm_FSR = 0.3;
+  this.office_FSR = 0.3;
+  this.min_Ht = 3;
+  this.mid_Ht = 7;
+  this.max_Ht = 20;
+  this.show_Evacuation = true;
+  this.show_Residences = true;
+  this.show_Commercial = true;
+  this.show_Office = true;
+}();
+var buildingGUI = datgui.addFolder("bldgGuiControls");
+buildingGUI.add(bldgGuiControls, "evacuation_density", 0.001, 0.1);
+buildingGUI.add(bldgGuiControls, "res_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "comm_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "office_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "min_Ht", 1, 5);
+buildingGUI.add(bldgGuiControls, "mid_Ht", 5, 12);
+buildingGUI.add(bldgGuiControls, "max_Ht", 12, 25);
 buildingGUI.add(bldgGuiControls, "show_Evacuation");
 buildingGUI.add(bldgGuiControls, "show_Residences");
 buildingGUI.add(bldgGuiControls, "show_Commercial");
 buildingGUI.add(bldgGuiControls, "show_Office");
 
 // main functions about the generation
-var genGuiControls=new function(){
-  this.AUTOLOOP=false;
-  this.show_Information=false;  
-}
+var genGuiControls = new function() {
+  this.AUTOLOOP = false;
+  this.show_Information = false;
+}();
 datgui.add(genGuiControls, "show_Information");
 datgui.add(genGuiControls, "AUTOLOOP");
 
-var customContainer = document.getElementById('moveGUI');
+var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
 
 datgui.close();
@@ -93,14 +91,13 @@ datgui.close();
 //  END OF GUI
 //
 
-
 // generate the grids
 var genGrid = function() {
-  varCellNumLe=gridGuiControls.num_Length;
-  varCellNumDe=gridGuiControls.num_Depth;
-  varCellLe=gridGuiControls.cell_Length;
-  varCellDe=gridGuiControls.cell_Depth;
-  
+  varCellNumLe = gridGuiControls.num_Length;
+  varCellNumDe = gridGuiControls.num_Depth;
+  varCellLe = gridGuiControls.cell_Length;
+  varCellDe = gridGuiControls.cell_Depth;
+
   var axes = new THREE.AxesHelper(5);
   scene.add(axes);
   for (var i = 0; i < gridArr.length; i++) {
@@ -113,8 +110,8 @@ var genGrid = function() {
   gridArr = Array();
   var a = varCellLe;
   var c = varCellDe;
-  var numL=varCellNumLe;
-  var numH=varCellNumDe;
+  var numL = varCellNumLe;
+  var numH = varCellNumDe;
   for (var i = -numL; i < numL; i++) {
     for (var j = -numH; j < numH; j++) {
       var p = new THREE.Geometry();
@@ -139,109 +136,126 @@ var genGrid = function() {
       ptArr.push(nspt);
 
       var p0 = new nsPt(i * a, 0, j * c);
-      var p1 = new nsPt((i * a) + a, 0, j * c);
-      var p2 = new nsPt((i * a) + a, 0, (j * c) + c);
-      var p3 = new nsPt(i * a, 0, (j * c) + c);
+      var p1 = new nsPt(i * a + a, 0, j * c);
+      var p2 = new nsPt(i * a + a, 0, j * c + c);
+      var p3 = new nsPt(i * a, 0, j * c + c);
       cellQuadArr.push(new nsQuad(p0, p1, p2, p3));
     }
   }
   for (var i = 0; i < gridArr.length; i++) {
     scene.add(gridArr[i]);
   }
-  genNetwork();
+  initGenNetwork();
   genCubes();
   constructGroundTiles();
 };
 
 // generate NETWORK
-var genNetwork=function() {
-  varCellNumLe=gridGuiControls.num_Length;
-  varCellNumDe=gridGuiControls.num_Depth;
-  varCellLe=gridGuiControls.cell_Length;
-  varCellDe=gridGuiControls.cell_Depth;
-
-  for(var i=0; i<nodeArr.length; i++){
+function initGenNetwork() {
+  networkEdgesArr = Array();
+  for (var i = 0; i < cellQuadArr.length; i++) {
+    var quad = cellQuadArr[i];
+    var p = quad.p;
+    var q = quad.q;
+    var r = quad.r;
+    var s = quad.s;
+    var m = quad.mp();
+    var e0 = new nsNetworkEdge(p, q);
+    var e1 = new nsNetworkEdge(q, r);
+    var e2 = new nsNetworkEdge(r, s);
+    var e3 = new nsNetworkEdge(s, p);
+    var t0 = checkNetworkEdgeRepetition(e0);
+    var t1 = checkNetworkEdgeRepetition(e1);
+    var t2 = checkNetworkEdgeRepetition(e2);
+    var t3 = checkNetworkEdgeRepetition(e3);
+    if (t0 === false) {
+      networkEdgesArr.push(e0);
+    }
+    if (t1 === false) {
+      networkEdgesArr.push(e1);
+    }
+    if (t2 === false) {
+      networkEdgesArr.push(e2);
+    }
+    if (t3 === false) {
+      networkEdgesArr.push(e3);
+    }
+  }
+  updateNetworkNodes();
+  for (var i = 0; i < nodeArr.length; i++) {
+    scene.add(nodeArr[i]);
+  }
+  for (var i = 0; i < edgeArr.length; i++) {
+    scene.add(edgeArr[i]);
+  }
+}
+function updateNetworkNodes(){
+  for (var i = 0; i < nodeArr.length; i++) {
     nodeArr[i].geometry.dispose();
     nodeArr[i].material.dispose();
     scene.remove(nodeArr[i]);
   }
-
-  nodeArr=Array();
-  networkNodesArr = new Array();
-  var a = varCellLe;
-  var c = varCellDe;
-  var numL=varCellNumLe;
-  var numH=varCellNumDe;
-  for (var i = -numL; i < numL+1; i++) {
-    for (var j = -numH; j < numH+1; j++) {
-      var networkNode = new nsNetworkNode(i * a, 0, j * c);
-      networkNodesArr.push(networkNode);
+  for (var i = 0; i < edgeArr.length; i++) {
+    edgeArr[i].geometry.dispose();
+    edgeArr[i].material.dispose();
+    scene.remove(edgeArr[i]);
+  }
+  nodeArr = Array();
+  edgeArr=Array();
+  for(var i=0; i<networkEdgesArr.length; i++){
+    var e=networkEdgesArr[i];
+    var n0=e.getNode0();
+    var n1=e.getNode1();
+    var type="";
+    if(n0.getType()==="other"){
+      setNodeType(n0);
+      var mesh=n0.getObj();
+      nodeArr.push(mesh);
     }
-  }
-  for(var i=0; i<networkNodesArr.length; i++){
-    var node=networkNodesArr[i];
-    nodeArr.push(node.getObj());
-  }
-  for(var i=0; i<nodeArr.length; i++){
-    scene.add(nodeArr[i]);
+    if(n1.getType()==="other"){
+      setNodeType(n1);
+      var mesh=n1.getObj();
+      nodeArr.push(mesh);
+    }
+    edgeArr.push(e.getObj());
+  }  
+}
+function setNodeType(n0){
+  var t=Math.random();
+  if(t<0.3){
+    n0.setType("res");
+  }else if(t>0.3 && t<0.75){
+    n0.setType("comm");
+  }else{
+    n0.setType("office");
   }
 }
 
-//generate the cubes
-var genCubes = function() {
-  
-  for (var i = 0; i < evacArr.length; i++) {
-    evacArr[i].geometry.dispose();
-    evacArr[i].material.dispose();
-    scene.remove(evacArr[i]);
+function checkNetworkEdgeRepetition(e0) {
+  var sum = 0;
+  if (networkEdgesArr.length > 0) {
+    for (var i = 0; i < networkEdgesArr.length; i++) {
+      var a = networkEdgesArr[i].getP();
+      var b = networkEdgesArr[i].getQ();
+      var p = e0.getP();
+      var q = e0.getQ();
+      var T = 0.0001;
+      if (
+        (utilDi(p, a) < T && utilDi(q, b) < T) ||
+        (utilDi(p, b) < T && utilDi(q, a) < T)
+      ) {
+        sum++;
+      }
+    }
   }
-    
-  for (var i = 0; i < resCubeArr.length; i++) {
-    resCubeArr[i].geometry.dispose();
-    resCubeArr[i].material.dispose();
-    scene.remove(resCubeArr[i]);
+  if (sum === 0) {
+    return false;
+  } else {
+    return true;
   }
-    
-  for (var i = 0; i < commCubeArr.length; i++) {
-    commCubeArr[i].geometry.dispose();
-    commCubeArr[i].material.dispose();
-    scene.remove(commCubeArr[i]);
-  }
-    
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    officeCubeArr[i].geometry.dispose();
-    officeCubeArr[i].material.dispose();
-    scene.remove(officeCubeArr[i]);
-  }
-  
-  evacArr = Array();
-  resCubeArr=Array();
-  commCubeArr=Array();
-  officeCubeArr=Array();
-  
-  for (var i = 0; i < cellQuadArr.length; i++) {
-    var deci= new CubeDecisions();
-    var numLayers=deci.getNumLayers();
-    var type= deci.getType();    
-    var maxHt=deci.getMaxHt();
-    var quad=cellQuadArr[i];   
-    var MK=new makeBuildings(quad, numLayers, type, maxHt);MK.genBuilding();
-  }
-  for (var i = 0; i < resCubeArr.length; i++) {
-    scene.add(resCubeArr[i]);
-  }
-  for (var i = 0; i < commCubeArr.length; i++) {
-    scene.add(commCubeArr[i]);
-  }
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    scene.add(officeCubeArr[i]);
-  }
-  for (var i = 0; i < evacArr.length; i++) {
-    scene.add(evacArr[i]);
-  }  
-};
+}
 
-//generate the passage
+//generate the passage: returnNodeType
 var constructGroundTiles = function() {
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
@@ -278,10 +292,8 @@ var constructGroundTiles = function() {
     var b = quad.q;
     var c = quad.r;
     var d = quad.s;
-    
-    
-    
-    // a=NE,b=SE,c=SW,d=NW    
+
+    // a=NE,b=SE,c=SW,d=NW
     var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
     var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
     var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
@@ -313,55 +325,116 @@ var constructGroundTiles = function() {
     pathQuadArr.push(q6);
     pathQuadArr.push(q7);
   }
-  
+
   for (var i = 0; i < pathQuadArr.length; i++) {
+    var name = returnNodeType(nodeArr, pathQuadArr[i]);
     var t = Math.random();
-    var name;
-    if (t < 0.35) {
-      name = "road";
-    } else if(t>0.35 && t<0.75){
-      name = "path";
-    } else{
-      name = "green";
+    if (name === "" || name == "") {
+      if (t < 0.35) {
+        name = "road";
+      } else if (t > 0.35 && t < 0.75) {
+        name = "path";
+      } else {
+        name = "green";
+      }
     }
     var PA = new setPath(pathQuadArr[i], name);
     PA.generateGround();
   }
-    
+
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
+
   for (var i = 0; i < roadArr.length; i++) {
     scene.add(roadArr[i]);
   }
+
   for (var i = 0; i < greenArr.length; i++) {
     scene.add(greenArr[i]);
   }
+
   for (var i = 0; i < groundArr.length; i++) {
     scene.add(groundArr[i]);
   }
 };
 
+var returnNodeType = function(dupNodeArr, ele) {
+  var minD = 1000000;
+  var name = "";
+  for (var i = 0; i < dupNodeArr.length; i++) {
+    var node = dupNodeArr[i];
+    var x = node.x;
+    var y = node.y;
+    var z = node.z;
+    var p = new nsPt(x, y, z);
+    var q = ele.mp();
+    var D = utilDi(p, q);
+    if (D < minD) {
+      name = node.getType();
+    }
+  }
+  return name;
+};
 
-var debugSphere=function(p){
-  var geox = new THREE.SphereGeometry(.5,10,10);
-  var matx = new THREE.MeshBasicMaterial ({
-    color: new THREE.Color("rgb(102,153,255)"),
-    wireframe: wireframeVal});
-  var mesh = new THREE.Mesh(geox, matx);
-  mesh.position.x = p.x;
-  mesh.position.y = p.y;
-  mesh.position.z = p.z; 
-  scene.add(mesh);
-}
+//generate the cubes
+var genCubes = function() {
+  for (var i = 0; i < evacArr.length; i++) {
+    evacArr[i].geometry.dispose();
+    evacArr[i].material.dispose();
+    scene.remove(evacArr[i]);
+  }
 
-var debugQuad=function(p,q,r,s){
-  var geox = new THREE.Geometry();
-  geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
-  geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
-  geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
-  geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
-  var matx=new THREE.LineBasicMaterial( { color: 0x0000ff } );
-  var line = new THREE.Line( geox, matx);
-  scene.add(line);
+  for (var i = 0; i < resCubeArr.length; i++) {
+    resCubeArr[i].geometry.dispose();
+    resCubeArr[i].material.dispose();
+    scene.remove(resCubeArr[i]);
+  }
+
+  for (var i = 0; i < commCubeArr.length; i++) {
+    commCubeArr[i].geometry.dispose();
+    commCubeArr[i].material.dispose();
+    scene.remove(commCubeArr[i]);
+  }
+
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    officeCubeArr[i].geometry.dispose();
+    officeCubeArr[i].material.dispose();
+    scene.remove(officeCubeArr[i]);
+  }
+
+  evacArr = Array();
+  resCubeArr = Array();
+  commCubeArr = Array();
+  officeCubeArr = Array();
+
+  for (var i = 0; i < cellQuadArr.length; i++) {
+    var deci = new CubeDecisions();
+    var numLayers = deci.getNumLayers();
+    var type = deci.getType();
+    var maxHt = deci.getMaxHt();
+    var quad = cellQuadArr[i];
+    var MK = new makeBuildings(quad, numLayers, type, maxHt);
+    MK.genBuilding();
+  }
+  for (var i = 0; i < resCubeArr.length; i++) {
+    scene.add(resCubeArr[i]);
+  }
+  for (var i = 0; i < commCubeArr.length; i++) {
+    scene.add(commCubeArr[i]);
+  }
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    scene.add(officeCubeArr[i]);
+  }
+  for (var i = 0; i < evacArr.length; i++) {
+    scene.add(evacArr[i]);
+  }
+};
+
+function utilDi(a, b) {
+  return Math.sqrt(
+    (a.x - b.x) * (a.x - b.x) +
+      (a.y - b.y) * (a.y - b.y) +
+      (a.z - b.z) * (a.z - b.z)
+  );
 }

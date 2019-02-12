@@ -18,22 +18,12 @@ function nsNetworkNode(a,b,c){
     this.comm=0.25;
     this.office=0.25;
     this.neutral=0.25;
-    this.type="res";
-    if(this.res>this.comm && this.res>this.office){
-        this.type="res";
-    }else if(this.office>this.comm && this.office>this.res){
-        this.type="office";
-    }else if(this.comm>this.res && this.comm>this.office){
-        this.type="comm";
-    }else{
-        var t=Math.random();
-        if(t<0.33){
-            this.type="res";
-        }else if(t>0.3 && t<0.66){
-            this.type="comm"
-        }else{
-            this.type="office"
-        }
+    this.type="other";
+    this.setType=function(t){
+        this.type=t;
+    };
+    this.getType=function(){
+        return this.type;
     }
     this.geoNode=new THREE.SphereGeometry(0.25,32,32);
     this.matNode; 
@@ -51,11 +41,52 @@ function nsNetworkNode(a,b,c){
 function nsNetworkEdge(a,b){
     this.p=a;
     this.q=b;
+    this.getP=function(){return this.p;}
+    this.getQ=function(){return this.q;}
+    
+    this.node0=new nsNetworkNode(this.p.x,this.p.y,this.p.z);
+    this.node1=new nsNetworkNode(this.q.x,this.q.y,this.q.z);
+    
+    this.getNode0=function(){return this.node0; }
+    this.getNode1=function(){return this.node1; }
+    
     this.edgeWt=0;
+    
     this.setCost=function(c){
         this.edgeWt=c;
     }
+    
+    this.getObj=function(){
+        var path = new THREE.Geometry();
+        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.1, this.p.z ));
+        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.1, this.q.z ));
+        var material;
+        if(this.node0.getType()==="res" && this.node1.getType()==="res"){
+            material = getPathMaterialFromType("green");
+        }
+        else if((this.node0.getType()==="comm" && this.node1.getType()==="res") || (this.node0.getType()==="res" && this.node1.getType()==="comm")){ 
+            material = getPathMaterialFromType("green");
+        }
+        else if(this.node0.getType()==="comm" && this.node1.getType()==="comm"){ 
+            material = getPathMaterialFromType("path");
+        }
+        else if((this.node0.getType()==="comm" && this.node1.getType()==="office") || (this.node0.getType()==="office" && this.node1.getType()==="comm")){ 
+            material = getPathMaterialFromType("path");
+        }
+        else if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
+            material = getPathMaterialFromType("road");
+        }
+        else if((this.node0.getType()==="res" && this.node1.getType()==="office") || (this.node0.getType()==="office" && this.node1.getType()==="res")){ 
+            material = getPathMaterialFromType("path");
+        }
+        else{
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,255)")});
+        }
+        var line = new THREE.Line(path, material);
+        return line;
+    }    
 }
+
 
 function nsTile(a,b,c,d){
     this.p=a;
@@ -100,7 +131,7 @@ function nsDis(a,b){
     return norm;
 }
 
-function setPath(quad, name, arr){
+function setPath(quad, name){
     this.quad=quad;
     this.name=name;
     this.generateGround=function(){
@@ -118,15 +149,15 @@ function setPath(quad, name, arr){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(155,150,100)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(150,150,150)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(178,255,102)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if (name=="green"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,155,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }else{
@@ -135,6 +166,8 @@ function setPath(quad, name, arr){
         }
     }
 }
+
+
 
 
 // CUBE DECISIONS
@@ -278,15 +311,15 @@ function getBuildingMaterialFromType(type){
         wireframe:wireframeVal});;
     if(type=="res"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(102,153,255)"),
+        color: new THREE.Color("rgb(10,0,255)"),
         wireframe: wireframeVal});        
     }else if(type=="comm"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(178,102,102)"),
+        color: new THREE.Color("rgb(255,102,0)"),
         wireframe: wireframeVal});        
     }else if(type=="office"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(255,102,102)"),
+        color: new THREE.Color("rgb(255,0,50)"),
         wireframe:wireframeVal});
     }else{//evac
         this.mat = new THREE.MeshBasicMaterial ({
@@ -295,3 +328,44 @@ function getBuildingMaterialFromType(type){
     }
     return this.mat
 }
+
+
+
+function getPathMaterialFromType(name){
+    var mat;
+    if(name==="road"){
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
+    }else if (name==="path"){
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,255,0)")});
+    }else if (name=="green"){
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
+    }else{
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,255)")});
+    }
+    return mat;
+}
+
+
+var debugSphere=function(p){
+    var geox = new THREE.SphereGeometry(.5,10,10);
+    var matx = new THREE.MeshBasicMaterial ({
+      color: new THREE.Color("rgb(102,153,255)"),
+      wireframe: wireframeVal});
+    var mesh = new THREE.Mesh(geox, matx);
+    mesh.position.x = p.x;
+    mesh.position.y = p.y;
+    mesh.position.z = p.z; 
+    scene.add(mesh);
+  }
+  
+var debugQuad=function(p,q,r,s){
+    var geox = new THREE.Geometry();
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+    geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+    geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
+    geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
+    var matx=new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    var line = new THREE.Line( geox, matx);
+    scene.add(line);
+}
+
