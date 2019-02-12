@@ -100,6 +100,24 @@ datgui.close();
 //  END OF GUI
 //
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // generate the grids
 var genGrid = function() {
   varCellNumLe = gridGuiControls.num_Length;
@@ -274,8 +292,6 @@ function genNetworkGeometry(){
   }
 }
 
-
-
 //check if the network edge already exists in networkEdgesArr
 function checkNetworkEdgeRepetition(arr, e0) {
   var sum = 0;
@@ -335,73 +351,6 @@ function getNetworkNodes(e){
     }
   }
 }
-
-
-
-
-
-//generate the cubes
-var genCubes = function() {
-  for (var i = 0; i < evacArr.length; i++) {
-    evacArr[i].geometry.dispose();
-    evacArr[i].material.dispose();
-    scene.remove(evacArr[i]);
-  }
-
-  for (var i = 0; i < resCubeArr.length; i++) {
-    resCubeArr[i].geometry.dispose();
-    resCubeArr[i].material.dispose();
-    scene.remove(resCubeArr[i]);
-  }
-
-  for (var i = 0; i < commCubeArr.length; i++) {
-    commCubeArr[i].geometry.dispose();
-    commCubeArr[i].material.dispose();
-    scene.remove(commCubeArr[i]);
-  }
-
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    officeCubeArr[i].geometry.dispose();
-    officeCubeArr[i].material.dispose();
-    scene.remove(officeCubeArr[i]);
-  }
-
-  evacArr = Array();
-  resCubeArr = Array();
-  commCubeArr = Array();
-  officeCubeArr = Array();
-
-  for (var i = 0; i < cellQuadArr.length; i++) {
-    var deci = new CubeDecisions();
-    var numLayers = deci.getNumLayers();
-    var type = deci.getType();
-    var maxHt = deci.getMaxHt();
-    var quad = cellQuadArr[i];
-    var MK = new makeBuildings(quad, numLayers, type, maxHt);
-    MK.genBuilding();
-  }
-  for (var i = 0; i < resCubeArr.length; i++) {
-    scene.add(resCubeArr[i]);
-  }
-  for (var i = 0; i < commCubeArr.length; i++) {
-    scene.add(commCubeArr[i]);
-  }
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    scene.add(officeCubeArr[i]);
-  }
-  for (var i = 0; i < evacArr.length; i++) {
-    scene.add(evacArr[i]);
-  }
-};
-
-function utilDi(a, b) {
-  return Math.sqrt(
-    (a.x - b.x) * (a.x - b.x) +
-      (a.y - b.y) * (a.y - b.y) +
-      (a.z - b.z) * (a.z - b.z)
-  );
-}
-
 
 function findMinCost(){
   for (var i=0;i<networkEdgesArr.length; i++) {
@@ -472,6 +421,27 @@ function findMinCost(){
   tmpEdges=[];
   genNetworkGeometry();
 }
+
+function utilDi(a, b) {
+  return Math.sqrt(
+    (a.x - b.x) * (a.x - b.x) +
+      (a.y - b.y) * (a.y - b.y) +
+      (a.z - b.z) * (a.z - b.z)
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -598,5 +568,74 @@ var constructGroundTiles = function(doRandom) {
 
   for (var i = 0; i < groundArr.length; i++) {
     scene.add(groundArr[i]);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//generate the cubes
+var genCubes = function() {
+  for (var i = 0; i < evacArr.length; i++) {
+    evacArr[i].geometry.dispose();
+    evacArr[i].material.dispose();
+    scene.remove(evacArr[i]);
+  }
+
+  for (var i = 0; i < resCubeArr.length; i++) {
+    resCubeArr[i].geometry.dispose();
+    resCubeArr[i].material.dispose();
+    scene.remove(resCubeArr[i]);
+  }
+
+  for (var i = 0; i < commCubeArr.length; i++) {
+    commCubeArr[i].geometry.dispose();
+    commCubeArr[i].material.dispose();
+    scene.remove(commCubeArr[i]);
+  }
+
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    officeCubeArr[i].geometry.dispose();
+    officeCubeArr[i].material.dispose();
+    scene.remove(officeCubeArr[i]);
+  }
+
+  evacArr = Array();
+  resCubeArr = Array();
+  commCubeArr = Array();
+  officeCubeArr = Array();
+
+  for (var i = 0; i < cellQuadArr.length; i++) {
+    var deci = new CubeDecisions();
+    var numLayers = deci.getNumLayers();
+    var type = deci.getType();
+    var maxHt = deci.getMaxHt();
+    var quad = cellQuadArr[i];
+    var MK = new makeBuildings(quad, numLayers, type, maxHt);
+    MK.genBuilding();
+  }
+  for (var i = 0; i < resCubeArr.length; i++) {
+    scene.add(resCubeArr[i]);
+  }
+  for (var i = 0; i < commCubeArr.length; i++) {
+    scene.add(commCubeArr[i]);
+  }
+  for (var i = 0; i < officeCubeArr.length; i++) {
+    scene.add(officeCubeArr[i]);
+  }
+  for (var i = 0; i < evacArr.length; i++) {
+    scene.add(evacArr[i]);
   }
 };

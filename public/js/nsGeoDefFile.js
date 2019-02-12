@@ -103,18 +103,6 @@ function nsNetworkEdge(a,b){
         else{
             this.type="path";
         }
-        if(this.node0.getType()==="office" && this.node1.getType()==="res"){ 
-            this.node0.setType("res");
-            this.node1.setType("office");            
-        }
-        if(this.node0.getType()==="comm" && this.node1.getType()==="res"){
-            this.node0.setType("res");
-            this.node1.setType("comm");            
-        }
-        if(this.node0.getType()==="office" && this.node1.getType()==="comm"){
-            this.node0.setType("comm");
-            this.node1.setType("office");            
-        }
     }
     this.getObj=function(){
        // console.log(this.node0.getType() + ", "+ this.node1.getType());
