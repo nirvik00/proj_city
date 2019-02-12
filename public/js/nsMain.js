@@ -5,6 +5,13 @@ var camera, scene, renderer, control;
 var ITERATION = 1;var COUNTER = 0;
 var wireframeVal = false;
 
+var costResRes;
+var costResComm;
+var costCommComm;
+var costOfficeRes;
+var costOfficeComm;
+var costOfficeOffice;
+
 var networkNodesArr = [];
 var networkEdgesArr = [];
 var tempNetworkEdgesArr = Array();
@@ -46,15 +53,16 @@ var init = function() {
   controls.addEventListener("change", render);
   controls.enableZoom = true;
   genGrid();
+  constructGroundTiles(true);
 };
 
 document.addEventListener("keypress", function(event) {
   if (event.keyCode === 13) {
-    //enter key event
+    //ENTER key event
     console.log("optimize iteration: (ENTER)" + COUNTER);
     findMinCost();
     genCubes();
-    constructGroundTiles();
+    constructGroundTiles(false);
     
     var source = infoPara.innerHTML;
     source += "\noptimize: " + COUNTER;
@@ -62,11 +70,11 @@ document.addEventListener("keypress", function(event) {
     COUNTER++;
   }
   if (event.keyCode === 32) {
-    //enter key event
+    //SPACE key event
     console.log("new iteration: (SPACE) " + ITERATION);
     genGrid();
     genCubes();
-    constructRandomGroundTiles();
+    constructGroundTiles(true);
     
     var source = infoPara.innerHTML;
     source += "\nnew Iteration " +   ITERATION;
@@ -81,6 +89,13 @@ var mainLoop = function() {
   varCellNumDe = gridGuiControls.num_Depth;
   varCellLe = gridGuiControls.cell_Length;
   varCellDe = gridGuiControls.cell_Depth;
+
+  costResRes = groundGuiControls.cost_Res_Res;
+  costResComm = groundGuiControls.cost_Res_Comm;
+  costCommComm = groundGuiControls.cost_Comm_Comm;
+  costOfficeRes = groundGuiControls.cost_Office_Res;
+  costOfficeComm = groundGuiControls.cost_Office_Comm;
+  costOfficeOffice = groundGuiControls.cost_Office_Office;
 
   cellNumLe.onChange(function() {
     genGrid();

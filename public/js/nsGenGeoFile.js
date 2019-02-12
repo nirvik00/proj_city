@@ -336,109 +336,6 @@ function getNetworkNodes(e){
   }
 }
 
-//generate the passage: returnNodeType RANDOMLY
-var constructRandomGroundTiles = function() {
-  for (var i = 0; i < pathArr.length; i++) {
-    pathArr[i].geometry.dispose();
-    pathArr[i].material.dispose();
-    scene.remove(pathArr[i]);
-  }
-  for (var i = 0; i < roadArr.length; i++) {
-    roadArr[i].geometry.dispose();
-    roadArr[i].material.dispose();
-    scene.remove(roadArr[i]);
-  }
-  for (var i = 0; i < greenArr.length; i++) {
-    greenArr[i].geometry.dispose();
-    greenArr[i].material.dispose();
-    scene.remove(greenArr[i]);
-  }
-  for (var i = 0; i < groundArr.length; i++) {
-    groundArr[i].geometry.dispose();
-    groundArr[i].material.dispose();
-    scene.remove(groundArr[i]);
-  }
-  pathArr = Array();
-  roadArr = Array();
-  greenArr = Array();
-  groundArr = Array();
-  var pathQuadArr = Array();
-  var w = (varCellNumLe - 1) / 2;
-  var t = (varCellNumDe - 1) / 2;
-
-  for (var i = 0; i < cellQuadArr.length; i++) {
-    var quad = cellQuadArr[i];
-    var q = quad.mp();
-    var a = quad.p;
-    var b = quad.q;
-    var c = quad.r;
-    var d = quad.s;
-
-    // a=NE,b=SE,c=SW,d=NW
-    var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
-    var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
-    var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
-    var h = new nsPt(q.x - 0.5, 0, q.z + 0.5);
-    var I = new nsPt(e.x, 0, a.z);
-    var j = new nsPt(f.x, 0, b.z);
-    var k = new nsPt(b.x, 0, f.z);
-    var l = new nsPt(b.x, 0, g.z);
-    var m = new nsPt(g.x, 0, c.z);
-    var n = new nsPt(h.x, 0, d.z);
-    var o = new nsPt(d.x, 0, h.z);
-    var p = new nsPt(a.x, 0, e.z);
-
-    var q0 = new nsQuad(a, I, e, p);
-    var q1 = new nsQuad(I, j, f, e);
-    var q2 = new nsQuad(j, b, k, f);
-    var q3 = new nsQuad(f, k, l, g);
-    var q4 = new nsQuad(g, l, c, m);
-    var q5 = new nsQuad(h, g, m, n);
-    var q6 = new nsQuad(o, h, n, d);
-    var q7 = new nsQuad(p, e, h, o);
-
-    pathQuadArr.push(q0);
-    pathQuadArr.push(q1);
-    pathQuadArr.push(q2);
-    pathQuadArr.push(q3);
-    pathQuadArr.push(q4);
-    pathQuadArr.push(q5);
-    pathQuadArr.push(q6);
-    pathQuadArr.push(q7);
-  }
-
-  for (var i = 0; i < pathQuadArr.length; i++) {
-    var name="";
-    var t = Math.random();
-    if (name === "" || name == "") {
-      if (t < 0.35) {
-        name = "road";
-      } else if (t > 0.35 && t < 0.75) {
-        name = "path";
-      } else {
-        name = "green";
-      }
-    }
-    var PA = new setPath(pathQuadArr[i], name);
-    PA.generateGround();
-  }
-
-  for (var i = 0; i < pathArr.length; i++) {
-    scene.add(pathArr[i]);
-  }
-
-  for (var i = 0; i < roadArr.length; i++) {
-    scene.add(roadArr[i]);
-  }
-
-  for (var i = 0; i < greenArr.length; i++) {
-    scene.add(greenArr[i]);
-  }
-
-  for (var i = 0; i < groundArr.length; i++) {
-    scene.add(groundArr[i]);
-  }
-};
 
 
 
@@ -507,12 +404,6 @@ function utilDi(a, b) {
 
 
 function findMinCost(){
-  var costResRes = groundGuiControls.cost_Res_Res;
-  var costResComm = groundGuiControls.cost_Res_Comm;
-  var costCommComm = groundGuiControls.cost_Comm_Comm;
-  var costOfficeRes = groundGuiControls.cost_Office_Res;
-  var costOfficeComm = groundGuiControls.cost_Office_Comm;
-  var costOfficeOffice = groundGuiControls.cost_Office_Office;
   for (var i=0;i<networkEdgesArr.length; i++) {
     var e=networkEdgesArr[i]; e.updateCost(); e.updateType();
     console.log(e.cost + ", "+e.node0.getType() + ", "+e.node1.getType());
@@ -587,7 +478,7 @@ function findMinCost(){
 
 
 //generate the passage: returnNodeType 
-var constructGroundTiles = function() {
+var constructGroundTiles = function(doRandom) {
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
     pathArr[i].material.dispose();
@@ -657,23 +548,42 @@ var constructGroundTiles = function() {
     pathQuadArr.push(q7);
   }
 
-  for (var i = 0; i < pathQuadArr.length; i++) {
-    var p=pathQuadArr[i].mp();
-    var minD=1000000000;
-    var name="";
-    for (var j=0; j<networkEdgesArr.length; j++){
-      var q=networkEdgesArr[j].getMp();
-      var d=utilDi(p,q);
-      if(d<minD){
-        minD=d;
-        name=networkEdgesArr[j].getType();
+  if(doRandom==false){
+    for (var i = 0; i < pathQuadArr.length; i++) {
+      var p=pathQuadArr[i].mp();
+      var minD=1000000000;
+      var name="";
+      for (var j=0; j<networkEdgesArr.length; j++){
+        var q=networkEdgesArr[j].getMp();
+        var d=utilDi(p,q);
+        if(d<minD){
+          minD=d;
+          name=networkEdgesArr[j].getType();
+        }
       }
+      console.log(name);
+      var PA = new setPath(pathQuadArr[i], name);
+      PA.generateGround();
     }
-    console.log(name);
-    var PA = new setPath(pathQuadArr[i], name);
-    PA.generateGround();
+  }else{
+    for (var i = 0; i < pathQuadArr.length; i++) {
+      var name="";
+      var t = Math.random();
+      if (name === "" || name == "") {
+        if (t < 0.35) {
+          name = "road";
+        } else if (t > 0.35 && t < 0.75) {
+          name = "path";
+        } else {
+          name = "green";
+        }
+      }
+      var PA = new setPath(pathQuadArr[i], name);
+      PA.generateGround();
+    }
+  
   }
-
+  
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
