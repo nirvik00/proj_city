@@ -499,14 +499,14 @@ var constructGroundTiles = function(doRandom) {
     var o = new nsPt(d.x, 0, h.z);
     var p = new nsPt(a.x, 0, e.z);
 
-    var q0 = new nsQuad(a, I, e, p);
-    var q1 = new nsQuad(I, j, f, e);
-    var q2 = new nsQuad(j, b, k, f);
-    var q3 = new nsQuad(f, k, l, g);
-    var q4 = new nsQuad(g, l, c, m);
-    var q5 = new nsQuad(h, g, m, n);
-    var q6 = new nsQuad(o, h, n, d);
-    var q7 = new nsQuad(p, e, h, o);
+    var q0 = new nsQuad(a, I, e, p, i);
+    var q1 = new nsQuad(I, j, f, e, i);
+    var q2 = new nsQuad(j, b, k, f, i);
+    var q3 = new nsQuad(f, k, l, g, i);
+    var q4 = new nsQuad(g, l, c, m, i);
+    var q5 = new nsQuad(h, g, m, n, i);
+    var q6 = new nsQuad(o, h, n, d, i);
+    var q7 = new nsQuad(p, e, h, o, i);
 
     pathQuadArr.push(q0);
     pathQuadArr.push(q1);
@@ -587,7 +587,7 @@ var constructGroundTiles = function(doRandom) {
 
 
 //generate the cubes
-var genCubes = function() {
+var genCubes = function(doRandom) {
   for (var i = 0; i < evacArr.length; i++) {
     evacArr[i].geometry.dispose();
     evacArr[i].material.dispose();
@@ -618,7 +618,13 @@ var genCubes = function() {
   officeCubeArr = Array();
 
   for (var i = 0; i < cellQuadArr.length; i++) {
-    var deci = new CubeDecisions();
+    var deci;
+    if(doRandom==false){
+      deci = new CubeDecisions();
+    }else{
+      deci = new CubeRandomDecisions();
+    }
+    
     var numLayers = deci.getNumLayers();
     var type = deci.getType();
     var maxHt = deci.getMaxHt();

@@ -126,11 +126,12 @@ function nsTile(a,b,c,d){
     this.neutral=0.25;   
 }
 
-function nsQuad(a,b,c,d){
+function nsQuad(a,b,c,d,i){
     this.p=a;
     this.q=b;
     this.r=c;
     this.s=d;
+    this.cellId=i;
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
@@ -201,7 +202,7 @@ function setPath(quad, name){
 // three types of buildings: res, comm, office
 // max heights: 3, 7, 20
 
-function CubeDecisions(){
+function CubeRandomDecisions(){
     var T=Math.random();
     this.numLayers;
     this.types=Array();
@@ -288,6 +289,94 @@ function CubeDecisions(){
     } 
 }
 
+
+
+function CubeRandomDecisions(){
+    var T=Math.random();
+    this.numLayers;
+    this.types=Array();
+    this.maxHt;
+    
+    this.getNumLayers=function(){
+        if(T<0.35){
+            this.numLayers=3;
+        }
+        else if(T>0.35 && T<0.7){
+            this.numLayers=2;
+        }else{
+            this.numLayers=1;
+        }
+        return this.numLayers;
+    }
+    
+    this.getMaxHt=function(){
+        var n=Math.random();
+        if(n<0.35){
+          this.maxHt=3;
+        }else if(n>0.35 && n<0.7){
+          this.maxHt=7;
+        }else{
+          this.maxHt=20;
+        }
+        return this.maxHt;
+    }
+    
+    this.getType=function(){
+        var t=this.numLayers;
+        if(t==3){
+            var m=Math.random();
+            if(m<0.16){
+                this.types.push("res");      
+                this.types.push("comm");
+                this.types.push("office");
+            }else if(m>0.16 && m<0.32){
+                this.types.push("res");
+                this.types.push("office");
+                this.types.push("comm");      
+            }else if(m>0.32 && m<0.48){
+                this.types.push("comm");
+                this.types.push("office");
+                this.types.push("res");      
+            }else if(m>0.48 && m<0.60){
+                this.types.push("comm");
+                this.types.push("res"); 
+                this.types.push("office");
+            }else if(m>0.60 && m<0.72){
+                this.types.push("office");
+                this.types.push("comm");
+                this.types.push("res"); 
+            }else{
+                this.types.push("office");
+                this.types.push("res"); 
+                this.types.push("comm");
+            }
+        }else if(t==2){
+            var m=Math.random();
+            if(m<0.35){
+                this.types.push("res");      
+                this.types.push("comm");
+            }else if(m>0.35 && m<0.7){
+                this.types.push("comm");      
+                this.types.push("res");
+            }else{
+                this.types.push("office");      
+                this.types.push("comm");
+            }
+        }else{
+            var m=Math.random();
+            if(m<0.35){
+                this.types.push("res");      
+            }else if(m>0.35 && m<0.7){
+                this.types.push("comm");      
+            }else if(m>0.35 && m<0.9){
+                this.types.push("office");      
+            }else{
+                this.types.push("evac");      
+            }
+        }
+        return this.types;
+    } 
+}
 // make the cube from properties
 function makeBuildings(quad, numlyr, types, maxht){
     this.quad=quad;
