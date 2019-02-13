@@ -8,8 +8,8 @@ var datgui = new dat.GUI({ autoPlace: false });
 
 //cell-grid gui controls
 var gridGuiControls = new function() {
-  this.num_Length = 2;
-  this.num_Depth = 2;
+  this.num_Length = 1;
+  this.num_Depth = 1;
   this.cell_Length = 3;
   this.cell_Depth = 3;
   this.show_Grid = false;
@@ -20,7 +20,6 @@ var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
 var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
 var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
 cellGUI.add(gridGuiControls, "show_Grid");
-
 
 varCellNumLe = gridGuiControls.num_Length;
 varCellNumDe = gridGuiControls.num_denpth;
@@ -49,7 +48,6 @@ groundGUI.add(groundGuiControls, "cost_Office_Office", 0.1, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
-
 
 //building gui controls
 var bldgGuiControls = new function() {
@@ -99,24 +97,6 @@ datgui.close();
 //
 //  END OF GUI
 //
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // generate the grids
 var genGrid = function() {
@@ -182,7 +162,7 @@ var genGrid = function() {
 //construct networkEdgesArr
 function initNetwork() {
   networkEdgesArr = [];
-  networkNodesArr=[];
+  networkNodesArr = [];
   for (var i = 0; i < cellQuadArr.length; i++) {
     var quad = cellQuadArr[i];
     var p = quad.p;
@@ -211,48 +191,57 @@ function initNetwork() {
       networkEdgesArr.push(e3);
     }
   }
-  
+
   //construct networkNodesArr
-  networkNodesArr=Array();
-  for(var i=0; i<networkEdgesArr.length; i++){
+  networkNodesArr = Array();
+  for (var i = 0; i < networkEdgesArr.length; i++) {
     getNetworkNodes(networkEdgesArr[i]);
   }
 
   // set type of node array
-  for(var i=0; i<networkNodesArr.length; i++){
+  for (var i = 0; i < networkNodesArr.length; i++) {
     networkNodesArr[i].setType();
   }
 
   //set this node to networkEdges
-  for(var i=0; i<networkEdgesArr.length; i++){
-    var e=networkEdgesArr[i];
-    var n0=e.getNode0(); var p=n0.getPt();
-    var n1=e.getNode1(); var q=n1.getPt();
-    for(var j=0; j<networkNodesArr.length; j++){
-      var n2=networkNodesArr[j]; var r=n2.getPt();
-      var d02=utilDi(p,r);
-      if(d02<0.001){
+  var nodeCounter=0;
+  for (var i = 0; i < networkEdgesArr.length; i++) {
+    var e = networkEdgesArr[i];
+    var n0 = e.getNode0();
+    var p = n0.getPt();
+    var n1 = e.getNode1();
+    var q = n1.getPt();
+    for (var j = 0; j < networkNodesArr.length; j++) {
+      var n2 = networkNodesArr[j];
+      var r = n2.getPt();
+      var d02 = utilDi(p, r);
+      if (d02 < 0.001) {
+        networkNodesArr[j].id=nodeCounter;
         networkEdgesArr[i].setNode0(networkNodesArr[j]);
+        nodeCounter++;
         break;
       }
     }
-    for(var j=0; j<networkNodesArr.length; j++){
-      var n2=networkNodesArr[j]; var r=n2.getPt();
-      var d01=utilDi(q,r);
-      if(d01<0.001){
+    for (var j = 0; j < networkNodesArr.length; j++) {
+      var n2 = networkNodesArr[j];
+      var r = n2.getPt();
+      var d01 = utilDi(q, r);
+      networkNodesArr[j].id=nodeCounter;
+      if (d01 < 0.001) {
         networkEdgesArr[i].setNode1(networkNodesArr[j]);
+        nodeCounter++;
         break;
       }
     }
   }
 
- //update type of networkedges
-  for(var i=0; i<networkEdgesArr.length; i++){
+  //update type of networkedges
+  for (var i = 0; i < networkEdgesArr.length; i++) {
     networkEdgesArr[i].updateType();
   }
 
   //update cost of network edges
-  for(var i=0; i<networkEdgesArr.length; i++){
+  for (var i = 0; i < networkEdgesArr.length; i++) {
     networkEdgesArr[i].updateCost();
   }
 
@@ -262,7 +251,7 @@ function initNetwork() {
 
 //for network: nodes and edges
 //set property of nodes to res, comm, off
-function genNetworkGeometry(){
+function genNetworkGeometry() {
   for (var i = 0; i < nodeArr.length; i++) {
     nodeArr[i].geometry.dispose();
     nodeArr[i].material.dispose();
@@ -273,21 +262,21 @@ function genNetworkGeometry(){
     edgeArr[i].material.dispose();
     scene.remove(edgeArr[i]);
   }
-  edgeArr=Array();
-  for(var i=0; i<networkEdgesArr.length; i++){
-    var e=networkEdgesArr[i];
+  edgeArr = Array();
+  for (var i = 0; i < networkEdgesArr.length; i++) {
+    var e = networkEdgesArr[i];
     edgeArr.push(e.getObj());
   }
-  for(var i=0; i<edgeArr.length; i++){  
-    scene.add(edgeArr[i]); 
+  for (var i = 0; i < edgeArr.length; i++) {
+    scene.add(edgeArr[i]);
   }
 
   nodeArr = Array();
-  for(var i=0; i<networkNodesArr.length; i++){
-    var n0=networkNodesArr[i];
+  for (var i = 0; i < networkNodesArr.length; i++) {
+    var n0 = networkNodesArr[i];
     nodeArr.push(n0.getObj());
   }
-  for(var i=0; i<nodeArr.length; i++){
+  for (var i = 0; i < nodeArr.length; i++) {
     scene.add(nodeArr[i]);
   }
 }
@@ -318,109 +307,65 @@ function checkNetworkEdgeRepetition(arr, e0) {
 }
 
 // network node creation from edge - repetition
-function getNetworkNodes(e){
-  
-  var sum0=0;
-  var sum1=0;
-  var n0=e.getNode0();
-  var n1=e.getNode1();
+function getNetworkNodes(e) {
+  var sum0 = 0;
+  var sum1 = 0;
+  var n0 = e.getNode0();
+  var n1 = e.getNode1();
 
-  var p=n0.getPt();
-  var q=n1.getPt();
-  
-  if(networkEdgesArr.length>0){
-    for(var i=0; i<networkNodesArr.length; i++){
-      var n2=networkNodesArr[i].getPt();
-      if(utilDi(n0,n2) < 0.01){
+  var p = n0.getPt();
+  var q = n1.getPt();
+
+  var nodeCounter = 0;
+
+  if (networkEdgesArr.length > 0) {
+    for (var i = 0; i < networkNodesArr.length; i++) {
+      var n2 = networkNodesArr[i].getPt();
+      if (utilDi(n0, n2) < 0.01) {
         sum0++;
         break;
       }
     }
-    if(sum0==0){
+    if (sum0 == 0) {
       networkNodesArr.push(n0);
     }
-    for(var i=0; i<networkNodesArr.length; i++){
-      var n2=networkNodesArr[i].getPt();
-      if(utilDi(n1,n2) < 0.01){
+    for (var i = 0; i < networkNodesArr.length; i++) {
+      var n2 = networkNodesArr[i].getPt();
+      if (utilDi(n1, n2) < 0.01) {
         sum1++;
         break;
       }
     }
-    if(sum1==0){
+    if (sum1 == 0) {
       networkNodesArr.push(n1);
     }
   }
 }
 
-function findMinCost(){
-  for (var i=0;i<networkEdgesArr.length; i++) {
-    var e=networkEdgesArr[i]; e.updateCost(); e.updateType();
-    console.log(e.cost + ", "+e.node0.getType() + ", "+e.node1.getType());
-  }
-  //sort all edges by weight
-  var sortedNetworkEdges=new Array();
-  var sortable =new Array();
-  for (var i=0;i<networkEdgesArr.length; i++) {
-      sortable.push([networkEdgesArr[i], networkEdgesArr[i].cost]);
-  }
-  sortable.sort(function(a, b) {
-      return a[1] - b[1];
-  });
-  networkEdgesArr=Array();
-  for (var i=0;i<sortable.length; i++) {
-    networkEdgesArr.push(sortable[i][0]);
-  }
-  sortable=[];
-  // end of sorting
 
 
-  //get all nodes of res type
-  var reqResNodes=[];
-  for(var i=0; i<networkNodesArr.length; i++){
-    if(networkNodesArr[i].getType()==="res") reqResNodes.push(networkNodesArr[i]);
-  }
-  console.log("length of initial array : " + reqResNodes.length);
 
-  
-  //get all nodes of res type
-  var tmpEdges=[];
-  for(var i=0; i<networkEdgesArr.length; i++){
-    var e=networkEdgesArr[i]; var n0=e.getNode0().getPt(); var n1=e.getNode1().getPt();    
-    var t=checkNetworkEdgeRepetition(tmpEdges, e);
-    if(t==false) {      
-      tmpEdges.push(e);
-    }
-    //remove nodes which have been found
-    //if length of remaininig nodes are > 1
-    if(reqResNodes.length>0){
-      //console.log("length of array : " + reqResNodes.length);
-      for(var j=0; j<reqResNodes.length; j++){
-        var n2=reqResNodes[j].getPt();
-        if(utilDi(n2,n0) < 0.01){
-          reqResNodes.splice(j,1);
-          break;
-        }
-        if(utilDi(n2,n1) < 0.01){
-          reqResNodes.splice(j,1);
-          break;
-        }
-      }
-    }else{
-      break;
-    }    
-  }
-  reqResNodes=[];
-  for(var i=0; i<tmpEdges.length; i++){
-    var f=tmpEdges[i]; var n0=f.getNode0().getPt(); var n1=f.getNode1().getPt();    
-    for(var j=0; j<networkEdgesArr.length; j++){
-      var e=networkEdgesArr[j]; var n2=e.getNode0().getPt(); var n3=e.getNode1().getPt();   if(utilDi(n0,n2)<0.01 && utilDi(n1,n3)<0.01){
-        networkEdgesArr[j].setType("green");
-      }
-    }      
-  }
-  tmpEdges=[];
-  genNetworkGeometry();
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function utilDi(a, b) {
   return Math.sqrt(
@@ -447,7 +392,11 @@ function utilDi(a, b) {
 
 
 
-//generate the passage: returnNodeType 
+
+
+
+
+//generate the passage: returnNodeType
 var constructGroundTiles = function(doRandom) {
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
@@ -518,26 +467,25 @@ var constructGroundTiles = function(doRandom) {
     pathQuadArr.push(q7);
   }
 
-  if(doRandom==false){
+  if (doRandom == false) {
     for (var i = 0; i < pathQuadArr.length; i++) {
-      var p=pathQuadArr[i].mp();
-      var minD=1000000000;
-      var name="";
-      for (var j=0; j<networkEdgesArr.length; j++){
-        var q=networkEdgesArr[j].getMp();
-        var d=utilDi(p,q);
-        if(d<minD){
-          minD=d;
-          name=networkEdgesArr[j].getType();
+      var p = pathQuadArr[i].mp();
+      var minD = 1000000000;
+      var name = "";
+      for (var j = 0; j < networkEdgesArr.length; j++) {
+        var q = networkEdgesArr[j].getMp();
+        var d = utilDi(p, q);
+        if (d < minD) {
+          minD = d;
+          name = networkEdgesArr[j].getType();
         }
       }
-      console.log(name);
       var PA = new setPath(pathQuadArr[i], name);
       PA.generateGround();
     }
-  }else{
+  } else {
     for (var i = 0; i < pathQuadArr.length; i++) {
-      var name="";
+      var name = "";
       var t = Math.random();
       if (name === "" || name == "") {
         if (t < 0.35) {
@@ -551,9 +499,8 @@ var constructGroundTiles = function(doRandom) {
       var PA = new setPath(pathQuadArr[i], name);
       PA.generateGround();
     }
-  
   }
-  
+
   for (var i = 0; i < pathArr.length; i++) {
     scene.add(pathArr[i]);
   }
@@ -570,21 +517,6 @@ var constructGroundTiles = function(doRandom) {
     scene.add(groundArr[i]);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //generate the cubes
 var genCubes = function(doRandom) {
@@ -619,12 +551,12 @@ var genCubes = function(doRandom) {
 
   for (var i = 0; i < cellQuadArr.length; i++) {
     var deci;
-    if(doRandom==false){
+    if (doRandom == false) {
       deci = new CubeDecisions();
-    }else{
+    } else {
       deci = new CubeRandomDecisions();
     }
-    
+
     var numLayers = deci.getNumLayers();
     var type = deci.getType();
     var maxHt = deci.getMaxHt();
@@ -645,3 +577,42 @@ var genCubes = function(doRandom) {
     scene.add(evacArr[i]);
   }
 };
+
+function cellQuadsAlignment() {
+  var resGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.res_FSR;
+  var commGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.comm_FSR;
+  var officeGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.office_FSR;
+  console.log(resGfa + ", " + commGfa + ", " + officeGfa);
+  var resCellsArr = [];
+  var commCellsArr = [];
+  var officeCellsArr = [];
+  for (var i = 0; i < cellQuadArr.length; i++) {
+    var p = cellQuadArr[i].mp();
+    var commRat = 0;
+    var resRat = 0;
+    var officeRat = 0;
+    for (var j = 0; j < networkNodesArr.length; j++) {
+      var q = networkNodesArr[j].getPt();
+      var d = utilDi(p, q);
+      if (d < 1.5 * Math.sqrt(varCellLe * varCellLe + varCellDe * varCellDe)) {
+        var t = networkNodesArr[j].getType();
+        if (t === "office") {
+          officeRat++;
+          officeCellsArr.push(cellQuadArr[i]);
+        } else if (t === "res") {
+          resRat++;
+          resCellsArr.push(cellQuadArr[i]);
+        } else if (t === "comm") {
+          commRat++;
+          commCellsArr.push(cellQuadArr[i]);
+        }
+      }
+    }
+    cellQuadArr[i].resRat = resRat;
+    cellQuadArr[i].commRat = commRat;
+    cellQuadArr[i].officeRat = officeRat;
+    var resDistributedFSR = resGfa / resCellsArr.length;
+    var commDistributedFSR = commGfa / commCellsArr.length;
+    var officeDistributedFSR = officeGfa / officeCellsArr.length;
+  }
+}

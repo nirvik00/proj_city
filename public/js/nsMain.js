@@ -63,6 +63,7 @@ document.addEventListener("keypress", function(event) {
     findMinCost();
     genCubes();
     constructGroundTiles(false);
+    cellQuadsAlignment();
     
     var source = infoPara.innerHTML;
     source += "\noptimize: " + COUNTER;

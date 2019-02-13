@@ -10,11 +10,15 @@ function nsEdge(a,b){
     this.q=b;
 }
 
-function nsNetworkNode(a,b,c){
+function nsNetworkNode(a,b,c, nodeId){
     this.x=a;
     this.y=b;
     this.z=c;
     this.type="other";
+    this.id=nodeId;
+    this.parent=null;
+    this.dist=100;
+
     this.getPt=function(){
         return new nsPt(this.x, this.y, this.z);
     }
@@ -60,7 +64,9 @@ function nsNetworkEdge(a,b){
     this.getNode0=function(){return this.node0; }
     this.getNode1=function(){return this.node1; }
     
-    this.edgeWt=0;
+    this.visited=0;
+
+
     this.cost=0;   
     this.updateCost=function(){      
         if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
@@ -132,6 +138,11 @@ function nsQuad(a,b,c,d,i){
     this.r=c;
     this.s=d;
     this.cellId=i;
+    
+    this.resRat=0.25;
+    this.commRat=0.25;
+    this.offRat=0.25;
+
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
@@ -291,7 +302,7 @@ function CubeRandomDecisions(){
 
 
 
-function CubeRandomDecisions(){
+function CubeDecisions(){
     var T=Math.random();
     this.numLayers;
     this.types=Array();
@@ -377,7 +388,8 @@ function CubeRandomDecisions(){
         return this.types;
     } 
 }
-// make the cube from properties
+
+// make the cube from properties - RANDOM
 function makeBuildings(quad, numlyr, types, maxht){
     this.quad=quad;
     this.numLayers=numlyr;
@@ -419,6 +431,9 @@ function makeBuildings(quad, numlyr, types, maxht){
         }
     }
 }
+
+
+
 
 function getBuildingMaterialFromType(type){
     this.mat=this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
@@ -478,4 +493,6 @@ var debugQuad=function(p,q,r,s){
     var line = new THREE.Line( geox, matx);
     scene.add(line);
 }
+
+
 
