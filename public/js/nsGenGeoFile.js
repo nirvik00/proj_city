@@ -173,9 +173,7 @@ function utilDi(a, b) {
 }
 
 
-
-//generate the passage: returnNodeType
-var constructGroundTiles = function(doRandom) {
+var clrGround=function(){
   for (var i = 0; i < pathArr.length; i++) {
     pathArr[i].geometry.dispose();
     pathArr[i].material.dispose();
@@ -212,6 +210,12 @@ var constructGroundTiles = function(doRandom) {
   greenArr = Array();
   groundArr = Array();
   circulationQuadArr = [];
+}
+
+
+//generate the passage: returnNodeType
+var constructGroundTiles = function(doRandom) {
+  clrGround();
 
   var pathQuadArr = Array();
   var w = (varCellNumLe - 1) / 2;
@@ -391,8 +395,9 @@ var genCirculationCorner=function(offset){
   }
 }
 
-//generate the cubes
-var genCubes = function(doRandom) {
+
+
+var clrBuildings=function(){
   for (var i = 0; i < evacArr.length; i++) {
     evacArr[i].geometry.dispose();
     evacArr[i].material.dispose();
@@ -421,7 +426,10 @@ var genCubes = function(doRandom) {
   resCubeArr = Array();
   commCubeArr = Array();
   officeCubeArr = Array();
-
+}
+//generate the cubes
+var genCubes = function(doRandom) {
+  clrBuildings();
   for (var i = 0; i < cellQuadArr.length; i++) {
     var deci;
     if (doRandom == false) {

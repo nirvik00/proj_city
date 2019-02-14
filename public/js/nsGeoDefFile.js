@@ -203,11 +203,11 @@ function setPath(quad, name){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(150,150,150)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,150,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if(name==="green"){
