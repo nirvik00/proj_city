@@ -77,12 +77,12 @@ function initNetwork() {
      
        //update type of networkedges
        for (var i = 0; i < networkEdgesArr.length; i++) {
-         networkEdgesArr[i].updateType();
+         //networkEdgesArr[i].updateType();
        }
      
        //update cost of network edges
        for (var i = 0; i < networkEdgesArr.length; i++) {
-         networkEdgesArr[i].updateCost();
+         //networkEdgesArr[i].updateCost();
        }
      
        //next function

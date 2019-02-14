@@ -7,11 +7,10 @@
 
 
 // util function: initiate edge weights - green network
-function initGreenEdges(){
+function initEdgeCost(inv){
        for (var i = 0; i < networkEdgesArr.length; i++) {
               var e = networkEdgesArr[i];
-              e.updateCost();
-              e.updateType();
+              e.updateCost(inv);
        }
        
        for(var i=0; i<networkNodesArr.length; i++){
@@ -33,14 +32,14 @@ function initGreenEdges(){
        sortable = [];// end of sorting
 }
 
-
 // util function : make sure nodes in array are correct - getPt()
 function getNodeHeap(){
        var nodeHeap=[];
        for (var i = 0; i < networkNodesArr.length; i++) {
               try{
-              var p=networkNodesArr[i].getPt()
-              nodeHeap.push(networkNodesArr[i]);
+                     var p=networkNodesArr[i].getPt()
+                     networkNodesArr[i].parent=null;
+                     nodeHeap.push(networkNodesArr[i]);
               }catch(err){
               }          
          }
@@ -57,7 +56,11 @@ function setEdgeToType(tmpArr, type){
                      var r=networkEdgesArr[j].getNode0().getPt();
                      var s=networkEdgesArr[j].getNode1().getPt();
                      if(utilDi(p,r)<0.1 && utilDi(q,s)<0.1){
-                            networkEdgesArr[j].setType(type);
+                            if(networkEdgesArr[j].getType() === "green" && type==="road"){
+                                   networkEdgesArr[j].setType("intx");
+                            }else{
+                                   networkEdgesArr[j].setType(type);
+                            }
                             break;
                      }
                      if(utilDi(p,s)<0.1 && utilDi(q,r)<0.1){
@@ -103,10 +106,6 @@ function getPath(source, sink, nodes, edges, tmpArr){
        }
        return tmpArr;
 }
-
-
-
-
 
 
 // step 1 of spt : get neighbours and update distance from source
@@ -170,25 +169,26 @@ function extractMinHeap(neighbours,nodeHeap){
 
 
 // MAIN DRIVER FOR SPT  shortest path algorithm - epsilon greedy
-function findMinCost() {
-       initGreenEdges();              //sort all edges by weight- for convenience
+function findMinCost(typeNode, typeEdge) {
+       //sort all edges by weight- for convenience
+       var invertCost=true;
+       if(typeNode==="res" && typeEdge==="green"){  invertCost=false;}
+       initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
+       
        var nodeHeap = getNodeHeap();      //get all valis nodes - point
-       var source;                 //get source node: first res in node heap
+       var source;                         //get ource node: first res in node heap
        for(var i=0; i<nodeHeap.length; i++){
-              if(nodeHeap[i].getType()=="res"){
+              if(nodeHeap[i].getType()==typeNode){
                      source=nodeHeap[i];
                      break;
               }
        }
-
        source.dist=0;                     //initialize alg with source dist=0
        source.parent=null;                //source parent is null
        nodeHeap.splice(0,1);              //remove source from nodeheap
        var resultNodeHeap=[];             //init result nodeheap - to store nodes
        resultNodeHeap.push(source);       //first element is the source
 
-       //console.log("\n\n\ninit to start spt : ");
-       //console.log(source);
 
        //djikstra algorithm to find min dist of all nodes from source 
        //recursive algorithm:
@@ -224,36 +224,37 @@ function findMinCost() {
        //console.log(resultNodeHeap);
        
        
-       //get all nodes of "res" type
+       //get all nodes of typeNode ie "res", "comm", "office" node-type
        //each res type will be a sink; make an array of sinks
        //the required spine will be a summation of all the paths to source
        var reqResNodes=[];
        for (var i = 0; i < networkNodesArr.length; i++) {
-              if(networkNodesArr[i].getType()==="res"){
+              if(networkNodesArr[i].getType()===typeNode){
                      try{
                             var p=networkNodesArr[i].getPt()
                             reqResNodes.push(networkNodesArr[i]);
                      }catch(err){
                             //error in getPT();
-                     }   
+                     }
               }
        }
 
-       //once again find the source
+
+       //once again find the source - typeNode
        //this is the node with min dist
        var source;
        var minDi=10000000;
        var req;
        for(var i=0; i<reqResNodes.length; i++){
               var node=reqResNodes[i];
-              if(node.dist<minDi && node.getType()=="res"){
+              if(node.dist<minDi && node.getType()==typeNode){
                      minDi=node.dist;
                      source=node;
               }
        }
 
        //get all paths from each element of the sink array
-       //set each edge to green
+       //set each edge to typeEdge:green , road, path
        //getPath is recursive function:
        //1.start with the sink
        //2.find parent and add to array
@@ -263,9 +264,9 @@ function findMinCost() {
               var sink=reqResNodes[i];
               var tmpArr=[];
               tmpArr=getPath(source, sink, resultNodeHeap, networkEdgesArr, tmpArr);
-              setEdgeToType(tmpArr,"green");
+              setEdgeToType(tmpArr, typeEdge);
        }
 
-       //finally set the edges to green
+       //finally render the geometry
        genNetworkGeometry();
 }

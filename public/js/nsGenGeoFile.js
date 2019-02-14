@@ -357,7 +357,7 @@ function cellQuadsAlignment() {
   var resGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.res_FSR;
   var commGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.comm_FSR;
   var officeGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.office_FSR;
-  console.log(resGfa + ", " + commGfa + ", " + officeGfa);
+  //console.log(resGfa + ", " + commGfa + ", " + officeGfa);
   var resCellsArr = [];
   var commCellsArr = [];
   var officeCellsArr = [];

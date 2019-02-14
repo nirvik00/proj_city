@@ -60,7 +60,9 @@ document.addEventListener("keypress", function(event) {
   if (event.keyCode === 13) {
     //ENTER key event
     console.log("optimize iteration: (ENTER)" + COUNTER);
-    findMinCost();
+    //typeNode, typeEdge
+    findMinCost("res", "green");
+    findMinCost("office", "road");
     genCubes();
     constructGroundTiles(false);
     cellQuadsAlignment();

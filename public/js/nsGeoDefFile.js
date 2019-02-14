@@ -68,31 +68,42 @@ function nsNetworkEdge(a,b){
 
 
     this.cost=0;   
-    this.updateCost=function(){      
+    this.updateCost=function(inv){      //inverse of same also - boolean var
         if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
-            this.cost=costOfficeOffice;
+            if(inv===false){ this.cost=costOfficeOffice; }
+            else{this.cost=1/costOfficeOffice;}
+            
         }
         else if(this.node0.getType()==="res" && this.node1.getType()==="res"){
-            this.cost=costResRes;
+            if(inv===false){ this.cost=costResRes; }
+            else{ this.cost=1/costResRes; }
+            
         }
         else if(this.node0.getType()==="comm" && this.node1.getType()==="comm"){
-            this.cost=costCommComm;
+            if(inv===false) { this.cost=costCommComm; } 
+            else{ this.cost=1/costCommComm; }
         }
         else if((this.node0.getType()==="res" && this.node1.getType()==="comm")||(this.node0.getType()==="comm" && this.node1.getType()==="res")){
-            this.cost=costResComm;
+            if(inv ===false) { this.cost=costResComm; }
+            else{ this.cost=1/costResComm; }
+            
         }
         else if((this.node0.getType()==="res" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="res")){
-            this.cost=costOfficeRes;
+            if(inv === false ){ this.cost=costOfficeRes; }
+            else{ this.cost=1/costOfficeRes; }
+            
         }
         else if((this.node0.getType()==="comm" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="comm")){
-            this.cost=costOfficeComm;
+            if(inv===false ) { this.cost=costOfficeComm; }
+            else{ this.cost=1/costOfficeComm; }
         }
         else{
             this.cost=0.0;
         }
     }
+
     //set type of edge:{green, path, road} based on two node-types at each end
-    this.type="other";
+    this.type="path";
     this.setType=function(name){
         this.type=name;
     }
@@ -201,7 +212,7 @@ function setPath(quad, name){
             greenArr.push(mesh);
         }
         else{
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,100,250)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(50,0,250)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }
@@ -432,9 +443,6 @@ function makeBuildings(quad, numlyr, types, maxht){
     }
 }
 
-
-
-
 function getBuildingMaterialFromType(type){
     this.mat=this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
         wireframe:wireframeVal});;
@@ -464,9 +472,10 @@ function getPathMaterialFromType(name){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
     }else if (name==="path"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,150,0)")}); 
-    }
-    else{
+    }else if(name==="green"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
+    }else{
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(50,0,255)")});
     }
     return mat;
 }
