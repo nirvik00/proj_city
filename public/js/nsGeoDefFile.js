@@ -146,6 +146,8 @@ function nsQuad(a,b,c,d,i){
     this.q=b;
     this.r=c;
     this.s=d;
+    this.type="";
+
     this.cellId=i;
     
     this.resRat=0.25;
@@ -160,6 +162,10 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
+}
+
+function nsCirculationQuad(){
+    
 }
 
 function nsUnitVec(a,b){
@@ -197,7 +203,7 @@ function setPath(quad, name){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(150,150,150)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
@@ -210,7 +216,7 @@ function setPath(quad, name){
             greenArr.push(mesh);
         }
         else{
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(50,0,250)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }

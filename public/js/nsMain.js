@@ -30,6 +30,10 @@ var pathArr = Array();
 var roadArr = Array();
 var greenArr = Array();
 var groundArr = Array();
+var intxArr=[];
+
+var circulationQuads=[];  //data str 
+var circulationQuadArr=[]; //rendered object
 
 var init = function() {
   scene = new THREE.Scene();

@@ -187,15 +187,28 @@ var constructGroundTiles = function(doRandom) {
     greenArr[i].material.dispose();
     scene.remove(greenArr[i]);
   }
+  for (var i = 0; i < intxArr.length; i++) {
+    intxArr[i].geometry.dispose();
+    greenArr[i].material.dispose();
+    scene.remove(intxArr[i]);
+  }
   for (var i = 0; i < groundArr.length; i++) {
     groundArr[i].geometry.dispose();
     groundArr[i].material.dispose();
     scene.remove(groundArr[i]);
   }
+  for (var i = 0; i < circulationQuadArr.length; i++) {
+    circulationQuadArr[i].geometry.dispose();
+    circulationQuadArr[i].material.dispose();
+    scene.remove(circulationQuadArr[i]);
+  }
+
   pathArr = Array();
   roadArr = Array();
   greenArr = Array();
   groundArr = Array();
+  circulationQuadArr = [];
+
   var pathQuadArr = Array();
   var w = (varCellNumLe - 1) / 2;
   var t = (varCellNumDe - 1) / 2;
@@ -209,10 +222,11 @@ var constructGroundTiles = function(doRandom) {
     var d = quad.s;
 
     // a=NE,b=SE,c=SW,d=NW
-    var e = new nsPt(q.x - 0.5, 0, q.z - 0.5);
-    var f = new nsPt(q.x + 0.5, 0, q.z - 0.5);
-    var g = new nsPt(q.x + 0.5, 0, q.z + 0.5);
-    var h = new nsPt(q.x - 0.5, 0, q.z + 0.5);
+    var offset=0.5;
+    var e = new nsPt(q.x - offset, 0, q.z - offset);
+    var f = new nsPt(q.x + offset, 0, q.z - offset);
+    var g = new nsPt(q.x + offset, 0, q.z + offset);
+    var h = new nsPt(q.x - offset, 0, q.z + offset);
     var I = new nsPt(e.x, 0, a.z);
     var j = new nsPt(f.x, 0, b.z);
     var k = new nsPt(b.x, 0, f.z);
@@ -242,19 +256,11 @@ var constructGroundTiles = function(doRandom) {
   }
 
   if (doRandom == false) {
-    for (var i = 0; i < pathQuadArr.length; i++) {
-      var p = pathQuadArr[i].mp();
-      var minD = 1000000000;
-      var name = "";
-      for (var j = 0; j < networkEdgesArr.length; j++) {
-        var q = networkEdgesArr[j].getMp();
-        var d = utilDi(p, q);
-        if (d < minD) {
-          minD = d;
-          name = networkEdgesArr[j].getType();
-        }
-      }
-      var PA = new setPath(pathQuadArr[i], name);
+    circulationQuads=[];
+    genCirculationCorner();
+    for (var i = 0; i < circulationQuads.length; i++) {
+      var name = circulationQuads[i].type;
+      var PA = new setPath(circulationQuads[i], name);
       PA.generateGround();
     }
   } else {
@@ -286,12 +292,55 @@ var constructGroundTiles = function(doRandom) {
   for (var i = 0; i < greenArr.length; i++) {
     scene.add(greenArr[i]);
   }
+  
+  for (var i = 0; i < intxArr.length; i++) {
+    scene.add(intxArr[i]);
+  }
 
   for (var i = 0; i < groundArr.length; i++) {
     scene.add(groundArr[i]);
   }
 };
 
+
+var genCirculationCorner=function(){
+  for(var i=0; i<networkNodesArr.length; i++){
+    var a=networkNodesArr[i].getPt();
+    var numIntx=0;
+    var numGreen=0;
+    var numPath=0;
+    var numRoad=0; 
+    for(var j=0; j<networkEdgesArr.length; j++){
+      var b=networkEdgesArr[j].getNode0().getPt();
+      var c=networkEdgesArr[j].getNode1().getPt();
+      if((utilDi(a,b)<0.01 && utilDi(a,c)>0.01) || (utilDi(a,c)<0.01 && utilDi(a,b)>0.01)){
+        if(networkEdgesArr[j].getType() === "intx"){
+          numIntx++;
+        }else if(networkEdgesArr[j].getType() === "green"){
+          numGreen++;
+        }else if(networkEdgesArr[j].getType() === "path"){
+          numPath++;
+        }else if(networkEdgesArr[j].getType() === "road"){
+          numRoad++;
+        }
+      }
+    }
+    var offset=0.5;
+    var p=new nsPt(a.x-offset,a.y, a.z-offset);
+    var q=new nsPt(a.x+offset,a.y, a.z-offset);
+    var r=new nsPt(a.x+offset,a.y, a.z+offset);
+    var s=new nsPt(a.x-offset,a.y, a.z+offset);
+    var type="path";
+    if(numIntx>0){ type = "intx"; }
+    else if(numGreen>0 && numRoad>0){ type = "intx"; }
+    else if(numGreen>0 && numRoad<1){ type = "green"; }
+    else if(numGreen<1 && numRoad>0){ type = "road"; }
+    else{type="path";}
+    var quad=new nsQuad(p,q,r,s);
+    quad.type=type;
+    circulationQuads.push(quad);
+  }
+}
 
 //generate the cubes
 var genCubes = function(doRandom) {
