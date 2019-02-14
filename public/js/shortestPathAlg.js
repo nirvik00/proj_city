@@ -10,6 +10,11 @@ function initEdgeCost(inv){
               e.updateCost(inv);
        }
 
+       var k=0;
+       for(var i=0; i<networkNodesArr.length ; i++){
+              networkNodesArr[i].id=k;
+              k++;
+       }
        var sortedNetworkEdges = new Array();  //sort all edges by weight
        var sortable = new Array();
        for (var i = 0; i < networkEdgesArr.length; i++) {
@@ -32,6 +37,7 @@ function getNodeHeap(){
               try{
                      var p=networkNodesArr[i].getPt()
                      networkNodesArr[i].parent=null;
+                     networkNodesArr[i].dist=10000;
                      nodeHeap.push(networkNodesArr[i]);
               }catch(err){
               }          
@@ -41,16 +47,19 @@ function getNodeHeap(){
 
 
 // util function : set all edges to a type
-function setEdgeToType(tmpArr, type){
-       for(var i=0; i<tmpArr.length; i++){
-              var p=tmpArr[i].getNode0().getPt();
-              var q=tmpArr[i].getNode1().getPt();
+function setEdgeToType(tmpeEdgeArr, type){
+       for(var i=0; i<tmpeEdgeArr.length; i++){
+              var p=tmpeEdgeArr[i].getNode0().getPt();
+              var q=tmpeEdgeArr[i].getNode1().getPt();
               for(var j=0; j<networkEdgesArr.length; j++){
                      var r=networkEdgesArr[j].getNode0().getPt();
                      var s=networkEdgesArr[j].getNode1().getPt();
-                     if((utilDi(p,r)<0.1 && utilDi(q,s)<0.1) || (utilDi(p,s)<0.1 && utilDi(q,r)<0.1)){
+                     if((utilDi(p,r)<0.1 && utilDi(q,s)<0.01) || (utilDi(p,s)<0.1 && utilDi(q,r)<0.01)){
                             if(networkEdgesArr[j].getType() === "green" && type==="road"){
+                                   console.log("\INTERSECTION : ");
+                                   networkEdgesArr[j].display();
                                    networkEdgesArr[j].setType("intx");
+                                   console.log("new type : " + networkEdgesArr[j].getType());
                             }else{
                                    networkEdgesArr[j].setType(type);
                             }
@@ -89,9 +98,9 @@ function getPath(source, sink, nodes, edges, tmpArr){
                      break;
               }
        }
-       sink=sink.parent;
+       var newSink=sink.parent;
        if(t===true){
-              getPath(source, sink, nodes, edges, tmpArr);
+              getPath(source, newSink, nodes, edges, tmpArr);
        }
        return tmpArr;
 }
@@ -99,30 +108,27 @@ function getPath(source, sink, nodes, edges, tmpArr){
 
 // step 1 of spt : get neighbours and update distance from source
 function getAllEdgesOfNode(node, edges){
+       var p=node.getPt();
        var neighbours=[];
        for(var i=0; i<edges.length; i++){
               var n0=edges[i].getNode0();
               var n1=edges[i].getNode1();
-              if(node.id===n0.id){
-                     if(n1.dist>node.dist){
-                            neighbours.push(n1);
+              var q=n0.getPt();
+              var r=n1.getPt();
+              if(utilDi(p,q)<0.01){
+                     if(n1.dist > (node.dist + edges[i].cost)){
                             n1.parent=node;
                             n1.dist=node.dist + edges[i].cost;
+                            neighbours.push(n1);
                      }                     
-              }else if(node.id === n1.id){
-                     if(n0.dist>node.dist){
-                            neighbours.push(n0);
+              }else if(utilDi(p,r)<0.01){
+                     if(n0.dist > (node.dist + edges[i].cost)){
                             n0.parent=node;
                             n0.dist=node.dist + edges[i].cost;
+                            neighbours.push(n0);
                      }                     
               }
        }
-       
-       var ids=[];
-       for(var i=0; i<neighbours.length; i++){
-              ids.push(neighbours[i].id);
-       }
-       //console.log("\n\n\n\nneighbours id = "+ ids);
        return neighbours;
 }
 
@@ -131,7 +137,7 @@ function getAllEdgesOfNode(node, edges){
 function extractMinHeap(neighbours,nodeHeap){
        for(var i=0; i<nodeHeap.length; i++){
               for(var j=0; j<neighbours.length; j++){
-                     if(utilDi(nodeHeap[i].getPt(),neighbours[j].getPt()) < 0.1){
+                     if(utilDi(nodeHeap[i].getPt(),neighbours[j].getPt()) < 0.01){
                             nodeHeap[i].dist=neighbours[j].dist;
                      }
               }
@@ -161,7 +167,7 @@ function extractMinHeap(neighbours,nodeHeap){
 function findMinCost(typeNode, typeEdge) {
        //sort all edges by weight- for convenience
        var invertCost=true;
-       if(typeNode==="res" && typeEdge==="green"){  invertCost=false;}
+       if(typeNode==="res" && typeEdge==="green"){  invertCost=false; }
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        
        var nodeHeap = getNodeHeap();      //get all valis nodes - point
@@ -202,19 +208,8 @@ function findMinCost(typeNode, typeEdge) {
               }
               
               resultNodeHeap.push(source);
-              //console.log("\nnew source:");
-              //console.log(source);
-              //console.log("\nremaining node heap: ");
-              //console.log(nodeHeap);
               k++;
-       }      
-
-       console.log("\n\n\nsolution: ");
-       for(var i=0; i<resultNodeHeap.length; i++){
-              resultNodeHeap[i].display();
-       }
-       
-       
+       }            
        
        //get all nodes of typeNode ie "res", "comm", "office" node-type
        //each res type will be a sink; make an array of sinks
@@ -259,10 +254,7 @@ function findMinCost(typeNode, typeEdge) {
               setEdgeToType(tmpArr, typeEdge);
        }
 
-       //display type of edge
-       for(var i=0; i<tmpArr.length; i++){
-              tmpArr[i].display();
-       }
+
 
        //finally render the geometry: nsMain.js after ENTER is pressed
        //genNetworkGeometry();

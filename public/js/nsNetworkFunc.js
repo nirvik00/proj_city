@@ -71,7 +71,7 @@ function initNetwork() {
          }
        }
 
-       
+
        //next function
        genNetworkGeometry();
 }
@@ -79,33 +79,34 @@ function initNetwork() {
 //for network: nodes and edges
 //set property of nodes to res, comm, off
 function genNetworkGeometry() {
-for (var i = 0; i < nodeArr.length; i++) {
-       nodeArr[i].geometry.dispose();
-       nodeArr[i].material.dispose();
-       scene.remove(nodeArr[i]);
-}
-for (var i = 0; i < edgeArr.length; i++) {
-       edgeArr[i].geometry.dispose();
-       edgeArr[i].material.dispose();
-       scene.remove(edgeArr[i]);
-}
-edgeArr = Array();
-for (var i = 0; i < networkEdgesArr.length; i++) {
-       var e = networkEdgesArr[i];
-       edgeArr.push(e.getObj());
-}
-for (var i = 0; i < edgeArr.length; i++) {
-       scene.add(edgeArr[i]);
-}
+  for (var i = 0; i < nodeArr.length; i++) {
+        nodeArr[i].geometry.dispose();
+        nodeArr[i].material.dispose();
+        scene.remove(nodeArr[i]);
+  }
+  for (var i = 0; i < edgeArr.length; i++) {
+        edgeArr[i].geometry.dispose();
+        edgeArr[i].material.dispose();
+        scene.remove(edgeArr[i]);
+  }
+  
+  edgeArr = Array();
+  for (var i = 0; i < networkEdgesArr.length; i++) {
+        var e = networkEdgesArr[i];
+        edgeArr.push(e.getObj());
+  }
+  for (var i = 0; i < edgeArr.length; i++) {
+        scene.add(edgeArr[i]);
+  }
 
-nodeArr = Array();
-for (var i = 0; i < networkNodesArr.length; i++) {
-       var n0 = networkNodesArr[i];
-       nodeArr.push(n0.getObj());
-}
-for (var i = 0; i < nodeArr.length; i++) {
-       scene.add(nodeArr[i]);
-}
+  nodeArr = Array();
+  for (var i = 0; i < networkNodesArr.length; i++) {
+        var n0 = networkNodesArr[i];
+        nodeArr.push(n0.getObj());
+  }
+  for (var i = 0; i < nodeArr.length; i++) {
+        scene.add(nodeArr[i]);
+  }
 }
      
 //check if the network edge already exists in networkEdgesArr

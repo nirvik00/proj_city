@@ -16,8 +16,8 @@ function nsNetworkNode(a,b,c, nodeId){
     this.z=c;
     this.type="other";
     this.id=nodeId;
-    this.parent=null;
-    this.dist=100;
+    this.parent=0;
+    this.dist=1000;
 
     this.getPt=function(){
         return new nsPt(this.x, this.y, this.z);
@@ -113,17 +113,6 @@ function nsNetworkEdge(a,b){
     }
     this.getType=function(){
         return this.type;
-    }
-    this.updateType=function(){
-       if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
-            this.type="road";
-        }
-        else if(this.node0.getType()==="res" && this.node1.getType()==="res"){
-            this.type="green";
-        }
-        else{
-            this.type="path";
-        }
     }
     this.getObj=function(){
        // console.log(this.node0.getType() + ", "+ this.node1.getType());
@@ -478,13 +467,15 @@ function getBuildingMaterialFromType(type){
 function getPathMaterialFromType(name){
     var mat;
     if(name==="road"){
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,0)")}); 
     }else if (name==="path"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,150,0)")}); 
     }else if(name==="green"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
-    }else{
+    }else if (name === "intx"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
+    }else{
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
     }
     return mat;
 }

@@ -72,10 +72,16 @@ document.addEventListener("keypress", function(event) {
 
     //typeNode, typeEdge
     var t=checkNodeTypeExists("res");
-    if(t==true){ findMinCost("res", "green"); }
+    if(t===true){ 
+      console.log("\nsolution for GREEN");
+      findMinCost("res", "green"); 
+    }
 
     var t=checkNodeTypeExists("office");
-    if(t==true){ findMinCost("office", "road"); }
+    if(t===true){ 
+      console.log("\nsolution for ROAD");
+      findMinCost("office", "road"); 
+    }
 
     
     genNetworkGeometry();
