@@ -255,9 +255,11 @@ var constructGroundTiles = function(doRandom) {
     pathQuadArr.push(q7);
   }
 
-  if (doRandom == false) {
+  if (doRandom === false) {
     circulationQuads=[];
-    genCirculationCorner();
+    var offset=0.5;
+    genCirculationCorner(offset);
+    genCirculationLinear(offset);
     for (var i = 0; i < circulationQuads.length; i++) {
       var name = circulationQuads[i].type;
       var PA = new setPath(circulationQuads[i], name);
@@ -302,8 +304,49 @@ var constructGroundTiles = function(doRandom) {
   }
 };
 
+var genCirculationLinear=function(offset){
+  for(var i=0; i<networkEdgesArr.length; i++){
+    var type=networkEdgesArr[i].getType();
+    var a=networkEdgesArr[i].getNode0().getPt();
+    var b=networkEdgesArr[i].getNode1().getPt();
+    var p,q;
+    if(a.x===b.x && a.z<b.z){
+      p=a; q=b;
+      genVerticalCirculationQuad(p,q, offset, type);
+    }else if(a.x===b.x && a.z>b.z){
+      p=b; q=a;
+      genVerticalCirculationQuad(p,q, offset, type);
+    }else if(a.x<b.x && a.z===b.z){
+      p=a; q=b;
+      genHorizontalCirculationQuad(p,q, offset, type);
+    }else if(a.x>b.x && a.z===b.z){
+      p=b; q=a;
+      genHorizontalCirculationQuad(p,q, offset, type);
+    }
+  }
+}
 
-var genCirculationCorner=function(){
+var genVerticalCirculationQuad=function(p,q,offset, type){
+  var a=new nsPt(p.x-offset, p.y, p.z+offset);
+  var b=new nsPt(p.x+offset, p.y, p.z+offset);
+  var c=new nsPt(q.x+offset, q.y, q.z-offset);
+  var d=new nsPt(q.x-offset, q.y, q.z-offset);
+  var quad=new nsQuad(a,b,c,d);
+  quad.type=type;
+  circulationQuads.push(quad);
+}
+
+var genHorizontalCirculationQuad=function(p,q,offset, type){
+  var a=new nsPt(p.x+offset, p.y, p.z-offset);
+  var b=new nsPt(q.x-offset, q.y, q.z-offset);
+  var c=new nsPt(q.x-offset, q.y, p.z+offset);
+  var d=new nsPt(p.x+offset, p.y, p.z+offset);
+  var quad=new nsQuad(a,b,c,d);
+  quad.type=type;
+  circulationQuads.push(quad);
+}
+
+var genCirculationCorner=function(offset){
   for(var i=0; i<networkNodesArr.length; i++){
     var a=networkNodesArr[i].getPt();
     var numIntx=0;
@@ -325,7 +368,7 @@ var genCirculationCorner=function(){
         }
       }
     }
-    var offset=0.5;
+
     var p=new nsPt(a.x-offset,a.y, a.z-offset);
     var q=new nsPt(a.x+offset,a.y, a.z-offset);
     var r=new nsPt(a.x+offset,a.y, a.z+offset);
