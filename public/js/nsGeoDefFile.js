@@ -249,11 +249,11 @@ function CubeRandomDecisions(){
     this.getMaxHt=function(){
         var n=Math.random();
         if(n<0.35){
-          this.maxHt=3;
+          this.maxHt=1;
         }else if(n>0.35 && n<0.7){
-          this.maxHt=7;
+          this.maxHt=3;
         }else{
-          this.maxHt=20;
+          this.maxHt=7;
         }
         return this.maxHt;
     }
@@ -428,7 +428,9 @@ function makeBuildings(quad, numlyr, types, maxht){
                 }                
             } 
             htarr.push(selfHt);
-            var geox = new THREE.BoxGeometry(1, selfHt, 1);
+            var reqLe=varCellLe-3*gridGuiControls.global_offset;
+            var reqDe=varCellDe-3*gridGuiControls.global_offset;
+            var geox = new THREE.BoxGeometry(reqLe, selfHt, reqDe);
             var matx=getBuildingMaterialFromType(this.types[i]);
             var mesh = new THREE.Mesh(geox, matx);
             mesh.position.x = p.x;

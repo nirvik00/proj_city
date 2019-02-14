@@ -1,8 +1,9 @@
 // GUI
 var varCellNumLe = 2;
 var varCellNumDe = 2;
-var varCellLe = 2;
-var varCellDe = 2;
+var varCellLe = 3;
+var varCellDe = 3;
+var varGlobalOffset=0.1;
 
 var datgui = new dat.GUI({ autoPlace: false });
 
@@ -12,6 +13,7 @@ var gridGuiControls = new function() {
   this.num_Depth = 1;
   this.cell_Length = 3;
   this.cell_Depth = 3;
+  this.global_offset = 0.5;
   this.show_Grid = false;
 }();
 var cellGUI = datgui.addFolder("gridGuiControls");
@@ -19,12 +21,14 @@ var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
 var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
 var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+var varGlobalOffset = cellGUI.add(gridGuiControls, "global_offset", 0.1, 1);
 cellGUI.add(gridGuiControls, "show_Grid");
 
 varCellNumLe = gridGuiControls.num_Length;
 varCellNumDe = gridGuiControls.num_denpth;
 varCellLe = gridGuiControls.cell_Length;
 varCellDe = gridGuiControls.cell_Depth;
+varGlobalOffset = gridGuiControls.global_offset;
 
 //ground gui controls
 var groundGuiControls = new function() {
@@ -257,7 +261,7 @@ var constructGroundTiles = function(doRandom) {
 
   if (doRandom === false) {
     circulationQuads=[];
-    var offset=0.5;
+    var offset=gridGuiControls.global_offset;
     genCirculationCorner(offset);
     genCirculationLinear(offset);
     for (var i = 0; i < circulationQuads.length; i++) {
@@ -304,6 +308,8 @@ var constructGroundTiles = function(doRandom) {
   }
 };
 
+
+//util function to generate linear circulation along edge : hor / ver
 var genCirculationLinear=function(offset){
   for(var i=0; i<networkEdgesArr.length; i++){
     var type=networkEdgesArr[i].getType();
@@ -326,6 +332,7 @@ var genCirculationLinear=function(offset){
   }
 }
 
+//util function to generate linear circulation along edge : ver
 var genVerticalCirculationQuad=function(p,q,offset, type){
   var a=new nsPt(p.x-offset, p.y, p.z+offset);
   var b=new nsPt(p.x+offset, p.y, p.z+offset);
@@ -335,7 +342,7 @@ var genVerticalCirculationQuad=function(p,q,offset, type){
   quad.type=type;
   circulationQuads.push(quad);
 }
-
+//util function to generate linear circulation along edge : hor
 var genHorizontalCirculationQuad=function(p,q,offset, type){
   var a=new nsPt(p.x+offset, p.y, p.z-offset);
   var b=new nsPt(q.x-offset, q.y, q.z-offset);
@@ -345,7 +352,7 @@ var genHorizontalCirculationQuad=function(p,q,offset, type){
   quad.type=type;
   circulationQuads.push(quad);
 }
-
+//util function to find and render intersection between circulation routes
 var genCirculationCorner=function(offset){
   for(var i=0; i<networkNodesArr.length; i++){
     var a=networkNodesArr[i].getPt();
@@ -368,7 +375,6 @@ var genCirculationCorner=function(offset){
         }
       }
     }
-
     var p=new nsPt(a.x-offset,a.y, a.z-offset);
     var q=new nsPt(a.x+offset,a.y, a.z-offset);
     var r=new nsPt(a.x+offset,a.y, a.z+offset);
@@ -445,6 +451,7 @@ var genCubes = function(doRandom) {
   }
 };
 
+
 function cellQuadsAlignment() {
   var resGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.res_FSR;
   var commGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.comm_FSR;
@@ -483,3 +490,5 @@ function cellQuadsAlignment() {
     var officeDistributedFSR = officeGfa / officeCellsArr.length;
   }
 }
+
+

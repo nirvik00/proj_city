@@ -19,6 +19,7 @@ var nodeArr = Array(); //network mesh of nodes
 var edgeArr = Array(); //network mesh of node-edges
 var greenEdgeArr=Array(); //network mesh of green edge
 
+var globalOffset=0.5;
 
 var gridArr = Array();
 var evacArr = Array();
