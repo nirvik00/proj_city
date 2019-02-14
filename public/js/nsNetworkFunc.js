@@ -41,10 +41,10 @@ function initNetwork() {
        // set type of node array
        for (var i = 0; i < networkNodesArr.length; i++) {
          networkNodesArr[i].setType();
+         networkNodesArr[i].id=i;
        }
      
        //set this node to networkEdges
-       var nodeCounter=0;
        for (var i = 0; i < networkEdgesArr.length; i++) {
          var e = networkEdgesArr[i];
          var n0 = e.getNode0();
@@ -56,9 +56,7 @@ function initNetwork() {
            var r = n2.getPt();
            var d02 = utilDi(p, r);
            if (d02 < 0.001) {
-             networkNodesArr[j].id=nodeCounter;
              networkEdgesArr[i].setNode0(networkNodesArr[j]);
-             nodeCounter++;
              break;
            }
          }
@@ -66,25 +64,14 @@ function initNetwork() {
            var n2 = networkNodesArr[j];
            var r = n2.getPt();
            var d01 = utilDi(q, r);
-           networkNodesArr[j].id=nodeCounter;
            if (d01 < 0.001) {
              networkEdgesArr[i].setNode1(networkNodesArr[j]);
-             nodeCounter++;
              break;
            }
          }
        }
-     
-       //update type of networkedges
-       for (var i = 0; i < networkEdgesArr.length; i++) {
-         //networkEdgesArr[i].updateType();
-       }
-     
-       //update cost of network edges
-       for (var i = 0; i < networkEdgesArr.length; i++) {
-         //networkEdgesArr[i].updateCost();
-       }
-     
+
+       
        //next function
        genNetworkGeometry();
 }
@@ -160,26 +147,23 @@ var nodeCounter = 0;
 
 if (networkEdgesArr.length > 0) {
        for (var i = 0; i < networkNodesArr.length; i++) {
-       var n2 = networkNodesArr[i].getPt();
-       if (utilDi(n0, n2) < 0.01) {
-       sum0++;
-       break;
+         var r = networkNodesArr[i].getPt();
+        if (utilDi(p, r) < 0.01) {
+          sum0++;
+          break;
+        }
        }
-       }
-       if (sum0 == 0) {
-       networkNodesArr.push(n0);
-       }
+       if (sum0 == 0) { networkNodesArr.push(n0); }
+
        for (var i = 0; i < networkNodesArr.length; i++) {
-       var n2 = networkNodesArr[i].getPt();
-       if (utilDi(n1, n2) < 0.01) {
-       sum1++;
-       break;
+        var r = networkNodesArr[i].getPt();
+        if (utilDi(q, r) < 0.01) { 
+          sum1++;
+          break;
+        }
        }
-       }
-       if (sum1 == 0) {
-       networkNodesArr.push(n1);
-       }
-}
+       if (sum1 == 0) { networkNodesArr.push(n1); }
+  }
 }
 
      

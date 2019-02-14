@@ -42,9 +42,13 @@ function nsNetworkNode(a,b,c, nodeId){
         this.matNode=getBuildingMaterialFromType(this.type);
         this.nodeMesh=new THREE.Mesh(this.geoNode, this.matNode);
         this.nodeMesh.position.x=this.x;
-        this.nodeMesh.position.y=this.y;
+        this.nodeMesh.position.y=this.y+0.5;
         this.nodeMesh.position.z=this.z;    
         return this.nodeMesh;
+    }
+    this.display=function(){
+        var s="id ="+this.id +", type=" + this.type + ", parent= "+ this.parent +", dist="+this.dist;
+        console.log(s);
     }
 }
 
@@ -124,12 +128,17 @@ function nsNetworkEdge(a,b){
     this.getObj=function(){
        // console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
-        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.15, this.p.z ));
-        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.15, this.q.z ));
+        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
+        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
         var material = getPathMaterialFromType(this.type);
         var line = new THREE.Line(path, material);
         return line;
     }    
+
+    this.display=function(){
+        var s= "node0 type= "+this.node0.getType() + ", node1 type= "+this.node1.getType() + ", edge type= "+this.getType();
+        console.log(s);
+    }
 }
 
 function nsTile(a,b,c,d){
@@ -475,7 +484,7 @@ function getPathMaterialFromType(name){
     }else if(name==="green"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
     }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(50,0,255)")});
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }
     return mat;
 }

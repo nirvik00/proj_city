@@ -3,20 +3,13 @@
 
 
 
-
-
-
 // util function: initiate edge weights - green network
 function initEdgeCost(inv){
        for (var i = 0; i < networkEdgesArr.length; i++) {
               var e = networkEdgesArr[i];
               e.updateCost(inv);
        }
-       
-       for(var i=0; i<networkNodesArr.length; i++){
-              networkNodesArr[i].id=i;
-       }
-       
+
        var sortedNetworkEdges = new Array();  //sort all edges by weight
        var sortable = new Array();
        for (var i = 0; i < networkEdgesArr.length; i++) {
@@ -55,18 +48,14 @@ function setEdgeToType(tmpArr, type){
               for(var j=0; j<networkEdgesArr.length; j++){
                      var r=networkEdgesArr[j].getNode0().getPt();
                      var s=networkEdgesArr[j].getNode1().getPt();
-                     if(utilDi(p,r)<0.1 && utilDi(q,s)<0.1){
+                     if((utilDi(p,r)<0.1 && utilDi(q,s)<0.1) || (utilDi(p,s)<0.1 && utilDi(q,r)<0.1)){
                             if(networkEdgesArr[j].getType() === "green" && type==="road"){
                                    networkEdgesArr[j].setType("intx");
                             }else{
                                    networkEdgesArr[j].setType(type);
                             }
                             break;
-                     }
-                     if(utilDi(p,s)<0.1 && utilDi(q,r)<0.1){
-                            networkEdgesArr[j].setType(type);
-                            break;
-                     }
+                     } 
               }
        }
 }
@@ -101,7 +90,7 @@ function getPath(source, sink, nodes, edges, tmpArr){
               }
        }
        sink=sink.parent;
-       if(t==true){
+       if(t===true){
               getPath(source, sink, nodes, edges, tmpArr);
        }
        return tmpArr;
@@ -178,7 +167,7 @@ function findMinCost(typeNode, typeEdge) {
        var nodeHeap = getNodeHeap();      //get all valis nodes - point
        var source;                         //get ource node: first res in node heap
        for(var i=0; i<nodeHeap.length; i++){
-              if(nodeHeap[i].getType()==typeNode){
+              if(nodeHeap[i].getType()===typeNode){
                      source=nodeHeap[i];
                      break;
               }
@@ -220,8 +209,11 @@ function findMinCost(typeNode, typeEdge) {
               k++;
        }      
 
-       //console.log("\n\n\nsolution: ");
-       //console.log(resultNodeHeap);
+       console.log("\n\n\nsolution: ");
+       for(var i=0; i<resultNodeHeap.length; i++){
+              resultNodeHeap[i].display();
+       }
+       
        
        
        //get all nodes of typeNode ie "res", "comm", "office" node-type
@@ -267,6 +259,11 @@ function findMinCost(typeNode, typeEdge) {
               setEdgeToType(tmpArr, typeEdge);
        }
 
-       //finally render the geometry
-       genNetworkGeometry();
+       //display type of edge
+       for(var i=0; i<tmpArr.length; i++){
+              tmpArr[i].display();
+       }
+
+       //finally render the geometry: nsMain.js after ENTER is pressed
+       //genNetworkGeometry();
 }

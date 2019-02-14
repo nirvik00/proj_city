@@ -56,13 +56,31 @@ var init = function() {
   constructGroundTiles(true);
 };
 
+function checkNodeTypeExists(nodeType){
+  var t=false;
+  for(var i=0; i<networkNodesArr.length; i++){
+    var type=networkNodesArr[i].getType();
+    if(type === nodeType) { t=true; break; }
+  }
+  return t;
+}
+
 document.addEventListener("keypress", function(event) {
   if (event.keyCode === 13) {
     //ENTER key event
     console.log("optimize iteration: (ENTER)" + COUNTER);
+
     //typeNode, typeEdge
-    findMinCost("res", "green");
-    findMinCost("office", "road");
+    var t=checkNodeTypeExists("res");
+    if(t==true){ findMinCost("res", "green"); }
+
+    var t=checkNodeTypeExists("office");
+    if(t==true){ findMinCost("office", "road"); }
+
+    
+    genNetworkGeometry();
+
+
     genCubes();
     constructGroundTiles(false);
     cellQuadsAlignment();
