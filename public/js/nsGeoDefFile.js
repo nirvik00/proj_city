@@ -68,7 +68,7 @@ function nsNetworkEdge(a,b){
     this.getNode0=function(){return this.node0; }
     this.getNode1=function(){return this.node1; }
     
-    this.visited=0;
+    this.id=-1;
 
 
     this.cost=0;   
@@ -119,13 +119,13 @@ function nsNetworkEdge(a,b){
         var path = new THREE.Geometry();
         path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
         path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
-        var material = getPathMaterialFromType(this.type);
+        var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
         return line;
     }    
 
     this.display=function(){
-        var s= "node0 type= "+this.node0.getType() + ", node1 type= "+this.node1.getType() + ", edge type= "+this.getType();
+        var s= "id= "+this.id+", node0 type= "+this.node0.getType() + ", node1 type= "+this.node1.getType() + ", edge type= "+this.getType();
         console.log(s);
     }
 }
@@ -464,18 +464,18 @@ function getBuildingMaterialFromType(type){
     return this.mat
 }
 
-function getPathMaterialFromType(name){
+function getPathMaterialFromType(name, id){
     var mat;
     if(name==="road"){
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,0)")}); 
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
     }else if (name==="path"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,150,0)")}); 
     }else if(name==="green"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
-    }else if (name === "intx"){
+    }else if (name==="intx"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,255)")}); 
     }
     return mat;
 }

@@ -73,13 +73,11 @@ document.addEventListener("keypress", function(event) {
     //typeNode, typeEdge
     var t=checkNodeTypeExists("res");
     if(t===true){ 
-      console.log("\nsolution for GREEN");
       findMinCost("res", "green"); 
     }
 
     var t=checkNodeTypeExists("office");
     if(t===true){ 
-      console.log("\nsolution for ROAD");
       findMinCost("office", "road"); 
     }
 
@@ -98,7 +96,8 @@ document.addEventListener("keypress", function(event) {
   }
   if (event.keyCode === 32) {
     //SPACE key event
-    console.log("new iteration: (SPACE) " + ITERATION);
+    console.clear();
+    console.log("\n\n\n\nnew iteration: (SPACE) " + ITERATION);
     genGrid();
     genCubes();
     constructGroundTiles(true);

@@ -7,6 +7,7 @@
 function initEdgeCost(inv){
        for (var i = 0; i < networkEdgesArr.length; i++) {
               var e = networkEdgesArr[i];
+              networkEdgesArr[i].id=i;
               e.updateCost(inv);
        }
 
@@ -48,6 +49,7 @@ function getNodeHeap(){
 
 // util function : set all edges to a type
 function setEdgeToType(tmpeEdgeArr, type){
+       var ids=[];
        for(var i=0; i<tmpeEdgeArr.length; i++){
               var p=tmpeEdgeArr[i].getNode0().getPt();
               var q=tmpeEdgeArr[i].getNode1().getPt();
@@ -56,14 +58,13 @@ function setEdgeToType(tmpeEdgeArr, type){
                      var s=networkEdgesArr[j].getNode1().getPt();
                      if((utilDi(p,r)<0.1 && utilDi(q,s)<0.01) || (utilDi(p,s)<0.1 && utilDi(q,r)<0.01)){
                             if(networkEdgesArr[j].getType() === "green" && type==="road"){
-                                   console.log("\INTERSECTION : ");
-                                   networkEdgesArr[j].display();
                                    networkEdgesArr[j].setType("intx");
-                                   console.log("new type : " + networkEdgesArr[j].getType());
+                                   ids.push(networkEdgesArr[j].id);
+                                   break;
                             }else{
                                    networkEdgesArr[j].setType(type);
+                                   break;
                             }
-                            break;
                      } 
               }
        }
