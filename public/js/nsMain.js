@@ -103,8 +103,6 @@ document.addEventListener("keypress", function(event) {
     //SPACE key event
     console.clear();
     console.log("\n\n\n\nnew iteration: (SPACE) " + ITERATION);
-    clrGround();
-    clrBuildings();
     genGrid();
     genCubes();
     constructGroundTiles(true);

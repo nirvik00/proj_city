@@ -26,10 +26,12 @@ function nsNetworkNode(a,b,c, nodeId){
         var t=Math.random();
         if(t<0.35){
             this.type="res";
-        }else if(t>=0.35 && t<0.7){
+        }else if(t>=0.35 && t<0.6){
             this.type="comm";
-        }else{
+        }else if(t>=0.6 && t<0.9){
             this.type="office";   
+        }else{
+            this.type="evac";   
         }
     };
     this.getType=function(){
@@ -203,11 +205,11 @@ function setPath(quad, name){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(150,150,150)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,150,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if(name==="green"){
@@ -254,95 +256,6 @@ function CubeRandomDecisions(){
           this.maxHt=3;
         }else{
           this.maxHt=7;
-        }
-        return this.maxHt;
-    }
-    
-    this.getType=function(){
-        var t=this.numLayers;
-        if(t==3){
-            var m=Math.random();
-            if(m<0.16){
-                this.types.push("res");      
-                this.types.push("comm");
-                this.types.push("office");
-            }else if(m>0.16 && m<0.32){
-                this.types.push("res");
-                this.types.push("office");
-                this.types.push("comm");      
-            }else if(m>0.32 && m<0.48){
-                this.types.push("comm");
-                this.types.push("office");
-                this.types.push("res");      
-            }else if(m>0.48 && m<0.60){
-                this.types.push("comm");
-                this.types.push("res"); 
-                this.types.push("office");
-            }else if(m>0.60 && m<0.72){
-                this.types.push("office");
-                this.types.push("comm");
-                this.types.push("res"); 
-            }else{
-                this.types.push("office");
-                this.types.push("res"); 
-                this.types.push("comm");
-            }
-        }else if(t==2){
-            var m=Math.random();
-            if(m<0.35){
-                this.types.push("res");      
-                this.types.push("comm");
-            }else if(m>0.35 && m<0.7){
-                this.types.push("comm");      
-                this.types.push("res");
-            }else{
-                this.types.push("office");      
-                this.types.push("comm");
-            }
-        }else{
-            var m=Math.random();
-            if(m<0.35){
-                this.types.push("res");      
-            }else if(m>0.35 && m<0.7){
-                this.types.push("comm");      
-            }else if(m>0.35 && m<0.9){
-                this.types.push("office");      
-            }else{
-                this.types.push("evac");      
-            }
-        }
-        return this.types;
-    } 
-}
-
-
-
-function CubeDecisions(){
-    var T=Math.random();
-    this.numLayers;
-    this.types=Array();
-    this.maxHt;
-    
-    this.getNumLayers=function(){
-        if(T<0.35){
-            this.numLayers=3;
-        }
-        else if(T>0.35 && T<0.7){
-            this.numLayers=2;
-        }else{
-            this.numLayers=1;
-        }
-        return this.numLayers;
-    }
-    
-    this.getMaxHt=function(){
-        var n=Math.random();
-        if(n<0.35){
-          this.maxHt=3;
-        }else if(n>0.35 && n<0.7){
-          this.maxHt=7;
-        }else{
-          this.maxHt=20;
         }
         return this.maxHt;
     }

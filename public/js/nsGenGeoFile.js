@@ -221,74 +221,14 @@ var constructGroundTiles = function(doRandom) {
   var w = (varCellNumLe - 1) / 2;
   var t = (varCellNumDe - 1) / 2;
 
-  for (var i = 0; i < cellQuadArr.length; i++) {
-    var quad = cellQuadArr[i];
-    var q = quad.mp();
-    var a = quad.p;
-    var b = quad.q;
-    var c = quad.r;
-    var d = quad.s;
-
-    // a=NE,b=SE,c=SW,d=NW
-    var offset=0.5;
-    var e = new nsPt(q.x - offset, 0, q.z - offset);
-    var f = new nsPt(q.x + offset, 0, q.z - offset);
-    var g = new nsPt(q.x + offset, 0, q.z + offset);
-    var h = new nsPt(q.x - offset, 0, q.z + offset);
-    var I = new nsPt(e.x, 0, a.z);
-    var j = new nsPt(f.x, 0, b.z);
-    var k = new nsPt(b.x, 0, f.z);
-    var l = new nsPt(b.x, 0, g.z);
-    var m = new nsPt(g.x, 0, c.z);
-    var n = new nsPt(h.x, 0, d.z);
-    var o = new nsPt(d.x, 0, h.z);
-    var p = new nsPt(a.x, 0, e.z);
-
-    var q0 = new nsQuad(a, I, e, p, i);
-    var q1 = new nsQuad(I, j, f, e, i);
-    var q2 = new nsQuad(j, b, k, f, i);
-    var q3 = new nsQuad(f, k, l, g, i);
-    var q4 = new nsQuad(g, l, c, m, i);
-    var q5 = new nsQuad(h, g, m, n, i);
-    var q6 = new nsQuad(o, h, n, d, i);
-    var q7 = new nsQuad(p, e, h, o, i);
-
-    pathQuadArr.push(q0);
-    pathQuadArr.push(q1);
-    pathQuadArr.push(q2);
-    pathQuadArr.push(q3);
-    pathQuadArr.push(q4);
-    pathQuadArr.push(q5);
-    pathQuadArr.push(q6);
-    pathQuadArr.push(q7);
-  }
-
-  if (doRandom === false) {
-    circulationQuads=[];
-    var offset=gridGuiControls.global_offset;
-    genCirculationCorner(offset);
-    genCirculationLinear(offset);
-    for (var i = 0; i < circulationQuads.length; i++) {
-      var name = circulationQuads[i].type;
-      var PA = new setPath(circulationQuads[i], name);
-      PA.generateGround();
-    }
-  } else {
-    for (var i = 0; i < pathQuadArr.length; i++) {
-      var name = "";
-      var t = Math.random();
-      if (name === "" || name == "") {
-        if (t < 0.35) {
-          name = "road";
-        } else if (t > 0.35 && t < 0.75) {
-          name = "path";
-        } else {
-          name = "green";
-        }
-      }
-      var PA = new setPath(pathQuadArr[i], name);
-      PA.generateGround();
-    }
+  circulationQuads=[];
+  var offset=gridGuiControls.global_offset;
+  genCirculationCorner(doRandom,offset);
+  genCirculationLinear(doRandom,offset);
+  for (var i = 0; i < circulationQuads.length; i++) {
+    var name = circulationQuads[i].type;
+    var PA = new setPath(circulationQuads[i], name);
+    PA.generateGround();
   }
 
   for (var i = 0; i < pathArr.length; i++) {
@@ -312,11 +252,28 @@ var constructGroundTiles = function(doRandom) {
   }
 };
 
+function getRandomType(){
+  var type;
+  var t=Math.random();
+  if (t < 0.35) {
+    type = "road";
+  } else if (t > 0.35 && t < 0.75) {
+    type = "path";
+  } else {
+    type = "green";
+  }
+  return type;
+}
 
 //util function to generate linear circulation along edge : hor / ver
-var genCirculationLinear=function(offset){
+var genCirculationLinear=function(doRandom, offset){
   for(var i=0; i<networkEdgesArr.length; i++){
-    var type=networkEdgesArr[i].getType();
+    var type;
+    if(doRandom===false){
+      type=networkEdgesArr[i].getType();
+    }else{
+      type=getRandomType();
+    }    
     var a=networkEdgesArr[i].getNode0().getPt();
     var b=networkEdgesArr[i].getNode1().getPt();
     var p,q;
@@ -357,38 +314,43 @@ var genHorizontalCirculationQuad=function(p,q,offset, type){
   circulationQuads.push(quad);
 }
 //util function to find and render intersection between circulation routes
-var genCirculationCorner=function(offset){
+var genCirculationCorner=function(doRandom,offset){
   for(var i=0; i<networkNodesArr.length; i++){
     var a=networkNodesArr[i].getPt();
-    var numIntx=0;
-    var numGreen=0;
-    var numPath=0;
-    var numRoad=0; 
-    for(var j=0; j<networkEdgesArr.length; j++){
-      var b=networkEdgesArr[j].getNode0().getPt();
-      var c=networkEdgesArr[j].getNode1().getPt();
-      if((utilDi(a,b)<0.01 && utilDi(a,c)>0.01) || (utilDi(a,c)<0.01 && utilDi(a,b)>0.01)){
-        if(networkEdgesArr[j].getType() === "intx"){
-          numIntx++;
-        }else if(networkEdgesArr[j].getType() === "green"){
-          numGreen++;
-        }else if(networkEdgesArr[j].getType() === "path"){
-          numPath++;
-        }else if(networkEdgesArr[j].getType() === "road"){
-          numRoad++;
+    var type;
+    if(doRandom===false){
+      var numIntx=0;
+      var numGreen=0;
+      var numPath=0;
+      var numRoad=0; 
+      for(var j=0; j<networkEdgesArr.length; j++){
+        var b=networkEdgesArr[j].getNode0().getPt();
+        var c=networkEdgesArr[j].getNode1().getPt();
+        if((utilDi(a,b)<0.01 && utilDi(a,c)>0.01) || (utilDi(a,c)<0.01 && utilDi(a,b)>0.01)){
+          if(networkEdgesArr[j].getType() === "intx"){
+            numIntx++;
+          }else if(networkEdgesArr[j].getType() === "green"){
+            numGreen++;
+          }else if(networkEdgesArr[j].getType() === "path"){
+            numPath++;
+          }else if(networkEdgesArr[j].getType() === "road"){
+            numRoad++;
+          }
         }
       }
-    }
+      var type="path";
+      if(numIntx>0){ type = "intx"; }
+      else if(numGreen>0 && numRoad>0){ type = "intx"; }
+      else if(numGreen>0 && numRoad<1){ type = "green"; }
+      else if(numGreen<1 && numRoad>0){ type = "road"; }
+      else{type="path";}
+    }else{
+      type=getRandomType();
+    }  
     var p=new nsPt(a.x-offset,a.y, a.z-offset);
     var q=new nsPt(a.x+offset,a.y, a.z-offset);
     var r=new nsPt(a.x+offset,a.y, a.z+offset);
     var s=new nsPt(a.x-offset,a.y, a.z+offset);
-    var type="path";
-    if(numIntx>0){ type = "intx"; }
-    else if(numGreen>0 && numRoad>0){ type = "intx"; }
-    else if(numGreen>0 && numRoad<1){ type = "green"; }
-    else if(numGreen<1 && numRoad>0){ type = "road"; }
-    else{type="path";}
     var quad=new nsQuad(p,q,r,s);
     quad.type=type;
     circulationQuads.push(quad);
@@ -430,6 +392,7 @@ var clrBuildings=function(){
 //generate the cubes
 var genCubes = function(doRandom) {
   clrBuildings();
+
   for (var i = 0; i < cellQuadArr.length; i++) {
     var deci;
     if (doRandom == false) {
