@@ -25,13 +25,13 @@ function nsNetworkNode(a,b,c, nodeId){
     this.setType=function(){
         var t=Math.random();
         if(t<0.35){
-            this.type="res";
+            this.type="GCN";
         }else if(t>=0.35 && t<0.6){
-            this.type="comm";
+            this.type="NCN";
         }else if(t>=0.6 && t<0.9){
-            this.type="office";   
+            this.type="RCN";   
         }else{
-            this.type="evac";   
+            this.type="EVC";   
         }
     };
     this.getType=function(){
@@ -75,33 +75,33 @@ function nsNetworkEdge(a,b){
 
     this.cost=0;   
     this.updateCost=function(inv){      //inverse of same also - boolean var
-        if(this.node0.getType()==="office" && this.node1.getType()==="office"){ 
-            if(inv===false){ this.cost=costOfficeOffice; }
-            else{this.cost=1/costOfficeOffice;}
+        if(this.node0.getType()==="RCN" && this.node1.getType()==="RCN"){ 
+            if(inv===false){ this.cost=costRcnRcn; }
+            else{this.cost=1/costRcnRcn;}
             
         }
-        else if(this.node0.getType()==="res" && this.node1.getType()==="res"){
-            if(inv===false){ this.cost=costResRes; }
-            else{ this.cost=1/costResRes; }
+        else if(this.node0.getType()==="GCN" && this.node1.getType()==="GCN"){
+            if(inv===false){ this.cost=costGcnGcn; }
+            else{ this.cost=1/costGcnGcn; }
             
         }
-        else if(this.node0.getType()==="comm" && this.node1.getType()==="comm"){
-            if(inv===false) { this.cost=costCommComm; } 
-            else{ this.cost=1/costCommComm; }
+        else if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
+            if(inv===false) { this.cost=costNcnNcn; } 
+            else{ this.cost=1/costNcnNcn; }
         }
-        else if((this.node0.getType()==="res" && this.node1.getType()==="comm")||(this.node0.getType()==="comm" && this.node1.getType()==="res")){
-            if(inv ===false) { this.cost=costResComm; }
-            else{ this.cost=1/costResComm; }
+        else if((this.node0.getType()==="GCN" && this.node1.getType()==="NCN")||(this.node0.getType()==="NCN" && this.node1.getType()==="GCN")){
+            if(inv ===false) { this.cost=costGcnNcn; }
+            else{ this.cost=1/costGcnNcn; }
             
         }
-        else if((this.node0.getType()==="res" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="res")){
-            if(inv === false ){ this.cost=costOfficeRes; }
-            else{ this.cost=1/costOfficeRes; }
+        else if((this.node0.getType()==="GCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="GCN")){
+            if(inv === false ){ this.cost=costRcnGcn; }
+            else{ this.cost=1/costRcnGcn; }
             
         }
-        else if((this.node0.getType()==="comm" && this.node1.getType()==="office")||(this.node0.getType()==="office" && this.node1.getType()==="comm")){
-            if(inv===false ) { this.cost=costOfficeComm; }
-            else{ this.cost=1/costOfficeComm; }
+        else if((this.node0.getType()==="NCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="NCN")){
+            if(inv===false ) { this.cost=costRcnNcn; }
+            else{ this.cost=1/costRcnNcn; }
         }
         else{
             this.cost=0.0;
@@ -137,9 +137,9 @@ function nsTile(a,b,c,d){
     this.q=b;
     this.r=c;
     this.s=d;
-    this.res=0.25;
-    this.comm=0.25;
-    this.office=0.25;
+    this.GCN=0.25;
+    this.NCN=0.25;
+    this.RCN=0.25;
     this.neutral=0.25;   
 }
 
@@ -152,8 +152,8 @@ function nsQuad(a,b,c,d,i){
 
     this.cellId=i;
     
-    this.resRat=0.25;
-    this.commRat=0.25;
+    this.GCNRat=0.25;
+    this.NCNRat=0.25;
     this.offRat=0.25;
 
     this.mp=function(){
@@ -227,7 +227,7 @@ function setPath(quad, name){
 
 // CUBE DECISIONS
 // determine the number of layers of buildings on site: three - max
-// three types of buildings: res, comm, office
+// three types of buildings: GCN, NCN, RCN
 // max heights: 3, 7, 20
 
 function CubeRandomDecisions(){
@@ -265,50 +265,50 @@ function CubeRandomDecisions(){
         if(t==3){
             var m=Math.random();
             if(m<0.16){
-                this.types.push("res");      
-                this.types.push("comm");
-                this.types.push("office");
+                this.types.push("GCN");      
+                this.types.push("NCN");
+                this.types.push("RCN");
             }else if(m>0.16 && m<0.32){
-                this.types.push("res");
-                this.types.push("office");
-                this.types.push("comm");      
+                this.types.push("GCN");
+                this.types.push("RCN");
+                this.types.push("NCN");      
             }else if(m>0.32 && m<0.48){
-                this.types.push("comm");
-                this.types.push("office");
-                this.types.push("res");      
+                this.types.push("NCN");
+                this.types.push("RCN");
+                this.types.push("GCN");      
             }else if(m>0.48 && m<0.60){
-                this.types.push("comm");
-                this.types.push("res"); 
-                this.types.push("office");
+                this.types.push("NCN");
+                this.types.push("GCN"); 
+                this.types.push("RCN");
             }else if(m>0.60 && m<0.72){
-                this.types.push("office");
-                this.types.push("comm");
-                this.types.push("res"); 
+                this.types.push("RCN");
+                this.types.push("NCN");
+                this.types.push("GCN"); 
             }else{
-                this.types.push("office");
-                this.types.push("res"); 
-                this.types.push("comm");
+                this.types.push("RCN");
+                this.types.push("GCN"); 
+                this.types.push("NCN");
             }
         }else if(t==2){
             var m=Math.random();
             if(m<0.35){
-                this.types.push("res");      
-                this.types.push("comm");
+                this.types.push("GCN");      
+                this.types.push("NCN");
             }else if(m>0.35 && m<0.7){
-                this.types.push("comm");      
-                this.types.push("res");
+                this.types.push("NCN");      
+                this.types.push("GCN");
             }else{
-                this.types.push("office");      
-                this.types.push("comm");
+                this.types.push("RCN");      
+                this.types.push("NCN");
             }
         }else{
             var m=Math.random();
             if(m<0.35){
-                this.types.push("res");      
+                this.types.push("GCN");      
             }else if(m>0.35 && m<0.7){
-                this.types.push("comm");      
+                this.types.push("NCN");      
             }else if(m>0.35 && m<0.9){
-                this.types.push("office");      
+                this.types.push("RCN");      
             }else{
                 this.types.push("evac");      
             }
@@ -349,12 +349,12 @@ function makeBuildings(quad, numlyr, types, maxht){
             mesh.position.x = p.x;
             mesh.position.y = (selfHt/2) + prevHt;
             mesh.position.z = p.z;    
-            if(this.types[i]=="res"){
-                resCubeArr.push(mesh);
-            }else if(this.types[i]=="comm"){
-                commCubeArr.push(mesh);
-            }else if(this.types[i]=="office"){
-                officeCubeArr.push(mesh);
+            if(this.types[i]=="GCN"){
+                GCNCubeArr.push(mesh);
+            }else if(this.types[i]=="NCN"){
+                NCNCubeArr.push(mesh);
+            }else if(this.types[i]=="RCN"){
+                RCNCubeArr.push(mesh);
             }else{ //evacuation
                 evacArr.push(mesh);    
             }
@@ -365,15 +365,15 @@ function makeBuildings(quad, numlyr, types, maxht){
 function getBuildingMaterialFromType(type){
     this.mat=this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
         wireframe:wireframeVal});;
-    if(type=="res"){
+    if(type=="GCN"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(10,0,255)"),
         wireframe: wireframeVal});        
-    }else if(type=="comm"){
+    }else if(type=="NCN"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(255,102,0)"),
         wireframe: wireframeVal});        
-    }else if(type=="office"){
+    }else if(type=="RCN"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(255,0,50)"),
         wireframe:wireframeVal});

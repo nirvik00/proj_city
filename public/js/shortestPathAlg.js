@@ -168,7 +168,7 @@ function extractMinHeap(neighbours,nodeHeap){
 function findMinCost(typeNode, typeEdge) {
        //sort all edges by weight- for convenience
        var invertCost=true;
-       if(typeNode==="res" && typeEdge==="green"){  invertCost=false; }
+       if(typeNode==="GCN" && typeEdge==="green"){  invertCost=false; }
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        
        var nodeHeap = getNodeHeap();      //get all valis nodes - point

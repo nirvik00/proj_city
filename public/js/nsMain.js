@@ -5,12 +5,13 @@ var camera, scene, renderer, control;
 var ITERATION = 1;var COUNTER = 0;
 var wireframeVal = false;
 
-var costResRes;
-var costResComm;
-var costCommComm;
-var costOfficeRes;
-var costOfficeComm;
-var costOfficeOffice;
+var costRcnRcn;
+var costGcnGcn;
+var costNcnNcn;
+var costGcnNcn;
+var costRcnGcn;
+var costRcnNcn;
+
 
 var networkNodesArr = [];
 var networkEdgesArr = [];
@@ -23,9 +24,9 @@ var globalOffset=0.5;
 
 var gridArr = Array();
 var evacArr = Array();
-var resCubeArr = Array();
-var commCubeArr = Array();
-var officeCubeArr = Array();
+var GCNCubeArr = Array();
+var NCNCubeArr = Array();
+var RCNCubeArr = Array();
 var cellQuadArr = Array();
 var pathArr = Array();
 var roadArr = Array();
@@ -76,14 +77,14 @@ document.addEventListener("keypress", function(event) {
     console.log("optimize iteration: (ENTER)" + COUNTER);
 
     //typeNode, typeEdge
-    var t=checkNodeTypeExists("res");
+    var t=checkNodeTypeExists("GCN");
     if(t===true){ 
-      findMinCost("res", "green"); 
+      findMinCost("GCN", "green"); 
     }
 
-    var t=checkNodeTypeExists("office");
+    var t=checkNodeTypeExists("RCN");
     if(t===true){ 
-      findMinCost("office", "road"); 
+      findMinCost("RCN", "road"); 
     }
 
     
@@ -121,12 +122,12 @@ var mainLoop = function() {
   varCellLe = gridGuiControls.cell_Length;
   varCellDe = gridGuiControls.cell_Depth;
 
-  costResRes = groundGuiControls.cost_Res_Res;
-  costResComm = groundGuiControls.cost_Res_Comm;
-  costCommComm = groundGuiControls.cost_Comm_Comm;
-  costOfficeRes = groundGuiControls.cost_Office_Res;
-  costOfficeComm = groundGuiControls.cost_Office_Comm;
-  costOfficeOffice = groundGuiControls.cost_Office_Office;
+  costGcnGcn = groundGuiControls.cost_GCN_GCN;
+  costGcnNcn = groundGuiControls.cost_GCN_NCN;
+  costNcnNcn = groundGuiControls.cost_NCN_NCN;
+  costRcnGcn = groundGuiControls.cost_RCN_GCN;
+  costRcnNcn = groundGuiControls.cost_RCN_NCN;
+  costRcnRcn = groundGuiControls.cost_RCN_RCN;
 
   cellNumLe.onChange(function() {
     genGrid();
@@ -197,41 +198,41 @@ var mainLoop = function() {
   }
   
   if (
-    bldgGuiControls.show_Residences == true &&
+    bldgGuiControls.show_GCN == true &&
     genGuiControls.hide_Buildings == false
   ) {
-    for (var i = 0; i < resCubeArr.length; i++) {
-      scene.add(resCubeArr[i]);
+    for (var i = 0; i < GCNCubeArr.length; i++) {
+      scene.add(GCNCubeArr[i]);
     }
   } else {
-    for (var i = 0; i < resCubeArr.length; i++) {
-      scene.remove(resCubeArr[i]);
+    for (var i = 0; i < GCNCubeArr.length; i++) {
+      scene.remove(GCNCubeArr[i]);
     }
   }
 
   if (
-    bldgGuiControls.show_Commercial == true &&
+    bldgGuiControls.show_NCN == true &&
     genGuiControls.hide_Buildings == false
   ) {
-    for (var i = 0; i < commCubeArr.length; i++) {
-      scene.add(commCubeArr[i]);
+    for (var i = 0; i < NCNCubeArr.length; i++) {
+      scene.add(NCNCubeArr[i]);
     }
   } else {
-    for (var i = 0; i < commCubeArr.length; i++) {
-      scene.remove(commCubeArr[i]);
+    for (var i = 0; i < NCNCubeArr.length; i++) {
+      scene.remove(NCNCubeArr[i]);
     }
   }
 
   if (
-    bldgGuiControls.show_Office == true &&
+    bldgGuiControls.show_RCN == true &&
     genGuiControls.hide_Buildings == false
   ) {
-    for (var i = 0; i < officeCubeArr.length; i++) {
-      scene.add(officeCubeArr[i]);
+    for (var i = 0; i < RCNCubeArr.length; i++) {
+      scene.add(RCNCubeArr[i]);
     }
   } else {
-    for (var i = 0; i < officeCubeArr.length; i++) {
-      scene.remove(officeCubeArr[i]);
+    for (var i = 0; i < RCNCubeArr.length; i++) {
+      scene.remove(RCNCubeArr[i]);
     }
   }
 

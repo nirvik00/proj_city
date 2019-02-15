@@ -1,4 +1,9 @@
 // GUI
+
+// res = GCN
+// comm = NCN
+// office= RCN
+
 var varCellNumLe = 2;
 var varCellNumDe = 2;
 var varCellLe = 3;
@@ -32,23 +37,23 @@ varGlobalOffset = gridGuiControls.global_offset;
 
 //ground gui controls
 var groundGuiControls = new function() {
-  this.cost_Res_Res = 0.1;
-  this.cost_Res_Comm = 0.30;
-  this.cost_Comm_Comm = 0.45;
-  this.cost_Office_Res = 0.75;
-  this.cost_Office_Comm = 0.85;
-  this.cost_Office_Office = 0.95;
+  this.cost_GCN_GCN = 0.1;
+  this.cost_GCN_NCN = 0.30;
+  this.cost_NCN_NCN = 0.45;
+  this.cost_RCN_GCN = 0.75;
+  this.cost_RCN_NCN = 0.85;
+  this.cost_RCN_RCN = 0.95;
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
 }();
 var groundGUI = datgui.addFolder("groundGuiControls");
-groundGUI.add(groundGuiControls, "cost_Res_Res", 0.01, 1);
-groundGUI.add(groundGuiControls, "cost_Res_Comm", 0.01, 1);
-groundGUI.add(groundGuiControls, "cost_Comm_Comm", 0.01, 1);
-groundGUI.add(groundGuiControls, "cost_Office_Res", 0.01, 1);
-groundGUI.add(groundGuiControls, "cost_Office_Comm", 0.01, 1);
-groundGUI.add(groundGuiControls, "cost_Office_Office", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_GCN_GCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_GCN_NCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_NCN_NCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_RCN_GCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_RCN_NCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_RCN_RCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
@@ -56,29 +61,29 @@ groundGUI.add(groundGuiControls, "show_Road");
 //building gui controls
 var bldgGuiControls = new function() {
   this.evacuation_density = 0.05;
-  this.res_FSR = 0.3;
-  this.comm_FSR = 0.3;
-  this.office_FSR = 0.3;
+  this.GCN_FSR = 0.3;
+  this.NCN_FSR = 0.3;
+  this.RCN_FSR = 0.3;
   this.min_Ht = 3;
   this.mid_Ht = 7;
   this.max_Ht = 20;
   this.show_Evacuation = true;
-  this.show_Residences = true;
-  this.show_Commercial = true;
-  this.show_Office = true;
+  this.show_GCN = true;
+  this.show_NCN = true;
+  this.show_RCN = true;
 }();
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "evacuation_density", 0.01, 0.1);
-buildingGUI.add(bldgGuiControls, "res_FSR", 0.1, 3);
-buildingGUI.add(bldgGuiControls, "comm_FSR", 0.1, 3);
-buildingGUI.add(bldgGuiControls, "office_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 3);
 buildingGUI.add(bldgGuiControls, "min_Ht", 1, 5);
 buildingGUI.add(bldgGuiControls, "mid_Ht", 5, 12);
 buildingGUI.add(bldgGuiControls, "max_Ht", 12, 25);
 buildingGUI.add(bldgGuiControls, "show_Evacuation");
-buildingGUI.add(bldgGuiControls, "show_Residences");
-buildingGUI.add(bldgGuiControls, "show_Commercial");
-buildingGUI.add(bldgGuiControls, "show_Office");
+buildingGUI.add(bldgGuiControls, "show_GCN");
+buildingGUI.add(bldgGuiControls, "show_NCN");
+buildingGUI.add(bldgGuiControls, "show_RCN");
 
 // main functions about the generation
 var genGuiControls = new function() {
@@ -366,28 +371,28 @@ var clrBuildings=function(){
     scene.remove(evacArr[i]);
   }
 
-  for (var i = 0; i < resCubeArr.length; i++) {
-    resCubeArr[i].geometry.dispose();
-    resCubeArr[i].material.dispose();
-    scene.remove(resCubeArr[i]);
+  for (var i = 0; i < GCNCubeArr.length; i++) {
+    GCNCubeArr[i].geometry.dispose();
+    GCNCubeArr[i].material.dispose();
+    scene.remove(GCNCubeArr[i]);
   }
 
-  for (var i = 0; i < commCubeArr.length; i++) {
-    commCubeArr[i].geometry.dispose();
-    commCubeArr[i].material.dispose();
-    scene.remove(commCubeArr[i]);
+  for (var i = 0; i < NCNCubeArr.length; i++) {
+    NCNCubeArr[i].geometry.dispose();
+    NCNCubeArr[i].material.dispose();
+    scene.remove(NCNCubeArr[i]);
   }
 
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    officeCubeArr[i].geometry.dispose();
-    officeCubeArr[i].material.dispose();
-    scene.remove(officeCubeArr[i]);
+  for (var i = 0; i < RCNCubeArr.length; i++) {
+    RCNCubeArr[i].geometry.dispose();
+    RCNCubeArr[i].material.dispose();
+    scene.remove(RCNCubeArr[i]);
   }
 
   evacArr = Array();
-  resCubeArr = Array();
-  commCubeArr = Array();
-  officeCubeArr = Array();
+  GCNCubeArr = Array();
+  NCNCubeArr = Array();
+  RCNCubeArr = Array();
 }
 //generate the cubes
 var genCubes = function(doRandom) {
@@ -408,14 +413,14 @@ var genCubes = function(doRandom) {
     var MK = new makeBuildings(quad, numLayers, type, maxHt);
     MK.genBuilding();
   }
-  for (var i = 0; i < resCubeArr.length; i++) {
-    scene.add(resCubeArr[i]);
+  for (var i = 0; i < GCNCubeArr.length; i++) {
+    scene.add(GCNCubeArr[i]);
   }
-  for (var i = 0; i < commCubeArr.length; i++) {
-    scene.add(commCubeArr[i]);
+  for (var i = 0; i < NCNCubeArr.length; i++) {
+    scene.add(NCNCubeArr[i]);
   }
-  for (var i = 0; i < officeCubeArr.length; i++) {
-    scene.add(officeCubeArr[i]);
+  for (var i = 0; i < RCNCubeArr.length; i++) {
+    scene.add(RCNCubeArr[i]);
   }
   for (var i = 0; i < evacArr.length; i++) {
     scene.add(evacArr[i]);
@@ -424,41 +429,41 @@ var genCubes = function(doRandom) {
 
 
 function cellQuadsAlignment() {
-  var resGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.res_FSR;
-  var commGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.comm_FSR;
-  var officeGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.office_FSR;
-  //console.log(resGfa + ", " + commGfa + ", " + officeGfa);
-  var resCellsArr = [];
-  var commCellsArr = [];
-  var officeCellsArr = [];
+  var GCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.GCN_FSR;
+  var NCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.NCN_FSR;
+  var RCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.RCN_FSR;
+  //console.log(GCNGfa + ", " + NCNGfa + ", " + RCNGfa);
+  var GCNCellsArr = [];
+  var NCNCellsArr = [];
+  var RCNCellsArr = [];
   for (var i = 0; i < cellQuadArr.length; i++) {
     var p = cellQuadArr[i].mp();
-    var commRat = 0;
-    var resRat = 0;
-    var officeRat = 0;
+    var NCNRat = 0;
+    var GCNRat = 0;
+    var RCNRat = 0;
     for (var j = 0; j < networkNodesArr.length; j++) {
       var q = networkNodesArr[j].getPt();
       var d = utilDi(p, q);
       if (d < 1.5 * Math.sqrt(varCellLe * varCellLe + varCellDe * varCellDe)) {
         var t = networkNodesArr[j].getType();
-        if (t === "office") {
-          officeRat++;
-          officeCellsArr.push(cellQuadArr[i]);
-        } else if (t === "res") {
-          resRat++;
-          resCellsArr.push(cellQuadArr[i]);
-        } else if (t === "comm") {
-          commRat++;
-          commCellsArr.push(cellQuadArr[i]);
+        if (t === "RCN") {
+          RCNRat++;
+          RCNCellsArr.push(cellQuadArr[i]);
+        } else if (t === "GCN") {
+          GCNRat++;
+          GCNCellsArr.push(cellQuadArr[i]);
+        } else if (t === "NCN") {
+          NCNRat++;
+          NCNCellsArr.push(cellQuadArr[i]);
         }
       }
     }
-    cellQuadArr[i].resRat = resRat;
-    cellQuadArr[i].commRat = commRat;
-    cellQuadArr[i].officeRat = officeRat;
-    var resDistributedFSR = resGfa / resCellsArr.length;
-    var commDistributedFSR = commGfa / commCellsArr.length;
-    var officeDistributedFSR = officeGfa / officeCellsArr.length;
+    cellQuadArr[i].GCNRat = GCNRat;
+    cellQuadArr[i].NCNRat = NCNRat;
+    cellQuadArr[i].RCNRat = RCNRat;
+    var GCNDistributedFSR = GCNGfa / GCNCellsArr.length;
+    var NCNDistributedFSR = NCNGfa / NCNCellsArr.length;
+    var RCNDistributedFSR = RCNGfa / RCNCellsArr.length;
   }
 }
 
