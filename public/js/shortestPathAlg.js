@@ -167,8 +167,10 @@ function extractMinHeap(neighbours,nodeHeap){
 // MAIN DRIVER FOR SPT  shortest path algorithm - epsilon greedy
 function findMinCost(typeNode, typeEdge) {
        //sort all edges by weight- for convenience
-       var invertCost=true;
-       if(typeNode==="GCN" && typeEdge==="green"){  invertCost=false; }
+       var invertCost=0;
+       if(typeNode==="GCN" && typeEdge==="green"){  invertCost=0; }
+       else if(typeNode==="RCN" && typeEdge==="road"){ invertCost=1; }
+       else if(typeNode==="EVAC" && typeEdge==="EVAC"){ invertCost=2; }
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        
        var nodeHeap = getNodeHeap();      //get all valis nodes - point

@@ -111,42 +111,39 @@ function genNetworkGeometry() {
      
 //check if the network edge already exists in networkEdgesArr
 function checkNetworkEdgeRepetition(arr, e0) {
-var sum = 0;
-if (arr.length > 0) {
-       for (var i = 0; i < arr.length; i++) {
-       var a = arr[i].getP();
-       var b = arr[i].getQ();
-       var p = e0.getP();
-       var q = e0.getQ();
-       var T = 0.0001;
-       if (
-       (utilDi(p, a) < T && utilDi(q, b) < T) ||
-       (utilDi(p, b) < T && utilDi(q, a) < T)
-       ) {
-       sum++;
-       }
-       }
-}
-if (sum === 0) {
-       return false;
-} else {
-       return true;
-}
+  var sum = 0;
+  if (arr.length > 0) {
+        for (var i = 0; i < arr.length; i++) {
+        var a = arr[i].getP();
+        var b = arr[i].getQ();
+        var p = e0.getP();
+        var q = e0.getQ();
+        var T = 0.0001;
+        if ((utilDi(p, a) < T && utilDi(q, b) < T) || (utilDi(p, b) < T && utilDi(q, a) < T)) {
+          sum++;
+        }
+    }
+  }
+  if (sum === 0) {
+        return false;
+  } else {
+        return true;
+  }
 }
      
 // network node creation from edge - repetition
 function getNetworkNodes(e) {
-var sum0 = 0;
-var sum1 = 0;
-var n0 = e.getNode0();
-var n1 = e.getNode1();
+  var sum0 = 0;
+  var sum1 = 0;
+  var n0 = e.getNode0();
+  var n1 = e.getNode1();
 
-var p = n0.getPt();
-var q = n1.getPt();
+  var p = n0.getPt();
+  var q = n1.getPt();
 
-var nodeCounter = 0;
+  var nodeCounter = 0;
 
-if (networkEdgesArr.length > 0) {
+  if (networkEdgesArr.length > 0) {
        for (var i = 0; i < networkNodesArr.length; i++) {
          var r = networkNodesArr[i].getPt();
         if (utilDi(p, r) < 0.01) {

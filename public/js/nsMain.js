@@ -11,6 +11,7 @@ var costNcnNcn;
 var costGcnNcn;
 var costRcnGcn;
 var costRcnNcn;
+var costEVAC;
 
 
 var networkNodesArr = [];
@@ -32,6 +33,7 @@ var pathArr = Array();
 var roadArr = Array();
 var greenArr = Array();
 var groundArr = Array();
+var evacArr = [];
 var intxArr=[];
 
 var circulationQuads=[];  //data str 
@@ -85,6 +87,11 @@ document.addEventListener("keypress", function(event) {
     var t=checkNodeTypeExists("RCN");
     if(t===true){ 
       findMinCost("RCN", "road"); 
+    }
+
+    var t=checkNodeTypeExists("EVAC");
+    if(t===true){ 
+      //findMinCost("EVAC", "EVAC"); 
     }
 
     
@@ -194,6 +201,12 @@ var mainLoop = function() {
     }
     for (var i = 0; i < roadArr.length; i++) {
       scene.remove(roadArr[i]);
+    }
+    for (var i = 0; i < intxArr.length; i++) {
+      scene.remove(intxArr[i]);
+    }
+    for (var i = 0; i < evacArr.length; i++) {
+      scene.remove(evacArr[i]);
     }
   }
   

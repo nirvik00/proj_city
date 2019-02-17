@@ -31,7 +31,7 @@ function nsNetworkNode(a,b,c, nodeId){
         }else if(t>=0.6 && t<0.9){
             this.type="RCN";   
         }else{
-            this.type="EVC";   
+            this.type="EVAC";   
         }
     };
     this.getType=function(){
@@ -71,37 +71,40 @@ function nsNetworkEdge(a,b){
     this.getNode1=function(){return this.node1; }
     
     this.id=-1;
-
-
     this.cost=0;   
     this.updateCost=function(inv){      //inverse of same also - boolean var
         if(this.node0.getType()==="RCN" && this.node1.getType()==="RCN"){ 
-            if(inv===false){ this.cost=costRcnRcn; }
-            else{this.cost=1/costRcnRcn;}
+            if(inv===0){ this.cost=costRcnRcn; }
+            else if(inv===1){this.cost=1/costRcnRcn;}
+            else{ this.cost=1/costEVAC; }
             
         }
         else if(this.node0.getType()==="GCN" && this.node1.getType()==="GCN"){
-            if(inv===false){ this.cost=costGcnGcn; }
-            else{ this.cost=1/costGcnGcn; }
-            
+            if(inv===0){ this.cost=costGcnGcn; }
+            else if(inv===0){ this.cost=1/costGcnGcn; }
+            else{ this.cost=1/costEVAC; }            
         }
         else if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
-            if(inv===false) { this.cost=costNcnNcn; } 
-            else{ this.cost=1/costNcnNcn; }
+            if(inv===0) { this.cost=costNcnNcn; } 
+            else if(inv===1){ this.cost=1/costNcnNcn; }
+            else { this.cost=costEVAC; }
         }
         else if((this.node0.getType()==="GCN" && this.node1.getType()==="NCN")||(this.node0.getType()==="NCN" && this.node1.getType()==="GCN")){
-            if(inv ===false) { this.cost=costGcnNcn; }
-            else{ this.cost=1/costGcnNcn; }
+            if(inv === 0) { this.cost=costGcnNcn; }
+            else if(inv===1){ this.cost=1/costGcnNcn; }
+            else{ this.cost=1/costEVAC; }
             
         }
         else if((this.node0.getType()==="GCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="GCN")){
-            if(inv === false ){ this.cost=costRcnGcn; }
-            else{ this.cost=1/costRcnGcn; }
+            if(inv === 0 ){ this.cost=costRcnGcn; }
+            else if(inv === 1){ this.cost=1/costRcnGcn; }
+            else{ this.cost=1/costEVAC; }            
             
         }
         else if((this.node0.getType()==="NCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="NCN")){
-            if(inv===false ) { this.cost=costRcnNcn; }
-            else{ this.cost=1/costRcnNcn; }
+            if(inv===0 ) { this.cost=costRcnNcn; }
+            else if(inv===1){ this.cost=1/costRcnNcn; }
+            else{ this.cost=1/costEVAC; }            
         }
         else{
             this.cost=0.0;
@@ -217,10 +220,14 @@ function setPath(quad, name){
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }
-        else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+        else if(name==="intx"){
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
-            greenArr.push(mesh);
+            intxArr.push(mesh);
+        }else{
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            var mesh=new THREE.Mesh(p, mat);    
+            evacArr.push(mesh);
         }
     }
 }

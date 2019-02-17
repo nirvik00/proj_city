@@ -43,6 +43,7 @@ var groundGuiControls = new function() {
   this.cost_RCN_GCN = 0.75;
   this.cost_RCN_NCN = 0.85;
   this.cost_RCN_RCN = 0.95;
+  this.cost_EVAC = 0.05;
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
@@ -54,6 +55,7 @@ groundGUI.add(groundGuiControls, "cost_NCN_NCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "cost_RCN_GCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "cost_RCN_NCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "cost_RCN_RCN", 0.01, 1);
+groundGUI.add(groundGuiControls, "cost_EVAC", 0.01, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
@@ -109,6 +111,8 @@ datgui.close();
 
 // generate the grids
 var genGrid = function() {
+  clrBuildings();
+  clrGround();
   varCellNumLe = gridGuiControls.num_Length;
   varCellNumDe = gridGuiControls.num_Depth;
   varCellLe = gridGuiControls.cell_Length;
@@ -196,7 +200,7 @@ var clrGround=function(){
   }
   for (var i = 0; i < intxArr.length; i++) {
     intxArr[i].geometry.dispose();
-    greenArr[i].material.dispose();
+    intxArr[i].material.dispose();
     scene.remove(intxArr[i]);
   }
   for (var i = 0; i < groundArr.length; i++) {
@@ -204,19 +208,39 @@ var clrGround=function(){
     groundArr[i].material.dispose();
     scene.remove(groundArr[i]);
   }
-  for (var i = 0; i < circulationQuadArr.length; i++) {
-    circulationQuadArr[i].geometry.dispose();
-    circulationQuadArr[i].material.dispose();
-    scene.remove(circulationQuadArr[i]);
+  for (var i = 0; i < evacArr.length; i++) {
+    evacArr[i].geometry.dispose();
+    evacArr[i].material.dispose();
+    scene.remove(evacArr[i]);
   }
-
   pathArr = Array();
   roadArr = Array();
   greenArr = Array();
   groundArr = Array();
-  circulationQuadArr = [];
+  evacArr=[];
+  intxArr=[];
 }
 
+var genGroundTiles=function(){
+  for (var i = 0; i < pathArr.length; i++) {
+    scene.add(pathArr[i]);
+  }
+  for (var i = 0; i < roadArr.length; i++) {
+    scene.add(roadArr[i]);
+  }
+  for (var i = 0; i < greenArr.length; i++) {
+    scene.add(greenArr[i]);
+  }  
+  for (var i = 0; i < intxArr.length; i++) {
+    scene.add(intxArr[i]);
+  }    
+  for (var i = 0; i < evacArr.length; i++) {
+    scene.add(evacArr[i]);
+  }
+  for (var i = 0; i < groundArr.length; i++) {
+    scene.add(groundArr[i]);
+  }
+}
 
 //generate the passage: returnNodeType
 var constructGroundTiles = function(doRandom) {
@@ -235,26 +259,7 @@ var constructGroundTiles = function(doRandom) {
     var PA = new setPath(circulationQuads[i], name);
     PA.generateGround();
   }
-
-  for (var i = 0; i < pathArr.length; i++) {
-    scene.add(pathArr[i]);
-  }
-
-  for (var i = 0; i < roadArr.length; i++) {
-    scene.add(roadArr[i]);
-  }
-
-  for (var i = 0; i < greenArr.length; i++) {
-    scene.add(greenArr[i]);
-  }
-  
-  for (var i = 0; i < intxArr.length; i++) {
-    scene.add(intxArr[i]);
-  }
-
-  for (var i = 0; i < groundArr.length; i++) {
-    scene.add(groundArr[i]);
-  }
+  genGroundTiles();
 };
 
 function getRandomType(){
