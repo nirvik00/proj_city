@@ -14,8 +14,8 @@ var datgui = new dat.GUI({ autoPlace: false });
 
 //cell-grid gui controls
 var gridGuiControls = new function() {
-  this.num_Length = 1;
-  this.num_Depth = 1;
+  this.num_Length = 1.5;
+  this.num_Depth = 1.5;
   this.cell_Length = 3;
   this.cell_Depth = 3;
   this.global_offset = 0.5;
@@ -259,7 +259,8 @@ var constructGroundTiles = function(doRandom) {
     var PA = new setPath(circulationQuads[i], name);
     PA.generateGround();
   }
-  genGroundTiles();
+
+  genGroundTiles(); // definition files
 };
 
 function getRandomType(){
@@ -313,7 +314,8 @@ var genVerticalCirculationQuad=function(p,q,offset, type){
   quad.type=type;
   circulationQuads.push(quad);
 }
-//util function to generate linear circulation along edge : hor
+
+//util function to generate  linear circulation along edge : hor
 var genHorizontalCirculationQuad=function(p,q,offset, type){
   var a=new nsPt(p.x+offset, p.y, p.z-offset);
   var b=new nsPt(q.x-offset, q.y, q.z-offset);
@@ -323,6 +325,7 @@ var genHorizontalCirculationQuad=function(p,q,offset, type){
   quad.type=type;
   circulationQuads.push(quad);
 }
+
 //util function to find and render intersection between circulation routes
 var genCirculationCorner=function(doRandom,offset){
   for(var i=0; i<networkNodesArr.length; i++){
@@ -367,42 +370,30 @@ var genCirculationCorner=function(doRandom,offset){
   }
 }
 
-
-
 var clrBuildings=function(){
-  for (var i = 0; i < evacArr.length; i++) {
-    evacArr[i].geometry.dispose();
-    evacArr[i].material.dispose();
-    scene.remove(evacArr[i]);
-  }
-
   for (var i = 0; i < GCNCubeArr.length; i++) {
     GCNCubeArr[i].geometry.dispose();
     GCNCubeArr[i].material.dispose();
     scene.remove(GCNCubeArr[i]);
   }
-
   for (var i = 0; i < NCNCubeArr.length; i++) {
     NCNCubeArr[i].geometry.dispose();
     NCNCubeArr[i].material.dispose();
     scene.remove(NCNCubeArr[i]);
   }
-
   for (var i = 0; i < RCNCubeArr.length; i++) {
     RCNCubeArr[i].geometry.dispose();
     RCNCubeArr[i].material.dispose();
     scene.remove(RCNCubeArr[i]);
   }
-
-  evacArr = Array();
   GCNCubeArr = Array();
   NCNCubeArr = Array();
   RCNCubeArr = Array();
 }
+
 //generate the cubes
 var genCubes = function(doRandom) {
   clrBuildings();
-
   for (var i = 0; i < cellQuadArr.length; i++) {
     var deci;
     if (doRandom == false) {
@@ -410,7 +401,6 @@ var genCubes = function(doRandom) {
     } else {
       deci = new CubeRandomDecisions();
     }
-
     var numLayers = deci.getNumLayers();
     var type = deci.getType();
     var maxHt = deci.getMaxHt();
@@ -431,7 +421,6 @@ var genCubes = function(doRandom) {
     scene.add(evacArr[i]);
   }
 };
-
 
 function cellQuadsAlignment() {
   var GCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.GCN_FSR;

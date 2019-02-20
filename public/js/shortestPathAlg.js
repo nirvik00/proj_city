@@ -10,7 +10,6 @@ function initEdgeCost(inv){
               networkEdgesArr[i].id=i;
               e.updateCost(inv);
        }
-
        var k=0;
        for(var i=0; i<networkNodesArr.length ; i++){
               networkNodesArr[i].id=k;
@@ -42,10 +41,9 @@ function getNodeHeap(){
                      nodeHeap.push(networkNodesArr[i]);
               }catch(err){
               }          
-         }
+       }
        return nodeHeap;
 }
-
 
 // util function : set all edges to a type
 function setEdgeToType(tmpeEdgeArr, type){
@@ -69,7 +67,6 @@ function setEdgeToType(tmpeEdgeArr, type){
               }
        }
 }
-
 
 // util function : get the path from sink to source by following parent trail
 function getPath(source, sink, nodes, edges, tmpArr){
@@ -106,7 +103,6 @@ function getPath(source, sink, nodes, edges, tmpArr){
        return tmpArr;
 }
 
-
 // step 1 of spt : get neighbours and update distance from source
 function getAllEdgesOfNode(node, edges){
        var p=node.getPt();
@@ -132,7 +128,6 @@ function getAllEdgesOfNode(node, edges){
        }
        return neighbours;
 }
-
 
 // step 2 of spt: get the min dist node from source - out of the nodeheap
 function extractMinHeap(neighbours,nodeHeap){
@@ -163,14 +158,29 @@ function extractMinHeap(neighbours,nodeHeap){
        return node;
 }
 
-
 // MAIN DRIVER FOR SPT  shortest path algorithm - epsilon greedy
 function findMinCost(typeNode, typeEdge) {
        //sort all edges by weight- for convenience
        var invertCost=0;
-       if(typeNode==="GCN" && typeEdge==="green"){  invertCost=0; }
-       else if(typeNode==="RCN" && typeEdge==="road"){ invertCost=1; }
-       else if(typeNode==="EVAC" && typeEdge==="EVAC"){ invertCost=2; }
+       if(typeNode==="GCN" && typeEdge==="green"){  
+              invertCost=0; 
+              sendSPTAlg(invertCost, typeNode, typeEdge);
+       }
+       else if(typeNode==="RCN" && typeEdge==="road"){
+              invertCost=1; 
+              sendSPTAlg(invertCost, typeNode, typeEdge);
+       }
+       else if(typeNode==="EVAC" && typeEdge==="EVAC"){ 
+              console.log("evac min cost");
+              invertCost=2; 
+              sendMSTAlg(invertCost, typeNode, typeEdge)
+       }
+
+}
+
+//EVAC MST algorithm
+function sendMSTAlg(invertCost, typeNode, typeEdge){
+       console.log("invert SPT Alg");
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        
        var nodeHeap = getNodeHeap();      //get all valis nodes - point
@@ -188,11 +198,58 @@ function findMinCost(typeNode, typeEdge) {
        resultNodeHeap.push(source);       //first element is the source
 
 
-       //djikstra algorithm to find min dist of all nodes from source 
-       //recursive algorithm:
-       //1. find all neighbours and update dist
-       //2. extract min from the heap
-       //loop until result heap is as big as initial nodeHeap
+       // djikstra algorithm to find min dist of all nodes from source 
+       // recursive algorithm:
+       // 1. find all neighbours and update dist
+       // 2. extract min from the heap
+       // loop until result heap is as big as initial nodeHeap
+       var k=0; 
+       while(nodeHeap.length>0){
+              var neighbours=getAllEdgesOfNode(source, networkEdgesArr);
+              source=extractMinHeap(neighbours, nodeHeap);
+              try{
+                     for(var i=0; i<nodeHeap.length; i++){     //remove the source from nodeheap
+                            if(utilDi(source.getPt(),nodeHeap[i].getPt())< 0.1){
+                                   nodeHeap.splice(i,1);
+                                   break;
+                            }
+                     }
+              }catch(err){
+                     console.log("error found");
+                     console.log(nodeHeap);
+                     break;
+              }
+              
+              resultNodeHeap.push(source);
+              k++;
+       }  
+       console.log(resultNodeHeap);
+}
+
+//SPT ALGS
+function sendSPTAlg(invertCost, typeNode, typeEdge){
+       initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
+       
+       var nodeHeap = getNodeHeap();      //get all valis nodes - point
+       var source;                         //get ource node: first res in node heap
+       for(var i=0; i<nodeHeap.length; i++){
+              if(nodeHeap[i].getType()===typeNode){
+                     source=nodeHeap[i];
+                     break;
+              }
+       }
+       source.dist=0;                     //initialize alg with source dist=0
+       source.parent=null;                //source parent is null
+       nodeHeap.splice(0,1);              //remove source from nodeheap
+       var resultNodeHeap=[];             //init result nodeheap - to store nodes
+       resultNodeHeap.push(source);       //first element is the source
+
+
+       // djikstra algorithm to find min dist of all nodes from source 
+       // recursive algorithm:
+       // 1. find all neighbours and update dist
+       // 2. extract min from the heap
+       // loop until result heap is as big as initial nodeHeap
        var k=0; 
        while(nodeHeap.length>0){
               var neighbours=getAllEdgesOfNode(source, networkEdgesArr);
@@ -213,17 +270,19 @@ function findMinCost(typeNode, typeEdge) {
               resultNodeHeap.push(source);
               k++;
        }            
-       
-       //get all nodes of typeNode ie "res", "comm", "office" node-type
-       //each res type will be a sink; make an array of sinks
-       //the required spine will be a summation of all the paths to source
+       // res = GCN
+       // comm = NCN
+       // office = RCN
+       // get all nodes of typeNode ie "res", "comm", "office" node-type
+       // each res type will be a sink; make an array of sinks
+       // the required spine will be a summation of all the paths to source
        var reqResNodes=[];
        for (var i = 0; i < networkNodesArr.length; i++) {
               if(networkNodesArr[i].getType()===typeNode){
                      try{
                             var p=networkNodesArr[i].getPt()
                             reqResNodes.push(networkNodesArr[i]);
-                     }catch(err){
+                     } catch(err) {
                             //error in getPT();
                      }
               }
@@ -243,22 +302,19 @@ function findMinCost(typeNode, typeEdge) {
               }
        }
 
-       //get all paths from each element of the sink array
-       //set each edge to typeEdge:green , road, path
-       //getPath is recursive function:
-       //1.start with the sink
-       //2.find parent and add to array
-       //3.loop until parent is source
-
+       // get all paths from each element of the sink array
+       // set each edge to typeEdge:green , road, path
+       // getPath is recursive function:
+       //     1. start with the sink
+       //     2. find parent and add to array
+       //     3. loop until parent is source
        for(var i=0; i<reqResNodes.length; i++){
               var sink=reqResNodes[i];
               var tmpArr=[];
               tmpArr=getPath(source, sink, resultNodeHeap, networkEdgesArr, tmpArr);
               setEdgeToType(tmpArr, typeEdge);
        }
-
-
-
+       
        //finally render the geometry: nsMain.js after ENTER is pressed
        //genNetworkGeometry();
 }

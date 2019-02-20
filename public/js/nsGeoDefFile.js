@@ -73,41 +73,42 @@ function nsNetworkEdge(a,b){
     this.id=-1;
     this.cost=0;   
     this.updateCost=function(inv){      //inverse of same also - boolean var
-        if(this.node0.getType()==="RCN" && this.node1.getType()==="RCN"){ 
-            if(inv===0){ this.cost=costRcnRcn; }
-            else if(inv===1){this.cost=1/costRcnRcn;}
-            else{ this.cost=1/costEVAC; }
-            
-        }
-        else if(this.node0.getType()==="GCN" && this.node1.getType()==="GCN"){
-            if(inv===0){ this.cost=costGcnGcn; }
-            else if(inv===0){ this.cost=1/costGcnGcn; }
-            else{ this.cost=1/costEVAC; }            
-        }
-        else if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
-            if(inv===0) { this.cost=costNcnNcn; } 
-            else if(inv===1){ this.cost=1/costNcnNcn; }
-            else { this.cost=costEVAC; }
-        }
-        else if((this.node0.getType()==="GCN" && this.node1.getType()==="NCN")||(this.node0.getType()==="NCN" && this.node1.getType()==="GCN")){
-            if(inv === 0) { this.cost=costGcnNcn; }
-            else if(inv===1){ this.cost=1/costGcnNcn; }
-            else{ this.cost=1/costEVAC; }
-            
-        }
-        else if((this.node0.getType()==="GCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="GCN")){
-            if(inv === 0 ){ this.cost=costRcnGcn; }
-            else if(inv === 1){ this.cost=1/costRcnGcn; }
-            else{ this.cost=1/costEVAC; }            
-            
-        }
-        else if((this.node0.getType()==="NCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="NCN")){
-            if(inv===0 ) { this.cost=costRcnNcn; }
-            else if(inv===1){ this.cost=1/costRcnNcn; }
-            else{ this.cost=1/costEVAC; }            
-        }
-        else{
-            this.cost=0.0;
+        if (inv===0 || inv===1) {
+            if(this.node0.getType()==="RCN" && this.node1.getType()==="RCN"){ 
+                if(inv===0){ this.cost=costRcnRcn; }
+                else if(inv===1){ this.cost=1/costRcnRcn; }
+            }
+            else if(this.node0.getType()==="GCN" && this.node1.getType()==="GCN"){
+                if(inv===0){ this.cost=costGcnGcn; }
+                else if(inv===1){ this.cost=1/costGcnGcn; }
+            }
+            else if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
+                if(inv===0) { this.cost=costNcnNcn; } 
+                else if(inv===1){ this.cost=1/costNcnNcn; }
+            }
+            else if((this.node0.getType()==="GCN" && this.node1.getType()==="NCN")||(this.node0.getType()==="NCN" && this.node1.getType()==="GCN")){
+                if(inv === 0) { this.cost=costGcnNcn; }
+                else if(inv===1){ this.cost=1/costGcnNcn; }
+            }
+            else if((this.node0.getType()==="GCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="GCN")){
+                if(inv === 0 ){ this.cost=costRcnGcn; }
+                else if(inv === 1){ this.cost=1/costRcnGcn; }
+            }
+            else if((this.node0.getType()==="NCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="NCN")){
+                if(inv===0 ) { this.cost=costRcnNcn; }
+                else if(inv===1){ this.cost=1/costRcnNcn; }
+            }
+        } else if(inv ===2) {
+            console.log("EVAC edge updated");
+            if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
+                this.cost=costNcnNcn;
+            }else if(this.node0.getType()==="EVAC" || this.node1.getType()==="EVAC"){
+                this.cost=costEVAC; 
+            }else{
+                this.cost=1/costEVAC; 
+                }            
+        } else {
+            this.cost=0.0; 
         }
     }
 
@@ -120,15 +121,20 @@ function nsNetworkEdge(a,b){
         return this.type;
     }
     this.getObj=function(){
-       // console.log(this.node0.getType() + ", "+ this.node1.getType());
+        //console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
-        path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
-        path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
+        if(this.getType() !== "EVAC"){
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
+        }else{
+            console.log("\n\nevac geometry added");
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5, this.q.z ));
+        }        
         var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
         return line;
-    }    
-
+    }
     this.display=function(){
         var s= "id= "+this.id+", node0 type= "+this.node0.getType() + ", node1 type= "+this.node1.getType() + ", edge type= "+this.getType();
         console.log(s);
@@ -225,7 +231,7 @@ function setPath(quad, name){
             var mesh=new THREE.Mesh(p, mat);    
             intxArr.push(mesh);
         }else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,155,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
             var mesh=new THREE.Mesh(p, mat);    
             evacArr.push(mesh);
         }
@@ -403,7 +409,9 @@ function getPathMaterialFromType(name, id){
     }else if (name==="intx"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,255)")}); 
+        console.log("\nEvac detected");
+        this.display();
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
     }
     return mat;
 }

@@ -89,7 +89,7 @@ function genNetworkGeometry() {
         edgeArr[i].material.dispose();
         scene.remove(edgeArr[i]);
   }
-  
+
   edgeArr = Array();
   for (var i = 0; i < networkEdgesArr.length; i++) {
         var e = networkEdgesArr[i];
