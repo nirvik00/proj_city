@@ -121,7 +121,6 @@ function nsNetworkEdge(a,b){
         //console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
         if(this.getType() === "EVAC"){
-            //console.log("\n\nevac geometry added");
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5, this.q.z ));
         }else{

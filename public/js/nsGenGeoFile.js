@@ -20,6 +20,10 @@ var gridGuiControls = new function() {
   this.cell_Depth = 3;
   this.global_offset = 0.5;
   this.show_Grid = false;
+  this.show_GCN=true;
+  this.show_RCN=true;
+  this.show_NCN=true;
+  this.show_MST=true;
 }();
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
@@ -27,6 +31,10 @@ var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
 var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
 var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
 var varGlobalOffset = cellGUI.add(gridGuiControls, "global_offset", 0.1, 1);
+var showGCN = cellGUI.add(gridGuiControls, "show_GCN");
+var showRCN = cellGUI.add(gridGuiControls, "show_RCN");
+var showNCN = cellGUI.add(gridGuiControls, "show_NCN");
+var showMST = cellGUI.add(gridGuiControls, "show_MST");
 cellGUI.add(gridGuiControls, "show_Grid");
 
 varCellNumLe = gridGuiControls.num_Length;
@@ -93,13 +101,13 @@ var genGuiControls = new function() {
   this.hide_Buildings = true;
   this.show_Network = true;
   this.show_Information = false;
-  this.AUTOLOOP = false;
+  this.show_Axis = false;
 }();
 datgui.add(genGuiControls, "hide_Ground");
 datgui.add(genGuiControls, "hide_Buildings");
 datgui.add(genGuiControls, "show_Network");
 datgui.add(genGuiControls, "show_Information");
-datgui.add(genGuiControls, "AUTOLOOP");
+datgui.add(genGuiControls, "show_Axis");
 
 var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
@@ -118,8 +126,6 @@ var genGrid = function() {
   varCellLe = gridGuiControls.cell_Length;
   varCellDe = gridGuiControls.cell_Depth;
 
-  var axes = new THREE.AxesHelper(5);
-  scene.add(axes);
   for (var i = 0; i < gridArr.length; i++) {
     gridArr[i].geometry.dispose();
     gridArr[i].material.dispose();
@@ -170,6 +176,7 @@ var genGrid = function() {
   //constructRandomGroundTiles();
   //findMinCost();
 };
+
 
 
 function utilDi(a, b) {

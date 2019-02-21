@@ -90,15 +90,31 @@ function genNetworkGeometry() {
         scene.remove(edgeArr[i]);
   }
 
-  dupEvacArr=[];
   edgeArr = Array();
   for (var i = 0; i < networkEdgesArr.length; i++) {
-        var e = networkEdgesArr[i];
-        edgeArr.push(e.getObj());
+    var e = networkEdgesArr[i];
+    if(gridGuiControls.show_GCN===true && e.type==="green"){
+      console.log("green edges added");
+      edgeArr.push(e.getObj());
+    }
+    if(gridGuiControls.show_RCN===true && e.type==="road"){
+      console.log("road edges added");
+      edgeArr.push(e.getObj());
+    }
+    if(gridGuiControls.show_NCN===true && e.type==="path"){
+      console.log("path edges added");
+      edgeArr.push(e.getObj());
+    }
+    if(gridGuiControls.show_MST===true && e.type==="EVAC"){
+      console.log("mst edges added");
+      edgeArr.push(e.getObj());
+    } 
   }
+
   for (var i = 0; i < edgeArr.length; i++) {
         scene.add(edgeArr[i]);
   }
+
   nodeArr = Array();
   for (var i = 0; i < networkNodesArr.length; i++) {
         var n0 = networkNodesArr[i];
@@ -164,7 +180,12 @@ function getNetworkNodes(e) {
   }
 }
 
-     
+// hide gcn
+var visibleGCN=function(val){
+  for(var i=0; i<networkEdgesArr.length; i++){
+  }
+
+}     
      
      
      

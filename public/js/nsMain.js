@@ -1,7 +1,7 @@
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 
-var camera, scene, renderer, control;
+var camera, scene, renderer, control, axes;
 var ITERATION = 1;var COUNTER = 0;
 var wireframeVal = false;
 
@@ -12,7 +12,6 @@ var costGcnNcn;
 var costRcnGcn;
 var costRcnNcn;
 var costEVAC;
-
 
 var networkNodesArr = [];
 var networkEdgesArr = [];
@@ -57,12 +56,11 @@ var init = function() {
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   scene3d.appendChild(renderer.domElement);
-
+  axes = new THREE.AxesHelper(5);
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.addEventListener("change", render);
   controls.enableZoom = true;
   genGrid();
-  constructGroundTiles(true);
 };
 
 function checkNodeTypeExists(nodeType){
@@ -153,8 +151,24 @@ var mainLoop = function() {
     genGrid();
   });
 
-  if (genGuiControls.AUTOLOOP == true) {
-    genGrid();
+  showGCN.onChange(function(){
+    genNetworkGeometry();
+  });
+  showNCN.onChange(function(){
+    genNetworkGeometry();
+  });
+  showRCN.onChange(function(){
+    genNetworkGeometry();
+  });
+  showMST.onChange(function(){
+    genNetworkGeometry();
+  });
+
+
+  if (genGuiControls.show_Axis === true) {
+    scene.add(axes);
+  }else{
+    scene.remove(axes);
   }
 
   if (groundGuiControls.show_Green == false) {
