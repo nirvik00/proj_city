@@ -102,7 +102,7 @@ function genNetworkGeometry() {
     if(gridGuiControls.show_MST===true && e.type==="MST"){
       edgeArr.push(e.getObj());
     } 
-    if(e.type==="intx"){
+    if((gridGuiControls.show_GCN===true || gridGuiControls.show_RCN===true ) && e.type==="intx"){
       edgeArr.push(e.getObj());
     } 
   }

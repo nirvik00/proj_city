@@ -379,7 +379,7 @@ function getBuildingMaterialFromType(type){
         wireframe:wireframeVal});;
     if(type=="GCN"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(10,0,255)"),
+        color: new THREE.Color("rgb(0,255,0)"),
         wireframe: wireframeVal});        
     }else if(type=="NCN"){
         this.mat = new THREE.MeshBasicMaterial ({
@@ -387,11 +387,11 @@ function getBuildingMaterialFromType(type){
         wireframe: wireframeVal});        
     }else if(type=="RCN"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(255,0,50)"),
+        color: new THREE.Color("rgb(50,50,50)"),
         wireframe:wireframeVal});
     }else{//evac
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(50,50,50)"),
+        color: new THREE.Color("rgb(255,0,0)"),
         wireframe:wireframeVal});
     }
     return this.mat

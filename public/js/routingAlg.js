@@ -388,8 +388,12 @@ function setEdgeToType(tmpeEdgeArr, type){
                                    networkEdgesArr[j].type= "intx";
                                    ids.push(networkEdgesArr[j].id);
                                    console.log("intx : " + i + ", "+j);
-                                   break;
-                            }else{
+                            }else if(networkEdgesArr[j].getType() === "intx" && type==="road"){
+                                   networkEdgesArr[j].type= "intx";
+                                   ids.push(networkEdgesArr[j].id);
+                                   console.log("intx : " + i + ", "+j);
+                            }                            
+                            else{
                                    networkEdgesArr[j].setType(type);
                                    break;
                             }
