@@ -26,12 +26,13 @@ function nsNetworkNode(a,b,c, nodeId){
         var t=Math.random();
         if(t<0.35){
             this.type="GCN";
-        }else if(t>=0.35 && t<0.7){
+        }else if(t>=0.35 && t<0.6){
             this.type="NCN";
-        }else{
+        }else if(t>=0.6 && t<0.85){
             this.type="RCN";   
+        }else{
+            this.type="EVAC";   
         }
-        //in the main array set one node randomly to EVAC
     };
     this.getType=function(){
         return this.type;

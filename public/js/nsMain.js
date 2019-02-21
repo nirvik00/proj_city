@@ -88,10 +88,7 @@ document.addEventListener("keypress", function(event) {
       findMinCost("RCN", "road"); 
     }
 
-    var t=checkNodeTypeExists("EVAC");
-    if(t===true){ 
-      findMinCost("EVAC", "EVAC"); 
-    }
+    findMinCost("MST", "MST"); 
     
     genNetworkGeometry();
 

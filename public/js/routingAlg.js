@@ -170,8 +170,7 @@ function findMinCost(typeNode, typeEdge) {
               invertCost=1; 
               sendSPTAlg(invertCost, typeNode, typeEdge);
        }
-       else if(typeNode==="EVAC" && typeEdge==="EVAC"){ 
-              console.log("evac min cost");
+       else if(typeNode==="MST" && typeEdge==="MST"){ 
               invertCost=2; 
               sendMSTAlg(invertCost, typeNode, typeEdge)
        }
@@ -355,14 +354,10 @@ function sendMSTAlg(invertCost, typeNode, typeEdge){
               }
        }
        var source;
-       for(var i=0; i<notMstNodes.length; i++){
-              if(notMstNodes[i].type==="EVAC"){
-                     source=notMstNodes[i];
-                     source.dist=0;
-                     notMstNodes.splice(i,1);
-                     break;
-              }
-       }
+       var t=Math.ceil(Math.random()*notMstNodes.length) -1 ;
+       source=notMstNodes[t];
+       notMstNodes.splice(t,1);
+
        var mstEdges=[];
        var mstNodes=[];
        mstNodes.push(source);

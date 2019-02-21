@@ -43,9 +43,6 @@ function initNetwork() {
          networkNodesArr[i].setType();
          networkNodesArr[i].id=i;
        }
-       var t= Math.ceil(Math.random()*networkNodesArr.length )-1 ;
-       networkNodesArr[t].type="EVAC";
-     
        //set this node to networkEdges
        for (var i = 0; i < networkEdgesArr.length; i++) {
          var e = networkEdgesArr[i];
@@ -179,14 +176,5 @@ function getNetworkNodes(e) {
        if (sum1 == 0) { networkNodesArr.push(n1); }
   }
 }
-
-// hide gcn
-var visibleGCN=function(val){
-  for(var i=0; i<networkEdgesArr.length; i++){
-  }
-
-}     
-     
-     
      
      
