@@ -26,9 +26,9 @@ function nsNetworkNode(a,b,c, nodeId){
         var t=Math.random();
         if(t<0.35){
             this.type="GCN";
-        }else if(t>=0.35 && t<0.6){
+        }else if(t>=0.35 && t<0.7){
             this.type="NCN";
-        }else if(t>=0.6 && t<0.9){
+        }else{
             this.type="RCN";   
         }
         //in the main array set one node randomly to EVAC

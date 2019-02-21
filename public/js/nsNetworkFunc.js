@@ -45,7 +45,6 @@ function initNetwork() {
        }
        var t= Math.ceil(Math.random()*networkNodesArr.length )-1 ;
        networkNodesArr[t].type="EVAC";
-       
      
        //set this node to networkEdges
        for (var i = 0; i < networkEdgesArr.length; i++) {
