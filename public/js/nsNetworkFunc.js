@@ -102,6 +102,9 @@ function genNetworkGeometry() {
     if(gridGuiControls.show_MST===true && e.type==="MST"){
       edgeArr.push(e.getObj());
     } 
+    if(e.type==="intx"){
+      edgeArr.push(e.getObj());
+    } 
   }
 
   for (var i = 0; i < edgeArr.length; i++) {

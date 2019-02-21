@@ -97,6 +97,8 @@ function nsNetworkEdge(a,b){
             else if((this.node0.getType()==="NCN" && this.node1.getType()==="RCN")||(this.node0.getType()==="RCN" && this.node1.getType()==="NCN")){
                 if(inv===0 ) { this.cost=costRcnNcn; }
                 else if(inv===1){ this.cost=1/costRcnNcn; }
+            }else{
+                this.cost=Math.random() + 0.5;    
             }
         } else if(inv === 2) {
             this.cost=Math.random();
@@ -407,6 +409,8 @@ function getPathMaterialFromType(name, id){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }else if(name === "MST"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
+    }else{
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }
     return mat;
 }
