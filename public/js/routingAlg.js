@@ -15,6 +15,10 @@ function findMinCost(typeNode, typeEdge) {
               invertCost=2; 
               sendMSTAlg(invertCost, typeNode, typeEdge)
        }
+       else if(typeNode==="EVAC" && typeEdge==="EVAC"){ 
+              invertCost=3; 
+              sendEVACSPTAlg(invertCost, typeNode, typeEdge)
+       }
 
 }
 
@@ -168,7 +172,7 @@ function extractMinHeap(neighbours,nodeHeap){
 
 
 
-// MST algorithm
+// MST Algorithm
 function sendMSTAlg(invertCost, typeNode, typeEdge){
        // console.log("\n\n\ninvert-2 SPT Alg" + invertCost);
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
@@ -326,8 +330,74 @@ function updateNeighborEdgeCostMST(node, edges){
        return neighbours;
 }
 
-function sendSTPEvacAlg(invertCost, typeNode, typeEdge){
 
+
+// EVAC SPT ALgorithm
+function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
+       // organize the nodes into evac and not evac
+       var evacNodes=[];
+       var notEvacNodes=[]
+       var allNodes=[];
+       for(var i=0; i<networkNodesArr.length; i++){
+              var n=networkNodesArr[i];
+              try{
+                     var p=n.getPt();
+                     allNodes.push(n);
+                     if(n.type=== "EVAC"){
+                            n.dist=0;
+                            evacNodes.push(n);
+                     }else{
+                            n.dist=1000000;
+                            notEvacNodes.push(n);
+                     }
+              }catch(err){
+                     console.log("error in network nodes");
+              }
+       }
+       
+       // for each not evac node, set its closest evac node as parent 
+       for(var i=0; i<notEvacNodes.length; i++){
+              var n=notEvacNodes[i];
+              var p=n.getPt();
+              var minDi=1000000;
+              for(var j=0; j<evacNodes.length; j++){
+                     var m=evacNodes[j];
+                     var q=m.getPt();
+                     var thisDi=utilDi(p,q);
+                     if(thisDi<minDi){
+                            minDi=thisDi;
+                            n.parent=m;
+                     }
+              }
+       }
+
+       //the dist of each node = dist from parent: evac
+
+       for(var i=0; i<notEvacNodes.length; i++){
+              var n=notEvacNodes[i];
+              var p=notEvacNodes[i].parent;
+              var di=utilDi(n.getPt(),p.getPt());
+              n.dist=di;
+       }
+       
+       // for each not evac node find min dist to its parent viz evac node
+       for(var i=0; i<notEvacNodes.length ; i++){
+              console.log("\nFor Evac: node, parent:")
+              notEvacNodes[i].display();
+              notEvacNodes[i].parent.display();
+              genEvacPath(notEvacNodes[i], allNodes);
+       }
+}
+
+// step 1. for EVAC SPT Algorithm
+function genEvacPath(node, nodes){
+       var source=node.parent;
+       var sink=node;
+       var k=0;
+       var neighbors=getAllEdgesOfNode(source, networkEdgesArr);
+       for(var i=0; i<neighbors.length; i++){
+              neighbors[i].display();
+       }
 }
 
 

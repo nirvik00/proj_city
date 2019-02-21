@@ -26,9 +26,9 @@ function nsNetworkNode(a,b,c, nodeId){
         var t=Math.random();
         if(t<0.35){
             this.type="GCN";
-        }else if(t>=0.35 && t<0.6){
+        }else if(t>=0.35 && t<0.7){
             this.type="NCN";
-        }else if(t>=0.6 && t<0.85){
+        }else if(t>=0.7 && t<0.95){
             this.type="RCN";   
         }else{
             this.type="EVAC";   
@@ -73,7 +73,7 @@ function nsNetworkEdge(a,b){
     this.id=-1;
     this.cost=0;   
     this.updateCost=function(inv){      //inverse of same also - boolean var
-        if (inv===0 || inv===1) {
+        if (inv===0 || inv===1) { // SPT
             if(this.node0.getType()==="RCN" && this.node1.getType()==="RCN"){ 
                 if(inv===0){ this.cost=costRcnRcn; }
                 else if(inv===1){ this.cost=1/costRcnRcn; }
@@ -100,15 +100,19 @@ function nsNetworkEdge(a,b){
             }else{
                 this.cost=Math.random() + 0.5;    
             }
-        } else if(inv === 2) {
+        } else if(inv === 2) { // MST
             this.cost=Math.random();
             if(this.type==="green"){
                 this.cost+=1;
             }else if(this.type==="road"){
                 this.cost+=1; 
             } 
-        } else {
-            this.cost=Math.random(); 
+        } else { // EVAC SPT
+            if(this.node0.getType()==="EVAC" || this.node1.getType()==="EVAC"){
+                this.cost=costEVAC;
+            }else{
+                this.cost=Math.random();     
+            }
         }
     }
 
@@ -124,8 +128,8 @@ function nsNetworkEdge(a,b){
         //console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
         if(this.getType() === "MST"){
-            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5, this.p.z ));
-            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5, this.q.z ));
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.0, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.0, this.q.z ));
         }else{
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));

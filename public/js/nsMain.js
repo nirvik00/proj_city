@@ -89,8 +89,13 @@ document.addEventListener("keypress", function(event) {
     }
 
     findMinCost("MST", "MST"); 
-    genNetworkGeometry();
 
+    var t=checkNodeTypeExists("EVAC");
+    if(t===true){ 
+      findMinCost("EVAC", "EVAC"); 
+    }
+
+    genNetworkGeometry();
 
     genCubes();
     constructGroundTiles(false);
