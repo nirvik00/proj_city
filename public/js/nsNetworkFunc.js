@@ -91,19 +91,15 @@ function genNetworkGeometry() {
   for (var i = 0; i < networkEdgesArr.length; i++) {
     var e = networkEdgesArr[i];
     if(gridGuiControls.show_GCN===true && e.type==="green"){
-      console.log("green edges added");
       edgeArr.push(e.getObj());
     }
     if(gridGuiControls.show_RCN===true && e.type==="road"){
-      console.log("road edges added");
       edgeArr.push(e.getObj());
     }
     if(gridGuiControls.show_NCN===true && e.type==="path"){
-      console.log("path edges added");
       edgeArr.push(e.getObj());
     }
-    if(gridGuiControls.show_MST===true && e.type==="EVAC"){
-      console.log("mst edges added");
+    if(gridGuiControls.show_MST===true && e.type==="MST"){
       edgeArr.push(e.getObj());
     } 
   }

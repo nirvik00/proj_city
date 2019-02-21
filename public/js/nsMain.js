@@ -89,7 +89,6 @@ document.addEventListener("keypress", function(event) {
     }
 
     findMinCost("MST", "MST"); 
-    
     genNetworkGeometry();
 
 

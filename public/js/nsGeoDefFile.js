@@ -106,7 +106,7 @@ function nsNetworkEdge(a,b){
                 this.cost+=1; 
             } 
         } else {
-            this.cost=0.0; 
+            this.cost=Math.random(); 
         }
     }
 
@@ -121,7 +121,7 @@ function nsNetworkEdge(a,b){
     this.getObj=function(){
         //console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
-        if(this.getType() === "EVAC"){
+        if(this.getType() === "MST"){
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5, this.q.z ));
         }else{
@@ -405,7 +405,7 @@ function getPathMaterialFromType(name, id){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
     }else if (name==="intx"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
-    }else{
+    }else if(name === "MST"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
     }
     return mat;

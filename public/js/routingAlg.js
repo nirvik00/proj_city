@@ -1,4 +1,233 @@
 
+// MAIN DRIVER FOR SPT / MST shortest path algorithm - epsilon greedy
+function findMinCost(typeNode, typeEdge) {
+       //sort all edges by weight- for convenience
+       var invertCost=0;
+       if(typeNode==="GCN" && typeEdge==="green"){  
+              invertCost=0; 
+              sendSPTAlg(invertCost, typeNode, typeEdge);
+       }
+       else if(typeNode==="RCN" && typeEdge==="road"){
+              invertCost=1; 
+              sendSPTAlg(invertCost, typeNode, typeEdge);
+       }
+       else if(typeNode==="MST" && typeEdge==="MST"){ 
+              invertCost=2; 
+              sendMSTAlg(invertCost, typeNode, typeEdge)
+       }
+
+}
+
+// step 1 of spt : get neighbours and update distance from source
+function getAllEdgesOfNode(node, edges){
+       var p=node.getPt();
+       var neighbours=[];
+       for(var i=0; i<edges.length; i++){
+              var n0=edges[i].getNode0();
+              var n1=edges[i].getNode1();
+              var q=n0.getPt();
+              var r=n1.getPt();
+              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.5){
+                     if(n1.dist > (node.dist + edges[i].cost)){
+                            n1.parent=node;
+                            n1.dist=node.dist + edges[i].cost;
+                            neighbours.push(n1);
+                     }
+              }else if(utilDi(p,r)<0.01  && utilDi(p,q)>0.5){
+                     if(n0.dist > (node.dist + edges[i].cost)){
+                            n0.parent=node;
+                            n0.dist=node.dist + edges[i].cost;
+                            neighbours.push(n0);
+                     }
+              }
+       }
+       return neighbours;
+}
+
+// step 2 of spt: get the min dist node from source - out of the nodeheap
+function extractMinHeap(neighbours,nodeHeap){
+       for(var i=0; i<nodeHeap.length; i++){
+              for(var j=0; j<neighbours.length; j++){
+                     if(utilDi(nodeHeap[i].getPt(),neighbours[j].getPt()) < 0.01){
+                            nodeHeap[i].dist=neighbours[j].dist;
+                     }
+              }
+       }
+       var minDist=100000;
+       var node=null;
+       for(var i=0; i<nodeHeap.length; i++){
+              var n0=nodeHeap[i];
+              if(n0.dist<minDist){
+                     minDist=n0.dist;
+                     node=n0;
+              }
+       }
+       try{
+              //console.log("min id = " + node.id);
+       }catch(err){
+              console.log("error in extract min heap function");
+              console.log(err);
+              console.log(nodeHeap);
+       }
+       
+       return node;
+}
+
+
+
+// MST algorithm
+function sendMSTAlg(invertCost, typeNode, typeEdge){
+       console.log("\n\n\ninvert-2 SPT Alg" + invertCost);
+       initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
+
+       // make a copy of networkEdgesArr into notMstEdges
+       var notMstEdges=[];
+       for(var i=0; i<networkEdgesArr.length; i++){
+              var e=networkEdgesArr[i];
+              try{
+                     var p= e.getNode0();
+                     var q= e.getNode1();
+                     var f=new nsNetworkEdge(p.getPt(),q.getPt());
+                     f.node0=p;
+                     f.node0.dist=1000000;
+                     f.node1=q;
+                     f.node1.dist=1000000;
+                     f.cost=e.cost;                     
+                     f.type=e.type;
+                     notMstEdges.push(f);
+              }catch(err){
+                     console.log("error in edges" + err);
+              }
+       }
+       var notMstNodes=[];
+       for(var i=0; i<networkNodesArr.length; i++){
+              var n=networkNodesArr[i];
+              try{
+                     var p=n.getPt();
+                     n.parent=0;
+                     n.dist=1000000;
+                     n.id=i;
+                     //n.display();
+                     notMstNodes.push(n);
+              }catch(err){
+                     console.log("error in nodes");
+              }
+       }
+       var source;
+       var t=Math.ceil(Math.random()*notMstNodes.length) -1 ;
+       source=notMstNodes[t];
+       notMstNodes.splice(t,1);
+
+       // console.log(source);
+       // source.display();
+
+       var mstEdges=[];
+       var mstNodes=[];
+       mstNodes.push(source);
+
+       // from source find neighbors
+       // check if neighbor is in notMstNodes=true
+       // update the dist of the neighbor
+       // extract min edge 
+       // update result
+       var k=0;
+       while(notMstNodes.length > 0 && k<100){
+              // console.log("\n\n\nresult of iteration:" + k + " : " + notMstNodes.length);
+              // console.log("source: ");
+              // source.display();
+              // console.log("neighbors: ");
+              
+              source.dist=0;
+              var neighborVertices = updateNeighborEdgeCostMST(source, notMstEdges); //find all neighbors & update dist
+              
+              //extract min heap : different from SPT, dont remove neighbor but min dist from among all nodes 
+              var newSource;
+              var minDi=10000000;
+              for(var i=0; i<notMstNodes.length; i++){
+                     var a=notMstNodes[i];
+                     var s=vertexInArray(a,notMstNodes);
+                     if(s===true && a.dist<minDi){
+                            minDi=a.dist;
+                            newSource=a;
+                     }
+              }
+              //console.log("new source: ");
+              //newSource.display();
+              //newSource.parent.display();
+
+              //remove newSource from notMstNodes, add to mstVertices; add edge to mstEdges
+              for(var i=0; i<notMstNodes.length; i++){
+                     var a=notMstNodes[i];
+                     if( utilDi(a.getPt(), newSource.getPt()) < 0.01 ){
+                            // console.log("\nnode removed:");
+                            // a.display();
+                            notMstNodes.splice(i,1);
+                            break;
+                     }
+              }
+              //find the edge from notMstEdges, add to mstEdges
+              for(var i=0; i<notMstEdges.length; i++){
+                     var e= notMstEdges[i];
+                     var a= e.getNode0().getPt();
+                     var b= e.getNode1().getPt();
+                     var c= newSource.parent.getPt();
+                     var d= newSource.getPt();
+                     if ((utilDi(a,c)<0.01 && utilDi(b,d)<0.01) || (utilDi(a,d)<0.01 && utilDi(b,c)<0.01) ) {
+                            mstEdges.push(e);
+                            //console.log("edge added");
+                            break;
+                     }
+              }
+              //continue the loop with newSource as source
+              source=newSource;
+              //console.log("\n\nremaining nodes: ");
+              for(var i=0; i<notMstNodes.length; i++){
+                     //notMstNodes[i].display();
+                     notMstNodes[i].dist=1000000;
+              }
+              k++;
+       }
+
+       // console.log("\n\n\nFINAL MST EDGES= " + mstEdges.length);
+       for(var i=0; i<mstEdges.length; i++){
+              var e=mstEdges[i];
+              e.type="MST";
+              // e.display();
+       }
+
+       //set mstEdge type to evac & add to networkEdges
+       for(var i=0; i<mstEdges.length; i++){
+              var e=mstEdges[i];
+              networkEdgesArr.push(e);
+       }
+}
+
+// step 1 of MST : get neighbours and update distance from source
+function updateNeighborEdgeCostMST(node, edges){
+       var p=node.getPt();
+       var neighbours=[];
+       for(var i=0; i<edges.length; i++){
+              var n0=edges[i].getNode0();
+              var n1=edges[i].getNode1();
+              var q=n0.getPt();
+              var r=n1.getPt();
+              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.5){
+                     if(n1.dist > (node.dist + edges[i].cost)){
+                            n1.parent=node;
+                            n1.dist=node.dist + edges[i].cost;
+                            neighbours.push(n1);
+                     }
+              }else if(utilDi(p,r)<0.01  && utilDi(p,q)>0.5){
+                     if(n0.dist > (node.dist + edges[i].cost)){
+                            n0.parent=node;
+                            n0.dist=node.dist + edges[i].cost;
+                            neighbours.push(n0);
+                     }
+              }
+       }
+       return neighbours;
+}
+
 
 
 
@@ -103,79 +332,6 @@ function getPath(source, sink, nodes, edges, tmpArr){
        return tmpArr;
 }
 
-// step 1 of spt : get neighbours and update distance from source
-function getAllEdgesOfNode(node, edges){
-       var p=node.getPt();
-       var neighbours=[];
-       for(var i=0; i<edges.length; i++){
-              var n0=edges[i].getNode0();
-              var n1=edges[i].getNode1();
-              var q=n0.getPt();
-              var r=n1.getPt();
-              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.5){
-                     if(n1.dist > (node.dist + edges[i].cost)){
-                            n1.parent=node;
-                            n1.dist=node.dist + edges[i].cost;
-                            neighbours.push(n1);
-                     }
-              }else if(utilDi(p,r)<0.01  && utilDi(p,q)>0.5){
-                     if(n0.dist > (node.dist + edges[i].cost)){
-                            n0.parent=node;
-                            n0.dist=node.dist + edges[i].cost;
-                            neighbours.push(n0);
-                     }
-              }
-       }
-       return neighbours;
-}
-
-// step 2 of spt: get the min dist node from source - out of the nodeheap
-function extractMinHeap(neighbours,nodeHeap){
-       for(var i=0; i<nodeHeap.length; i++){
-              for(var j=0; j<neighbours.length; j++){
-                     if(utilDi(nodeHeap[i].getPt(),neighbours[j].getPt()) < 0.01){
-                            nodeHeap[i].dist=neighbours[j].dist;
-                     }
-              }
-       }
-       var minDist=100000;
-       var node=null;
-       for(var i=0; i<nodeHeap.length; i++){
-              var n0=nodeHeap[i];
-              if(n0.dist<minDist){
-                     minDist=n0.dist;
-                     node=n0;
-              }
-       }
-       try{
-              //console.log("min id = " + node.id);
-       }catch(err){
-              console.log("error in extract min heap function");
-              console.log(err);
-              console.log(nodeHeap);
-       }
-       
-       return node;
-}
-
-// MAIN DRIVER FOR SPT / MST shortest path algorithm - epsilon greedy
-function findMinCost(typeNode, typeEdge) {
-       //sort all edges by weight- for convenience
-       var invertCost=0;
-       if(typeNode==="GCN" && typeEdge==="green"){  
-              invertCost=0; 
-              sendSPTAlg(invertCost, typeNode, typeEdge);
-       }
-       else if(typeNode==="RCN" && typeEdge==="road"){
-              invertCost=1; 
-              sendSPTAlg(invertCost, typeNode, typeEdge);
-       }
-       else if(typeNode==="MST" && typeEdge==="MST"){ 
-              invertCost=2; 
-              sendMSTAlg(invertCost, typeNode, typeEdge)
-       }
-
-}
 
 function vertexInArray(n, nodes){
        var p=n.getPt();
@@ -192,8 +348,7 @@ function vertexInArray(n, nodes){
 }
 
 
-
-//SPT ALGS
+//SPT ALG
 function sendSPTAlg(invertCost, typeNode, typeEdge){
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        var nodeHeap = getNodeHeap();      //get all valis nodes - point
@@ -288,152 +443,4 @@ function sendSPTAlg(invertCost, typeNode, typeEdge){
 
 
 
-// step 1 of spt : get neighbours and update distance from source
-function updateNeighborEdgeCostMST(node, edges){
-       var p=node.getPt();
-       var neighbours=[];
-       for(var i=0; i<edges.length; i++){
-              var n0=edges[i].getNode0();
-              var n1=edges[i].getNode1();
-              var q=n0.getPt();
-              var r=n1.getPt();
-              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.5){
-                     if(n1.dist > (node.dist + edges[i].cost)){
-                            n1.parent=node;
-                            n1.dist=node.dist + edges[i].cost;
-                            neighbours.push(n1);
-                     }
-              }else if(utilDi(p,r)<0.01  && utilDi(p,q)>0.5){
-                     if(n0.dist > (node.dist + edges[i].cost)){
-                            n0.parent=node;
-                            n0.dist=node.dist + edges[i].cost;
-                            neighbours.push(n0);
-                     }
-              }
-       }
-       return neighbours;
-}
 
-
-//EVAC MST algorithm
-function sendMSTAlg(invertCost, typeNode, typeEdge){
-       console.log("\n\n\ninvert-2 SPT Alg" + invertCost);
-       initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
-
-       // make a copy of networkEdgesArr into notMstEdges
-       var notMstEdges=[];
-       for(var i=0; i<networkEdgesArr.length; i++){
-              var e=networkEdgesArr[i];
-              try{
-                     var p= e.getNode0();
-                     var q= e.getNode1();
-                     var f=new nsNetworkEdge(p.getPt(),q.getPt());
-                     f.node0=p;
-                     f.node0.dist=1000000;
-                     f.node1=q;
-                     f.node1.dist=1000000;
-                     f.cost=e.cost;                     
-                     f.type=e.type;
-                     notMstEdges.push(f);
-              }catch(err){
-                     console.log("error in edges" + err);
-              }
-       }
-       var notMstNodes=[];
-       for(var i=0; i<networkNodesArr.length; i++){
-              var n=networkNodesArr[i];
-              try{
-                     var p=n.getPt();
-                     n.parent=0;
-                     n.dist=1000000;
-                     n.id=i;
-                     //n.display();
-                     notMstNodes.push(n);
-              }catch(err){
-                     console.log("error in nodes");
-              }
-       }
-       var source;
-       var t=Math.ceil(Math.random()*notMstNodes.length) -1 ;
-       source=notMstNodes[t];
-       notMstNodes.splice(t,1);
-
-       var mstEdges=[];
-       var mstNodes=[];
-       mstNodes.push(source);
-
-       // from source find neighbors
-       // check if neighbor is in notMstNodes=true
-       // update the dist of the neighbor
-       // extract min edge 
-       // update result
-       var k=0;
-       while(notMstNodes.length > 0 && k<100){
-              // console.log("\n\n\nresult of iteration:" + k + " : " + notMstNodes.length);
-              // console.log("source: ");
-              // source.display();
-              // console.log("neighbors: ");
-              
-              source.dist=0;
-              var neighborVertices = updateNeighborEdgeCostMST(source, notMstEdges); //find all neighbors & update dist
-              
-              //extract min heap : different from SPT, dont remove neighbor but min dist from among all nodes 
-              var newSource;
-              var minDi=10000000;
-              for(var i=0; i<notMstNodes.length; i++){
-                     var a=notMstNodes[i];
-                     var s=vertexInArray(a,notMstNodes);
-                     if(s===true && a.dist<minDi){
-                            minDi=a.dist;
-                            newSource=a;
-                     }
-              }
-              //console.log("new source: ");
-              //newSource.display();
-              //newSource.parent.display();
-
-              //remove newSource from notMstNodes, add to mstVertices; add edge to mstEdges
-              for(var i=0; i<notMstNodes.length; i++){
-                     var a=notMstNodes[i];
-                     if( utilDi(a.getPt(), newSource.getPt()) < 0.01 ){
-                            // console.log("\nnode removed:");
-                            // a.display();
-                            notMstNodes.splice(i,1);
-                            break;
-                     }
-              }
-              //find the edge from notMstEdges, add to mstEdges
-              for(var i=0; i<notMstEdges.length; i++){
-                     var e= notMstEdges[i];
-                     var a= e.getNode0().getPt();
-                     var b= e.getNode1().getPt();
-                     var c= newSource.parent.getPt();
-                     var d= newSource.getPt();
-                     if ((utilDi(a,c)<0.01 && utilDi(b,d)<0.01) || (utilDi(a,d)<0.01 && utilDi(b,c)<0.01) ) {
-                            mstEdges.push(e);
-                            //console.log("edge added");
-                            break;
-                     }
-              }
-              //continue the loop with newSource as source
-              source=newSource;
-              //console.log("\n\nremaining nodes: ");
-              for(var i=0; i<notMstNodes.length; i++){
-                     //notMstNodes[i].display();
-                     notMstNodes[i].dist=1000000;
-              }
-              k++;
-       }
-
-       //console.log("\n\n\nFINAL MST EDGES= " + mstEdges.length);
-       for(var i=0; i<mstEdges.length; i++){
-              var e=mstEdges[i];
-              //e.display();
-       }
-       //set mstEdge type to evac & add to networkEdges
-       for(var i=0; i<mstEdges.length; i++){
-              var e=mstEdges[i];
-              e.type="EVAC";
-              networkEdgesArr.push(e);
-       }
-}
