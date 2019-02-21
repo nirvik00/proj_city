@@ -30,9 +30,8 @@ function nsNetworkNode(a,b,c, nodeId){
             this.type="NCN";
         }else if(t>=0.6 && t<0.9){
             this.type="RCN";   
-        }else{
-            this.type="EVAC";   
         }
+        //in the main array set one node randomly to EVAC
     };
     this.getType=function(){
         return this.type;
@@ -49,7 +48,7 @@ function nsNetworkNode(a,b,c, nodeId){
         return this.nodeMesh;
     }
     this.display=function(){
-        var s="id ="+this.id +", type=" + this.type + ", parent= "+ this.parent +", dist="+this.dist;
+        var s="Pt ="+this.x+","+this.y+","+this.z +" , type=" + this.type + ", dist="+this.dist;
         console.log(s);
     }
 }
@@ -98,15 +97,13 @@ function nsNetworkEdge(a,b){
                 if(inv===0 ) { this.cost=costRcnNcn; }
                 else if(inv===1){ this.cost=1/costRcnNcn; }
             }
-        } else if(inv ===2) {
-            console.log("EVAC edge updated");
-            if(this.node0.getType()==="NCN" && this.node1.getType()==="NCN"){
-                this.cost=costNcnNcn;
-            }else if(this.node0.getType()==="EVAC" || this.node1.getType()==="EVAC"){
-                this.cost=costEVAC; 
-            }else{
-                this.cost=1/costEVAC; 
-                }            
+        } else if(inv === 2) {
+            this.cost=Math.random();
+            if(this.type==="green"){
+                this.cost+=1;
+            }else if(this.type==="road"){
+                this.cost+=1; 
+            } 
         } else {
             this.cost=0.0; 
         }
@@ -123,20 +120,20 @@ function nsNetworkEdge(a,b){
     this.getObj=function(){
         //console.log(this.node0.getType() + ", "+ this.node1.getType());
         var path = new THREE.Geometry();
-        if(this.getType() !== "EVAC"){
-            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
-            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
-        }else{
-            console.log("\n\nevac geometry added");
+        if(this.getType() === "EVAC"){
+            //console.log("\n\nevac geometry added");
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5, this.q.z ));
+        }else{
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
         }        
         var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
         return line;
     }
     this.display=function(){
-        var s= "id= "+this.id+", node0 type= "+this.node0.getType() + ", node1 type= "+this.node1.getType() + ", edge type= "+this.getType();
+        var s= "EDGE id= "+this.id+", node0 type= "+this.node0.getType() +", node0 id= "+this.node0.id + ", node1 type= "+this.node1.getType() +", node1 id= "+this.node0.id + ", edge type= "+this.getType() +", cost= "+this.cost;
         console.log(s);
     }
 }
@@ -409,8 +406,6 @@ function getPathMaterialFromType(name, id){
     }else if (name==="intx"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
     }else{
-        console.log("\nEvac detected");
-        this.display();
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
     }
     return mat;

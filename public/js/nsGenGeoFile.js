@@ -14,8 +14,8 @@ var datgui = new dat.GUI({ autoPlace: false });
 
 //cell-grid gui controls
 var gridGuiControls = new function() {
-  this.num_Length = 1.5;
-  this.num_Depth = 1.5;
+  this.num_Length = 1;
+  this.num_Depth = 1;
   this.cell_Length = 3;
   this.cell_Depth = 3;
   this.global_offset = 0.5;
@@ -43,7 +43,7 @@ var groundGuiControls = new function() {
   this.cost_RCN_GCN = 0.75;
   this.cost_RCN_NCN = 0.85;
   this.cost_RCN_RCN = 0.95;
-  this.cost_EVAC = 0.05;
+  this.cost_EVAC = 0.95;
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
@@ -170,7 +170,6 @@ var genGrid = function() {
   //constructRandomGroundTiles();
   //findMinCost();
 };
-
 
 
 function utilDi(a, b) {

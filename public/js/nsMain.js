@@ -35,6 +35,7 @@ var greenArr = Array();
 var groundArr = Array();
 var evacArr = [];
 var intxArr=[];
+var dupEvacArr=[];
 
 var circulationQuads=[];  //data str 
 var circulationQuadArr=[]; //rendered object
@@ -91,9 +92,8 @@ document.addEventListener("keypress", function(event) {
 
     var t=checkNodeTypeExists("EVAC");
     if(t===true){ 
-      //findMinCost("EVAC", "EVAC"); 
+      findMinCost("EVAC", "EVAC"); 
     }
-
     
     genNetworkGeometry();
 
@@ -135,6 +135,7 @@ var mainLoop = function() {
   costRcnGcn = groundGuiControls.cost_RCN_GCN;
   costRcnNcn = groundGuiControls.cost_RCN_NCN;
   costRcnRcn = groundGuiControls.cost_RCN_RCN;
+  costEVAC = groundGuiControls.cost_EVAC;
 
   cellNumLe.onChange(function() {
     genGrid();

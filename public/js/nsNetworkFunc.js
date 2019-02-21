@@ -36,13 +36,16 @@ function initNetwork() {
        networkNodesArr = Array();
        for (var i = 0; i < networkEdgesArr.length; i++) {
          getNetworkNodes(networkEdgesArr[i]);
-       }
+       }       
      
        // set type of node array
        for (var i = 0; i < networkNodesArr.length; i++) {
          networkNodesArr[i].setType();
          networkNodesArr[i].id=i;
        }
+       var t= Math.ceil(Math.random()*networkNodesArr.length )-1 ;
+       networkNodesArr[t].type="EVAC";
+       
      
        //set this node to networkEdges
        for (var i = 0; i < networkEdgesArr.length; i++) {
@@ -70,8 +73,6 @@ function initNetwork() {
            }
          }
        }
-
-
        //next function
        genNetworkGeometry();
 }
@@ -90,6 +91,7 @@ function genNetworkGeometry() {
         scene.remove(edgeArr[i]);
   }
 
+  dupEvacArr=[];
   edgeArr = Array();
   for (var i = 0; i < networkEdgesArr.length; i++) {
         var e = networkEdgesArr[i];
@@ -98,7 +100,6 @@ function genNetworkGeometry() {
   for (var i = 0; i < edgeArr.length; i++) {
         scene.add(edgeArr[i]);
   }
-
   nodeArr = Array();
   for (var i = 0; i < networkNodesArr.length; i++) {
         var n0 = networkNodesArr[i];
