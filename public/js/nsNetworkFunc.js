@@ -3,6 +3,7 @@
 function initNetwork() {
        networkEdgesArr = [];
        networkNodesArr = [];
+       evacEdges=[]
        for (var i = 0; i < cellQuadArr.length; i++) {
          var quad = cellQuadArr[i];
          var p = quad.p;
@@ -91,20 +92,29 @@ function genNetworkGeometry() {
   for (var i = 0; i < networkEdgesArr.length; i++) {
     var e = networkEdgesArr[i];
     if(gridGuiControls.show_GCN===true && e.type==="green"){
-      edgeArr.push(e.getObj());
+      edgeArr.push(e.getObj(0));
     }
     if(gridGuiControls.show_RCN===true && e.type==="road"){
-      edgeArr.push(e.getObj());
+      edgeArr.push(e.getObj(0));
     }
     if(gridGuiControls.show_NCN===true && e.type==="path"){
-      edgeArr.push(e.getObj());
+      edgeArr.push(e.getObj(0));
     }
     if(gridGuiControls.show_MST===true && e.type==="MST"){
-      edgeArr.push(e.getObj());
+      edgeArr.push(e.getObj(0));
     } 
     if((gridGuiControls.show_GCN===true || gridGuiControls.show_RCN===true ) && e.type==="intx"){
-      edgeArr.push(e.getObj());
+      edgeArr.push(e.getObj(0));
     } 
+  }
+  var k=1;
+  for(var i=0; i<evacEdges.length; i++){
+    var tmpArr=evacEdges[i];
+    for(var j=0; j<tmpArr.length; j++){
+      var e=tmpArr[j];
+      edgeArr.push(e.getObj(k));
+    }
+    k++;
   }
 
   for (var i = 0; i < edgeArr.length; i++) {

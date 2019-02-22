@@ -101,7 +101,7 @@ var genGuiControls = new function() {
   this.hide_Buildings = true;
   this.show_Network = true;
   this.show_Information = false;
-  this.show_Axis = false;
+  this.show_Axis = true;
 }();
 datgui.add(genGuiControls, "hide_Ground");
 datgui.add(genGuiControls, "hide_Buildings");

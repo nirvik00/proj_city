@@ -101,18 +101,14 @@ function nsNetworkEdge(a,b){
                 this.cost=Math.random() + 0.5;    
             }
         } else if(inv === 2) { // MST
-            this.cost=Math.random();
+            this.cost=0.5;
             if(this.type==="green"){
                 this.cost+=1;
             }else if(this.type==="road"){
                 this.cost+=1; 
             } 
         } else { // EVAC SPT
-            if(this.node0.getType()==="EVAC" || this.node1.getType()==="EVAC"){
-                this.cost=costEVAC;
-            }else{
-                this.cost=Math.random();     
-            }
+            this.cost=0.75;
         }
     }
 
@@ -124,16 +120,18 @@ function nsNetworkEdge(a,b){
     this.getType=function(){
         return this.type;
     }
-    this.getObj=function(){
-        //console.log(this.node0.getType() + ", "+ this.node1.getType());
+    this.getObj=function(t){
         var path = new THREE.Geometry();
         if(this.getType() === "MST"){
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.0, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.0, this.q.z ));
+        }else if(this.getType() === "EVAC"){
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5+(t/10), this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5+(t/10), this.q.z ));
         }else{
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
-        }        
+        }
         var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
         return line;
@@ -414,7 +412,7 @@ function getPathMaterialFromType(name, id){
     }else if(name === "MST"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
     }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,255)")});
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,0)")});
     }
     return mat;
 }

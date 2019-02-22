@@ -13,6 +13,7 @@ var costRcnGcn;
 var costRcnNcn;
 var costEVAC;
 
+var evacEdges=[];
 var networkNodesArr = [];
 var networkEdgesArr = [];
 var tempNetworkEdgesArr = Array();

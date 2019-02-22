@@ -26,7 +26,7 @@ function findMinCost(typeNode, typeEdge) {
 //SPT ALG
 function sendSPTAlg(invertCost, typeNode, typeEdge){
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
-       var nodeHeap = getNodeHeap();      //get all valis nodes - point
+       var nodeHeap = getNodeHeap();       //get all valis nodes - point
        var source;                         //get ource node: first res in node heap
        for(var i=0; i<nodeHeap.length; i++){
               if(nodeHeap[i].getType()===typeNode){
@@ -46,6 +46,7 @@ function sendSPTAlg(invertCost, typeNode, typeEdge){
        // 1. find all neighbours and update dist
        // 2. extract min from the heap
        // loop until result heap is as big as initial nodeHeap
+       // this sets the min dist from all nodes to source
        var k=0; 
        while(nodeHeap.length>0){
               var neighbours=getAllEdgesOfNode(source, networkEdgesArr);
@@ -61,8 +62,7 @@ function sendSPTAlg(invertCost, typeNode, typeEdge){
                      console.log("error found");
                      console.log(nodeHeap);
                      break;
-              }
-              
+              }              
               resultNodeHeap.push(source);
               k++;
        }            
@@ -104,13 +104,14 @@ function sendSPTAlg(invertCost, typeNode, typeEdge){
        //     1. start with the sink
        //     2. find parent and add to array
        //     3. loop until parent is source
+       var finalEdgeArr=[];
        for(var i=0; i<reqResNodes.length; i++){
               var sink=reqResNodes[i];
               var tmpArr=[];
               tmpArr=getPath(source, sink, resultNodeHeap, networkEdgesArr, tmpArr);
               setEdgeToType(tmpArr, typeEdge);
        }
-
+       return reqResNodes;
        //finally render the geometry: nsMain.js after ENTER is pressed
        //genNetworkGeometry();
 }
@@ -118,7 +119,7 @@ function sendSPTAlg(invertCost, typeNode, typeEdge){
 // step 1 of spt : get neighbours and update distance from source
 function getAllEdgesOfNode(node, edges){
        var p=node.getPt();
-       var neighbours=[];
+       var neighbors=[];
        for(var i=0; i<edges.length; i++){
               var n0=edges[i].getNode0();
               var n1=edges[i].getNode1();
@@ -128,17 +129,17 @@ function getAllEdgesOfNode(node, edges){
                      if(n1.dist > (node.dist + edges[i].cost)){
                             n1.parent=node;
                             n1.dist=node.dist + edges[i].cost;
-                            neighbours.push(n1);
+                            neighbors.push(n1);
                      }
               }else if(utilDi(p,r)<0.01  && utilDi(p,q)>0.5){
                      if(n0.dist > (node.dist + edges[i].cost)){
                             n0.parent=node;
                             n0.dist=node.dist + edges[i].cost;
-                            neighbours.push(n0);
+                            neighbors.push(n0);
                      }
               }
        }
-       return neighbours;
+       return neighbors;
 }
 
 // step 2 of spt: get the min dist node from source - out of the nodeheap
@@ -234,10 +235,12 @@ function sendMSTAlg(invertCost, typeNode, typeEdge){
               // source.display();
               // console.log("neighbors: ");
               
-              source.dist=0;
-              var neighborVertices = updateNeighborEdgeCostMST(source, notMstEdges); //find all neighbors & update dist
+              source.dist=0; // different from Djikstra
+              //find all neighbors & update dist
+              var neighborVertices = updateNeighborEdgeCostMST(source, notMstEdges); 
               
-              //extract min heap : different from SPT, dont remove neighbor but min dist from among all nodes 
+              //extract min heap : different from SPT, 
+              //dont remove neighbor but min dist from among all nodes 
               var newSource;
               var minDi=10000000;
               for(var i=0; i<notMstNodes.length; i++){
@@ -265,7 +268,6 @@ function sendMSTAlg(invertCost, typeNode, typeEdge){
               //find the edge from notMstEdges, add to mstEdges
               for(var i=0; i<notMstEdges.length; i++){
                      try{
-
                             var e= notMstEdges[i];
                             var a= e.getNode0().getPt();
                             var b= e.getNode1().getPt();
@@ -313,7 +315,7 @@ function updateNeighborEdgeCostMST(node, edges){
               var n1=edges[i].getNode1();
               var q=n0.getPt();
               var r=n1.getPt();
-              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.5){
+              if(utilDi(p,q)<0.01 && utilDi(p,r)>0.01){
                      if(n1.dist > (node.dist + edges[i].cost)){
                             n1.parent=node;
                             n1.dist=node.dist + edges[i].cost;
@@ -334,8 +336,8 @@ function updateNeighborEdgeCostMST(node, edges){
 
 // EVAC SPT ALgorithm
 function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
+       initEdgeCost(invertCost);
        // organize the nodes into evac and not evac
-       var evacNodes=[];
        var notEvacNodes=[]
        var allNodes=[];
        for(var i=0; i<networkNodesArr.length; i++){
@@ -345,7 +347,6 @@ function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
                      allNodes.push(n);
                      if(n.type=== "EVAC"){
                             n.dist=0;
-                            evacNodes.push(n);
                      }else{
                             n.dist=1000000;
                             notEvacNodes.push(n);
@@ -354,50 +355,164 @@ function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
                      console.log("error in network nodes");
               }
        }
+       var allEdges=[];
+       for(var i=0; i<networkEdgesArr.length; i++){
+              var e=networkEdgesArr[i];
+              try{
+                     var p= e.getNode0();
+                     var q= e.getNode1();
+                     var f=new nsNetworkEdge(p.getPt(),q.getPt());
+                     f.node0=p;
+                     f.node0.dist=1000000;
+                     f.node1=q;
+                     f.node1.dist=1000000;
+                     f.cost=e.cost;                     
+                     f.type=e.type;
+                     allEdges.push(f);
+              }catch(err){
+                     console.log("error in edges" + err);
+              }
+       }
        
-       // for each not evac node, set its closest evac node as parent 
        for(var i=0; i<notEvacNodes.length; i++){
-              var n=notEvacNodes[i];
+              var sink=notEvacNodes[i]; // this node
+              var tmpArr=genEvacPath(sink, allEdges);
+              for(var j=0; j<tmpArr.length; j++){
+                   tmpArr[j].type="EVAC";
+              }
+              evacEdges.push(tmpArr);
+       }
+
+}
+
+
+// step 0. set parent node as closest to node
+function setEvacParentNode(allNodes, evacNodes){
+       // for each not evac node, set its closest evac node as parent 
+       for(var i=0; i<allNodes.length; i++){
+              var n=allNodes[i];
               var p=n.getPt();
               var minDi=1000000;
+              var parent;
               for(var j=0; j<evacNodes.length; j++){
                      var m=evacNodes[j];
                      var q=m.getPt();
                      var thisDi=utilDi(p,q);
                      if(thisDi<minDi){
                             minDi=thisDi;
-                            n.parent=m;
+                            parent=m;
                      }
               }
+              
        }
-
-       //the dist of each node = dist from parent: evac
-
-       for(var i=0; i<notEvacNodes.length; i++){
-              var n=notEvacNodes[i];
-              var p=notEvacNodes[i].parent;
-              var di=utilDi(n.getPt(),p.getPt());
-              n.dist=di;
-       }
-       
-       // for each not evac node find min dist to its parent viz evac node
-       for(var i=0; i<notEvacNodes.length ; i++){
-              console.log("\nFor Evac: node, parent:")
-              notEvacNodes[i].display();
-              notEvacNodes[i].parent.display();
-              genEvacPath(notEvacNodes[i], allNodes);
-       }
+       return allNodes;
 }
 
 // step 1. for EVAC SPT Algorithm
-function genEvacPath(node, nodes){
-       var source=node.parent;
-       var sink=node;
-       var k=0;
-       var neighbors=getAllEdgesOfNode(source, networkEdgesArr);
-       for(var i=0; i<neighbors.length; i++){
-              neighbors[i].display();
+function genEvacPath(sink, allEdges){
+       var evacNodes=[];
+       var allInitNodes=[];
+       for(var i=0; i<networkNodesArr.length; i++){
+              var n=networkNodesArr[i];
+              try{
+                     var p=n.getPt();
+                     if(n.type==="EVAC"){
+                            evacNodes.push(n);
+                     }
+                     allInitNodes.push(n);
+              }catch(err){
+                     //error
+              }
        }
+
+       var source;
+       var allNodes=setEvacParentNode(allInitNodes, evacNodes);
+       var minDi=100000000;
+       for(var i=0; i<evacNodes.length; i++){
+              var di=utilDi(evacNodes[i].getPt(), sink.getPt());
+              if(di<minDi){
+                     minDi=di;
+                     source=evacNodes[i];
+              }
+       }
+
+       // source=closest evac node
+       // sink = this node
+       // all nodes=all nodes in graph
+       // set dist of nodes = metric dist from source for this node + di from this node
+       for(var i=0; i<allNodes.length; i++){
+              var n=allNodes[i];
+              var p=source.getPt();
+              var di=utilDi(n.getPt(),p);
+              allNodes[i].dist=di;
+       }
+       source.dist=0;
+       sink.dist=utilDi(source.getPt(),sink.getPt());
+
+       console.log("\n\n\nsource, sink: ");
+       source.display();
+       sink.display();
+       sink.parent=source;
+
+       // recursive algorithm:
+       // 1. find all neighbours and update dist
+       // 2. extract min from the heap
+       // loop until result heap is as big as initial nodeHeap
+       // this sets the min dist from all nodes to source
+       var k=0; 
+       var resultNodeHeap=[];
+       while(allNodes.length>0){
+              var neighbours=getAllEdgesOfNode(source, allEdges);
+              source=extractMinHeap(neighbours, allNodes);
+              try{
+                     for(var i=0; i<allNodes.length; i++){ //remove the source from allNodes
+                            if(utilDi(source.getPt(),allNodes[i].getPt())< 0.1){
+                                   allNodes.splice(i,1);
+                                   break;
+                            }
+                     }
+              }catch(err){
+                     console.log("error found");
+                     console.log(allNodes);
+                     break;
+              }              
+              resultNodeHeap.push(source);
+              k++;
+       }
+
+       for(var i=0; i<resultNodeHeap.length; i++){
+              //resultNodeHeap[i].display();
+       }
+
+       //from sink recursively goto parent until parent=source
+       var reqEdges=[];
+       var reqNodes=[];
+       var k=0;
+       while(k<10){
+              var p=sink.getPt(); 
+              var q=sink.parent.getPt();
+              sink.display();
+              sink.parent.display();
+              //get edge from sink & sink parent
+              for(var i=0; i<allEdges.length; i++){
+                     var r=allEdges[i].getNode0().getPt();
+                     var s=allEdges[i].getNode1().getPt();
+                     if((utilDi(p,r)<0.01 && utilDi(q,s)<0.01) || (utilDi(p,s)<0.01 && utilDi(q,r)<0.01)){
+                            reqEdges.push(allEdges[i]);
+                            break;
+                     }
+              }              
+              if(sink.parent.type==="EVAC"){
+                     break;
+              }else{
+                     sink=sink.parent;
+              }  
+              k++;
+       }
+       console.log("\n\n\nEdges for this sink, source:");
+       console.log(reqEdges);
+       return reqEdges;
+
 }
 
 
@@ -506,7 +621,6 @@ function getPath(source, sink, nodes, edges, tmpArr){
        }
        return tmpArr;
 }
-
 
 function vertexInArray(n, nodes){
        var p=n.getPt();
