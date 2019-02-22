@@ -10,12 +10,18 @@ var varCellLe = 3;
 var varCellDe = 3;
 var varGlobalOffset=0.1;
 
+
+var GcnFsr=0.3;
+var NcnFsr=0.3;
+var RcnFsr=0.3;
+var EvacFsr=0.1;
+
 var datgui = new dat.GUI({ autoPlace: false });
 
 //cell-grid gui controls
 var gridGuiControls = new function() {
-  this.num_Length = 1;
-  this.num_Depth = 1;
+  this.num_Length = 1.5;
+  this.num_Depth = 1.5;
   this.cell_Length = 3;
   this.cell_Depth = 3;
   this.global_offset = 0.5;
@@ -25,7 +31,7 @@ var gridGuiControls = new function() {
   this.show_NCN=true;
   this.show_MST=true;
   this.show_EVAC=true;
-}();
+};
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
@@ -57,7 +63,7 @@ var groundGuiControls = new function() {
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
-}();
+};
 var groundGUI = datgui.addFolder("groundGuiControls");
 groundGUI.add(groundGuiControls, "cost_GCN_GCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "cost_GCN_NCN", 0.01, 1);
@@ -76,6 +82,7 @@ var bldgGuiControls = new function() {
   this.GCN_FSR = 0.3;
   this.NCN_FSR = 0.3;
   this.RCN_FSR = 0.3;
+  this.EVAC_FSR = 0.1;
   this.min_Ht = 3;
   this.mid_Ht = 7;
   this.max_Ht = 20;
@@ -83,12 +90,13 @@ var bldgGuiControls = new function() {
   this.show_GCN = true;
   this.show_NCN = true;
   this.show_RCN = true;
-}();
+};
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "evacuation_density", 0.01, 0.1);
-buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 3);
-buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 3);
-buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 3);
+buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 1);
+buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 1);
+buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 1);
+buildingGUI.add(bldgGuiControls, "EVAC_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "min_Ht", 1, 5);
 buildingGUI.add(bldgGuiControls, "mid_Ht", 5, 12);
 buildingGUI.add(bldgGuiControls, "max_Ht", 12, 25);
@@ -104,7 +112,7 @@ var genGuiControls = new function() {
   this.show_Network = true;
   this.show_Information = false;
   this.show_Axis = false;
-}();
+}
 datgui.add(genGuiControls, "hide_Ground");
 datgui.add(genGuiControls, "hide_Buildings");
 datgui.add(genGuiControls, "show_Network");

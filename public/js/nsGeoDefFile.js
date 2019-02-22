@@ -23,6 +23,7 @@ function nsNetworkNode(a,b,c, nodeId){
         return new nsPt(this.x, this.y, this.z);
     }
     this.setType=function(){
+        
         var t=Math.random();
         if(t<0.35){
             this.type="GCN";
@@ -174,10 +175,6 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
-}
-
-function nsCirculationQuad(){
-    
 }
 
 function nsUnitVec(a,b){
@@ -427,7 +424,7 @@ var debugSphere=function(p){
     mesh.position.y = p.y;
     mesh.position.z = p.z; 
     scene.add(mesh);
-  }
+}
   
 var debugQuad=function(p,q,r,s){
     var geox = new THREE.Geometry();

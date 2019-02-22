@@ -27,6 +27,7 @@ function findMinCost(typeNode, typeEdge) {
 
 //SPT ALG
 function sendSPTAlg(invertCost, typeNode, typeEdge){
+       console.log("In GCN SPT : "+invertCost);
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
        var nodeHeap = getNodeHeap();       //get all valis nodes - point
        var source;                         //get ource node: first res in node heap
@@ -181,7 +182,7 @@ function extractMinHeap(neighbours,nodeHeap){
 function sendMSTAlg(invertCost, typeNode, typeEdge){
        // console.log("\n\n\ninvert-2 SPT Alg" + invertCost);
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
-
+       console.log("In MST : "+invertCost);
        // make a copy of networkEdgesArr into notMstEdges
        var notMstEdges=[];
        for(var i=0; i<networkEdgesArr.length; i++){
@@ -343,6 +344,7 @@ function updateNeighborEdgeCostMST(node, edges){
 // EVAC SPT ALgorithm
 function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
        initEdgeCost(invertCost);
+       console.log("In Evac SPT : "+invertCost);
        // organize the nodes into evac and not evac
        var notEvacNodes=[]
        var allNodes=[];
@@ -414,7 +416,7 @@ function setEvacParentNode(allNodes, evacNodes){
        return allNodes;
 }
 
-// step 1. for EVAC SPT Algorithm
+// step 1. for EVAC SPT Algorithm-
 function genEvacPath(sink, allEdges){
        var evacNodes=[];
        var allInitNodes=[];

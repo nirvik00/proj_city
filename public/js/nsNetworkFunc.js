@@ -33,46 +33,54 @@ function initNetwork() {
          }
        }
      
-       //construct networkNodesArr
-       networkNodesArr = Array();
-       for (var i = 0; i < networkEdgesArr.length; i++) {
-         getNetworkNodes(networkEdgesArr[i]);
-       }       
-     
-       // set type of node array
-       for (var i = 0; i < networkNodesArr.length; i++) {
-         networkNodesArr[i].setType();
-         networkNodesArr[i].id=i;
-       }
-       //set this node to networkEdges
-       for (var i = 0; i < networkEdgesArr.length; i++) {
-         var e = networkEdgesArr[i];
-         var n0 = e.getNode0();
-         var p = n0.getPt();
-         var n1 = e.getNode1();
-         var q = n1.getPt();
-         for (var j = 0; j < networkNodesArr.length; j++) {
-           var n2 = networkNodesArr[j];
-           var r = n2.getPt();
-           var d02 = utilDi(p, r);
-           if (d02 < 0.001) {
-             networkEdgesArr[i].setNode0(networkNodesArr[j]);
-             break;
-           }
-         }
-         for (var j = 0; j < networkNodesArr.length; j++) {
-           var n2 = networkNodesArr[j];
-           var r = n2.getPt();
-           var d01 = utilDi(q, r);
-           if (d01 < 0.001) {
-             networkEdgesArr[i].setNode1(networkNodesArr[j]);
-             break;
-           }
-         }
-       }
-       //next function
-       genNetworkGeometry();
-}
+        //construct networkNodesArr
+        networkNodesArr = Array();
+        for (var i = 0; i < networkEdgesArr.length; i++) {
+          getNetworkNodes(networkEdgesArr[i]);
+        }
+        
+        // set type of node array based on FSR
+        var max=networkNodesArr.length;
+        // console.log(GcnFsr, NcnFsr, RcnFsr, EvacFsr, max);
+        var sum=GcnFsr+NcnFsr+RcnFsr+EvacFsr;
+        var numNcn=Math.ceil(NcnFsr*max/sum);
+        var numRcn=Math.ceil(RcnFsr*max/sum);
+        var numEvac=Math.floor(EvacFsr*max/sum);
+        var numGcn=max-(numNcn+ numRcn+ numEvac)
+        // console.log(max, numGcn, numNcn, numRcn, numEvac);
+        setNodeType(max, numGcn, numNcn, numRcn, numEvac)
+
+
+
+        //set this node to networkEdges
+        for (var i = 0; i < networkEdgesArr.length; i++) {
+          var e = networkEdgesArr[i];
+          var n0 = e.getNode0();
+          var p = n0.getPt();
+          var n1 = e.getNode1();
+          var q = n1.getPt();
+          for (var j = 0; j < networkNodesArr.length; j++) {
+            var n2 = networkNodesArr[j];
+            var r = n2.getPt();
+            var d02 = utilDi(p, r);
+            if (d02 < 0.001) {
+              networkEdgesArr[i].setNode0(networkNodesArr[j]);
+              break;
+            }
+          }
+          for (var j = 0; j < networkNodesArr.length; j++) {
+            var n2 = networkNodesArr[j];
+            var r = n2.getPt();
+            var d01 = utilDi(q, r);
+            if (d01 < 0.001) {
+              networkEdgesArr[i].setNode1(networkNodesArr[j]);
+              break;
+            }
+          }
+        }
+        //next function
+        genNetworkGeometry();
+  }
      
 //for network: nodes and edges
 //set property of nodes to res, comm, off
@@ -187,5 +195,41 @@ function getNetworkNodes(e) {
        if (sum1 == 0) { networkNodesArr.push(n1); }
   }
 }
-     
-     
+
+function setNodeType(max, numGcn, numNcn, numRcn, numEvac){
+  var used=[];
+  var unUsed=[]
+  for(var i=0; i<networkNodesArr.length; i++){
+    networkNodesArr[i].id=i;
+    unUsed.push(i);   
+  }
+  unUsed=shuffleArray(unUsed);
+  for(var i=0; i<unUsed.length; i++){
+    //console.log(unUsed[i]);
+    var t=unUsed[i];
+    if(i<numGcn){
+      networkNodesArr[t].type="GCN";
+      //used.push([t, "GCN"]);
+    }else if(i>=numGcn && i<numNcn+numGcn){
+      networkNodesArr[t].type="NCN";
+      //used.push([t, "NCN"]);
+    }else if(i>=numGcn+numNcn && i<numNcn+numGcn+numRcn){
+      networkNodesArr[t].type="RCN";
+      //used.push([t, "RCN"]);
+    }else{
+      networkNodesArr[t].type="EVAC";
+      //used.push([t, "EVAC"]);
+    }
+  }    
+  //console.log(used);
+}
+
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+  return array;
+}

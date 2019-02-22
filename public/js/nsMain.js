@@ -13,6 +13,8 @@ var costRcnGcn;
 var costRcnNcn;
 var costEVAC;
 
+
+
 var evacEdges=[];
 var networkNodesArr = [];
 var networkEdgesArr = [];
@@ -61,7 +63,7 @@ var init = function() {
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.addEventListener("change", render);
   controls.enableZoom = true;
-  genGrid();
+  runSystem();
 };
 
 function checkNodeTypeExists(nodeType){
@@ -79,31 +81,7 @@ document.addEventListener("keypress", function(event) {
     console.clear();
     console.log("iteration: (ENTER)" + ITERATION);
 
-    genGrid();
-
-    //typeNode, typeEdge
-    var t=checkNodeTypeExists("GCN");
-    if(t===true){ 
-      findMinCost("GCN", "green"); 
-    }
-
-    var t=checkNodeTypeExists("RCN");
-    if(t===true){ 
-      findMinCost("RCN", "road"); 
-    }
-
-    findMinCost("MST", "MST"); 
-
-    var t=checkNodeTypeExists("EVAC");
-    if(t===true){ 
-      findMinCost("EVAC", "EVAC"); 
-    }
-
-    genNetworkGeometry();
-
-    genCubes();
-    constructGroundTiles(false);
-    cellQuadsAlignment();
+    runSystem();
     
     var source = infoPara.innerHTML;
     source += "\noptimize: " + COUNTER;
@@ -111,6 +89,34 @@ document.addEventListener("keypress", function(event) {
     ITERATION++;
   }
 });
+
+var runSystem=function(){
+  genGrid();
+
+  //typeNode, typeEdge
+  var t=checkNodeTypeExists("GCN");
+  if(t===true){ 
+    findMinCost("GCN", "green"); 
+  }
+
+  var t=checkNodeTypeExists("RCN");
+  if(t===true){ 
+    findMinCost("RCN", "road"); 
+  }
+
+  findMinCost("MST", "MST"); 
+
+  var t=checkNodeTypeExists("EVAC");
+  if(t===true){ 
+    findMinCost("EVAC", "EVAC"); 
+  }
+
+  genNetworkGeometry();
+
+  genCubes();
+  constructGroundTiles(false);
+  cellQuadsAlignment();
+}
 
 var mainLoop = function() {
   varCellNumLe = gridGuiControls.num_Length;
@@ -125,6 +131,11 @@ var mainLoop = function() {
   costRcnNcn = groundGuiControls.cost_RCN_NCN;
   costRcnRcn = groundGuiControls.cost_RCN_RCN;
   costEVAC = groundGuiControls.cost_EVAC;
+
+  GcnFsr=bldgGuiControls.GCN_FSR;
+  NcnFsr=bldgGuiControls.NCN_FSR;
+  RcnFsr=bldgGuiControls.RCN_FSR;
+  EvacFsr=bldgGuiControls.EVAC_FSR;
 
   cellNumLe.onChange(function() {
     genGrid();
