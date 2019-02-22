@@ -448,10 +448,6 @@ function genEvacPath(sink, allEdges){
        }
        source.dist=0;
        sink.dist=utilDi(source.getPt(),sink.getPt());
-
-       console.log("\n\n\nsource, sink: ");
-       source.display();
-       sink.display();
        sink.parent=source;
 
        // recursive algorithm:
@@ -509,8 +505,6 @@ function genEvacPath(sink, allEdges){
               }  
               k++;
        }
-       console.log("\n\n\nEdges for this sink, source:");
-       console.log(reqEdges);
        return reqEdges;
 
 }

@@ -165,7 +165,9 @@ var mainLoop = function() {
   showMST.onChange(function(){
     genNetworkGeometry();
   });
-
+  showEVAC.onChange(function(){
+    genNetworkGeometry();
+  });
 
   if (genGuiControls.show_Axis === true) {
     scene.add(axes);

@@ -107,14 +107,16 @@ function genNetworkGeometry() {
       edgeArr.push(e.getObj(0));
     } 
   }
-  var k=1;
-  for(var i=0; i<evacEdges.length; i++){
-    var tmpArr=evacEdges[i];
-    for(var j=0; j<tmpArr.length; j++){
-      var e=tmpArr[j];
-      edgeArr.push(e.getObj(k));
+  if(gridGuiControls.show_EVAC===true){
+    var k=1;
+    for(var i=0; i<evacEdges.length; i++){
+      var tmpArr=evacEdges[i];
+      for(var j=0; j<tmpArr.length; j++){
+        var e=tmpArr[j];
+        edgeArr.push(e.getObj(k));
+      }
+      k++;
     }
-    k++;
   }
 
   for (var i = 0; i < edgeArr.length; i++) {

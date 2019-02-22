@@ -24,6 +24,7 @@ var gridGuiControls = new function() {
   this.show_RCN=true;
   this.show_NCN=true;
   this.show_MST=true;
+  this.show_EVAC=true;
 }();
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
@@ -35,6 +36,7 @@ var showGCN = cellGUI.add(gridGuiControls, "show_GCN");
 var showRCN = cellGUI.add(gridGuiControls, "show_RCN");
 var showNCN = cellGUI.add(gridGuiControls, "show_NCN");
 var showMST = cellGUI.add(gridGuiControls, "show_MST");
+var showEVAC = cellGUI.add(gridGuiControls, "show_EVAC");
 cellGUI.add(gridGuiControls, "show_Grid");
 
 varCellNumLe = gridGuiControls.num_Length;
@@ -101,7 +103,7 @@ var genGuiControls = new function() {
   this.hide_Buildings = true;
   this.show_Network = true;
   this.show_Information = false;
-  this.show_Axis = true;
+  this.show_Axis = false;
 }();
 datgui.add(genGuiControls, "hide_Ground");
 datgui.add(genGuiControls, "hide_Buildings");
