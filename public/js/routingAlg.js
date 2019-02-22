@@ -23,6 +23,8 @@ function findMinCost(typeNode, typeEdge) {
 }
 
 
+
+
 //SPT ALG
 function sendSPTAlg(invertCost, typeNode, typeEdge){
        initEdgeCost(invertCost);              // for green DO NOT INVERT, for road invert
@@ -170,6 +172,8 @@ function extractMinHeap(neighbours,nodeHeap){
        
        return node;
 }
+
+
 
 
 
@@ -334,6 +338,8 @@ function updateNeighborEdgeCostMST(node, edges){
 
 
 
+
+
 // EVAC SPT ALgorithm
 function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
        initEdgeCost(invertCost);
@@ -476,10 +482,6 @@ function genEvacPath(sink, allEdges){
               k++;
        }
 
-       for(var i=0; i<resultNodeHeap.length; i++){
-              //resultNodeHeap[i].display();
-       }
-
        //from sink recursively goto parent until parent=source
        var reqEdges=[];
        var reqNodes=[];
@@ -487,8 +489,6 @@ function genEvacPath(sink, allEdges){
        while(k<10){
               var p=sink.getPt(); 
               var q=sink.parent.getPt();
-              sink.display();
-              sink.parent.display();
               //get edge from sink & sink parent
               for(var i=0; i<allEdges.length; i++){
                      var r=allEdges[i].getNode0().getPt();
@@ -506,12 +506,9 @@ function genEvacPath(sink, allEdges){
               k++;
        }
        return reqEdges;
-
 }
 
-
-
-// util function: initiate edge weights - green network
+// util function for EVAC SPT Algorithm: initiate edge weights - green network
 function initEdgeCost(inv){
        for (var i = 0; i < networkEdgesArr.length; i++) {
               var e = networkEdgesArr[i];

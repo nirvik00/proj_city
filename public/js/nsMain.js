@@ -76,7 +76,10 @@ function checkNodeTypeExists(nodeType){
 document.addEventListener("keypress", function(event) {
   if (event.keyCode === 13) {
     //ENTER key event
-    console.log("optimize iteration: (ENTER)" + COUNTER);
+    console.clear();
+    console.log("iteration: (ENTER)" + ITERATION);
+
+    genGrid();
 
     //typeNode, typeEdge
     var t=checkNodeTypeExists("GCN");
@@ -105,21 +108,7 @@ document.addEventListener("keypress", function(event) {
     var source = infoPara.innerHTML;
     source += "\noptimize: " + COUNTER;
     infoPara.innerHTML = source;    
-    COUNTER++;
-  }
-  if (event.keyCode === 32) {
-    //SPACE key event
-    console.clear();
-    console.log("\n\n\n\nnew iteration: (SPACE) " + ITERATION);
-    genGrid();
-    genCubes();
-    constructGroundTiles(true);
-    
-    var source = infoPara.innerHTML;
-    source += "\nnew Iteration " +   ITERATION;
-    infoPara.innerHTML = source;    
     ITERATION++;
-    COUNTER=0;
   }
 });
 

@@ -215,24 +215,24 @@ function setPath(quad, name){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)"), side:THREE.DoubleSide, wireframe:wireframeVal}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)")});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if(name==="green"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,0)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }
         else if(name==="intx"){
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)")});
             var mesh=new THREE.Mesh(p, mat);    
             intxArr.push(mesh);
         }else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,155,255)"), side:THREE.DoubleSide, wireframe:wireframeVal});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,155,255)")});
             var mesh=new THREE.Mesh(p, mat);    
             evacArr.push(mesh);
         }
