@@ -113,6 +113,9 @@ function nsNetworkEdge(a,b){
         }
     }
 
+    //set the area required at that edge
+    this.area=0.0;
+
     //set type of edge:{green, path, road} based on two node-types at each end
     this.type="path";
     this.setType=function(name){
@@ -163,9 +166,13 @@ function nsQuad(a,b,c,d,i){
 
     this.cellId=i;
     
-    this.GCNRat=0.25;
-    this.NCNRat=0.25;
-    this.offRat=0.25;
+    this.gcnRat=0.0;
+    this.ncnRat=0.0;
+    this.rcnRat=0.0;
+
+    this.gcnArea=0.0;
+    this.ncnArea=0.0;
+    this.rcnArea=0.0;
 
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
@@ -242,97 +249,8 @@ function setPath(quad, name, ht){
 }
 
 // CUBE DECISIONS
-// determine the number of layers of buildings on site: three - max
 // three types of buildings: GCN, NCN, RCN
 // max heights: 3, 7, 20
-
-function CubeRandomDecisions(){
-    var T=Math.random();
-    this.numLayers;
-    this.types=Array();
-    this.maxHt;
-    
-    this.getNumLayers=function(){
-        if(T<0.35){
-            this.numLayers=3;
-        }
-        else if(T>0.35 && T<0.7){
-            this.numLayers=2;
-        }else{
-            this.numLayers=1;
-        }
-        return this.numLayers;
-    }
-    
-    this.getMaxHt=function(){
-        var n=Math.random();
-        if(n<0.35){
-          this.maxHt=1;
-        }else if(n>0.35 && n<0.7){
-          this.maxHt=3;
-        }else{
-          this.maxHt=7;
-        }
-        return this.maxHt;
-    }
-    
-    this.getType=function(){
-        var t=this.numLayers;
-        if(t==3){
-            var m=Math.random();
-            if(m<0.16){
-                this.types.push("GCN");      
-                this.types.push("NCN");
-                this.types.push("RCN");
-            }else if(m>0.16 && m<0.32){
-                this.types.push("GCN");
-                this.types.push("RCN");
-                this.types.push("NCN");      
-            }else if(m>0.32 && m<0.48){
-                this.types.push("NCN");
-                this.types.push("RCN");
-                this.types.push("GCN");      
-            }else if(m>0.48 && m<0.60){
-                this.types.push("NCN");
-                this.types.push("GCN"); 
-                this.types.push("RCN");
-            }else if(m>0.60 && m<0.72){
-                this.types.push("RCN");
-                this.types.push("NCN");
-                this.types.push("GCN"); 
-            }else{
-                this.types.push("RCN");
-                this.types.push("GCN"); 
-                this.types.push("NCN");
-            }
-        }else if(t==2){
-            var m=Math.random();
-            if(m<0.35){
-                this.types.push("GCN");      
-                this.types.push("NCN");
-            }else if(m>0.35 && m<0.7){
-                this.types.push("NCN");      
-                this.types.push("GCN");
-            }else{
-                this.types.push("RCN");      
-                this.types.push("NCN");
-            }
-        }else{
-            var m=Math.random();
-            if(m<0.35){
-                this.types.push("GCN");      
-            }else if(m>0.35 && m<0.7){
-                this.types.push("NCN");      
-            }else if(m>0.35 && m<0.9){
-                this.types.push("RCN");      
-            }else{
-                this.types.push("evac");      
-            }
-        }
-        return this.types;
-    } 
-}
-
 // make the cube from properties - RANDOM
 function makeBuildings(quad, numlyr, types, maxht){
     this.quad=quad;

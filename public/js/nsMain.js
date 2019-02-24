@@ -115,12 +115,15 @@ var runSystem=function(doRandom){
     }
   }
 
-
+  // initialize & generate the network
   genNetworkGeometry();
-
-  genCubes();
+  
+  // construct the ground tiles
   constructGroundTiles(doRandom);
-  cellQuadsAlignment();
+
+  //get the quads and set the probabilities of GCN, NCN, RCN
+  //generate the cubes
+  genCubes();
 }
 
 var mainLoop = function() {

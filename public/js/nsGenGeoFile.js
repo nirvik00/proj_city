@@ -316,7 +316,6 @@ var genCirculationLinear=function(doRandom, offset){
     }else{
       type=getRandomType();
     }    
-    console.log("type : " + type);
     var a=networkEdgesArr[i].getNode0().getPt();
     var b=networkEdgesArr[i].getNode1().getPt();
     var p,q;
@@ -476,19 +475,13 @@ var clrBuildings=function(){
 //generate the cubes
 var genCubes = function(doRandom) {
   clrBuildings();
+  cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
   for (var i = 0; i < cellQuadArr.length; i++) {
-    var deci;
-    if (doRandom == false) {
-      deci = new CubeDecisions();
-    } else {
-      deci = new CubeRandomDecisions();
-    }
-    var numLayers = deci.getNumLayers();
-    var type = deci.getType();
-    var maxHt = deci.getMaxHt();
     var quad = cellQuadArr[i];
-    var MK = new makeBuildings(quad, numLayers, type, maxHt);
-    MK.genBuilding();
+    
+    
+    //var MK = new makeBuildings(quad);
+    //MK.genBuilding();
   }
   for (var i = 0; i < GCNCubeArr.length; i++) {
     scene.add(GCNCubeArr[i]);
@@ -505,42 +498,83 @@ var genCubes = function(doRandom) {
 };
 
 function cellQuadsAlignment() {
-  var GCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.GCN_FSR;
-  var NCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.NCN_FSR;
-  var RCNGfa = cellQuadArr.length * varCellLe * varCellDe * bldgGuiControls.RCN_FSR;
-  //console.log(GCNGfa + ", " + NCNGfa + ", " + RCNGfa);
+  var bua=(cellQuadArr.length*varCellLe*varCellDe);
+  
+  var gcnArea = bua * bldgGuiControls.GCN_FSR;
+  var rcnArea = bua * bldgGuiControls.RCN_FSR;
+  var ncnArea = bua*(1-(bldgGuiControls.GCN_FSR + bldgGuiControls.RCN_FSR)); 
+  //var ncnArea = bua * bldgGuiControls.NCN_FSR;
+  console.log(gcnArea + ", " + ncnArea + ", " + rcnArea);
   var GCNCellsArr = [];
   var NCNCellsArr = [];
   var RCNCellsArr = [];
+  // calculate the number of node of each type in quad
+  // set the gcn, ncn, rcn ratios to the quad
+  // add quads to gcnArr, ncnArr, rcnArr
+  var cumuGcnRat=0;
+  var cumuNcnRat=0;
+  var cumuRcnRat=0;
   for (var i = 0; i < cellQuadArr.length; i++) {
-    var p = cellQuadArr[i].mp();
+    var p = cellQuadArr[i].p;
+    var q = cellQuadArr[i].q;
+    var r = cellQuadArr[i].r;
+    var s = cellQuadArr[i].s;
     var NCNRat = 0;
     var GCNRat = 0;
     var RCNRat = 0;
     for (var j = 0; j < networkNodesArr.length; j++) {
-      var q = networkNodesArr[j].getPt();
-      var d = utilDi(p, q);
-      if (d < 1.5 * Math.sqrt(varCellLe * varCellLe + varCellDe * varCellDe)) {
+      var a = networkNodesArr[j].getPt();
+      var dp = utilDi(p, a);
+      var dq = utilDi(q, a);
+      var dr = utilDi(r, a);
+      var ds = utilDi(s, a);
+      if (dp < 0.01 || dq<0.01 || dr<0.01 || ds<0.01) {
         var t = networkNodesArr[j].getType();
         if (t === "RCN") {
-          RCNRat++;
+          RCNRat++; cumuRcnRat++;
           RCNCellsArr.push(cellQuadArr[i]);
         } else if (t === "GCN") {
-          GCNRat++;
+          GCNRat++; cumuGcnRat++;
           GCNCellsArr.push(cellQuadArr[i]);
         } else if (t === "NCN") {
-          NCNRat++;
+          NCNRat++; cumuNcnRat++;
           NCNCellsArr.push(cellQuadArr[i]);
         }
       }
     }
-    cellQuadArr[i].GCNRat = GCNRat;
-    cellQuadArr[i].NCNRat = NCNRat;
-    cellQuadArr[i].RCNRat = RCNRat;
-    var GCNDistributedFSR = GCNGfa / GCNCellsArr.length;
-    var NCNDistributedFSR = NCNGfa / NCNCellsArr.length;
-    var RCNDistributedFSR = RCNGfa / RCNCellsArr.length;
+    cellQuadArr[i].gcnRat = GCNRat;
+    cellQuadArr[i].ncnRat = NCNRat;
+    cellQuadArr[i].rcnRat = RCNRat;    
   }
+  console.log("\n\n\nArea distribution:");
+  console.log("Bua: "+bua);
+  console.log("FSR req: G ="+gcnArea+", N="+ncnArea +", R= "+rcnArea);
+  console.log("Number of Cells: \nG="+GCNCellsArr.length+", N="+ NCNCellsArr.length +", R="+RCNCellsArr.length);
+  // set the area of gcn, ncn, rcn to each quad
+  // area set is given by the node distribution per cell 
+  var cumuGcnArea=0;var cumuNcnArea=0; var cumuRcnArea=0;
+  for(var i=0; i<cellQuadArr.length; i++){
+    if(cellQuadArr[i].gcnRat>0){
+      cellQuadArr[i].gcnArea=gcnArea*cellQuadArr[i].gcnRat/cumuGcnRat;
+      cumuGcnArea+=cellQuadArr[i].gcnArea;
+    }
+    if(cellQuadArr[i].ncnRat>0){
+      cellQuadArr[i].ncnArea=ncnArea*cellQuadArr[i].ncnRat/cumuNcnRat;
+      cumuNcnArea+=cellQuadArr[i].ncnArea;
+    }
+    if(cellQuadArr[i].rcnRat>0) {
+      cellQuadArr[i].rcnArea=rcnArea*cellQuadArr[i].rcnRat/cumuRcnRat;
+      cumuRcnArea+=cellQuadArr[i].rcnArea;
+    }
+    //console.log("\n" + i);
+    //console.log("ratios: "+cellQuadArr[i].gcnRat+ ", "+ cellQuadArr[i].ncnRat+", "+ cellQuadArr[i].rcnRat);
+    //console.log("Req areas : "+gcnDistributedArea+ ", "+ncnDistributedArea + ", "+rcnDistributedArea);
+    //console.log("Got areas : "+cellQuadArr[i].gcnArea+ ", "+cellQuadArr[i].ncnArea + ", "+cellQuadArr[i].rcnArea);
+  }
+
+  console.log("\n\n\nGot Areas :\nCumulative areas : G=" + cumuGcnArea+ ", N="+cumuNcnArea + ", R="+cumuRcnArea);
+  console.log("Total Area : " + (cumuGcnArea+ cumuNcnArea +cumuRcnArea));
 }
+
 
 
