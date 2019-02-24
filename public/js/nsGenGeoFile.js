@@ -187,8 +187,6 @@ var genGrid = function() {
   //findMinCost();
 };
 
-
-
 function utilDi(a, b) {
   return Math.sqrt(
     (a.x - b.x) * (a.x - b.x) +
@@ -196,7 +194,6 @@ function utilDi(a, b) {
       (a.z - b.z) * (a.z - b.z)
   );
 }
-
 
 var clrGround=function(){
   for (var i = 0; i < pathArr.length; i++) {
@@ -477,8 +474,7 @@ var genCubes = function(doRandom) {
   clrBuildings();
   cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
   for (var i = 0; i < cellQuadArr.length; i++) {
-    var quad = cellQuadArr[i];
-    
+    var quad = cellQuadArr[i];  
     
     //var MK = new makeBuildings(quad);
     //MK.genBuilding();
@@ -500,10 +496,15 @@ var genCubes = function(doRandom) {
 function cellQuadsAlignment() {
   var bua=(cellQuadArr.length*varCellLe*varCellDe);
   
-  var gcnArea = bua * bldgGuiControls.GCN_FSR;
-  var rcnArea = bua * bldgGuiControls.RCN_FSR;
-  var ncnArea = bua*(1-(bldgGuiControls.GCN_FSR + bldgGuiControls.RCN_FSR)); 
-  //var ncnArea = bua * bldgGuiControls.NCN_FSR;
+  //normalize the FSR input to 1 and then distribute the FSR
+  var gcnFsr=bldgGuiControls.GCN_FSR
+  var ncnFsr=bldgGuiControls.NCN_FSR
+  var rcnFsr=bldgGuiControls.RCN_FSR
+  var sumFsr= (gcnFsr+ncnFsr+rcnFsr);
+  var gcnArea = bua * gcnFsr/sumFsr;
+  var rcnArea = bua * rcnFsr/sumFsr;
+  var ncnArea = bua * ncnFsr/sumFsr; 
+  
   console.log(gcnArea + ", " + ncnArea + ", " + rcnArea);
   var GCNCellsArr = [];
   var NCNCellsArr = [];

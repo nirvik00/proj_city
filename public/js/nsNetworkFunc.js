@@ -174,7 +174,6 @@ function getNetworkNodes(e) {
   var q = n1.getPt();
 
   var nodeCounter = 0;
-
   if (networkEdgesArr.length > 0) {
        for (var i = 0; i < networkNodesArr.length; i++) {
          var r = networkNodesArr[i].getPt();
@@ -183,6 +182,7 @@ function getNetworkNodes(e) {
           break;
         }
        }
+       
        if (sum0 == 0) { networkNodesArr.push(n0); }
 
        for (var i = 0; i < networkNodesArr.length; i++) {
