@@ -208,7 +208,7 @@ function setPath(quad, name){
         p.vertices.push(new THREE.Vector3(b.x,t,b.z));
         p.vertices.push(new THREE.Vector3(c.x,t,c.z));
         p.vertices.push(new THREE.Vector3(d.x,t,d.z));
-        p.faces.push(new THREE.Face3(0,1,2));
+        p.faces.push(new THREE.Face3(0,2,1));
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
@@ -428,10 +428,12 @@ var debugSphere=function(p){
   
 var debugQuad=function(p,q,r,s){
     var geox = new THREE.Geometry();
-    geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
-    geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
-    geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
-    geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
+    var y=1;
+    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
+    geox.vertices.push(new THREE.Vector3(q.x,y,q.z));
+    geox.vertices.push(new THREE.Vector3(r.x,y,r.z));
+    geox.vertices.push(new THREE.Vector3(s.x,y,s.z));
+    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
     var matx=new THREE.LineBasicMaterial( { color: 0x0000ff } );
     var line = new THREE.Line( geox, matx);
     scene.add(line);

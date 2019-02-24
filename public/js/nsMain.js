@@ -81,7 +81,7 @@ document.addEventListener("keypress", function(event) {
     console.clear();
     console.log("iteration: (ENTER)" + ITERATION);
 
-    runSystem();
+    runSystem(false);
     
     var source = infoPara.innerHTML;
     source += "\noptimize: " + COUNTER;
@@ -90,31 +90,34 @@ document.addEventListener("keypress", function(event) {
   }
 });
 
-var runSystem=function(){
+var runSystem=function(doRandom){
   genGrid();
 
-  //typeNode, typeEdge
-  var t=checkNodeTypeExists("GCN");
-  if(t===true){ 
-    findMinCost("GCN", "green"); 
+  if(doRandom===false){
+    //typeNode, typeEdge
+    var t=checkNodeTypeExists("GCN");
+    if(t===true){ 
+      findMinCost("GCN", "green"); 
+    }
+
+    var t=checkNodeTypeExists("RCN");
+    if(t===true){ 
+      findMinCost("RCN", "road"); 
+    }
+
+    findMinCost("MST", "MST"); 
+
+    var t=checkNodeTypeExists("EVAC");
+    if(t===true){ 
+      findMinCost("EVAC", "EVAC"); 
+    }
   }
 
-  var t=checkNodeTypeExists("RCN");
-  if(t===true){ 
-    findMinCost("RCN", "road"); 
-  }
-
-  findMinCost("MST", "MST"); 
-
-  var t=checkNodeTypeExists("EVAC");
-  if(t===true){ 
-    findMinCost("EVAC", "EVAC"); 
-  }
 
   genNetworkGeometry();
 
   genCubes();
-  constructGroundTiles(false);
+  constructGroundTiles(doRandom);
   cellQuadsAlignment();
 }
 

@@ -284,10 +284,12 @@ function getRandomType(){
   var t=Math.random();
   if (t < 0.35) {
     type = "road";
-  } else if (t > 0.35 && t < 0.75) {
+  } else if (t >= 0.35 && t < 0.75) {
     type = "path";
-  } else {
+  } else if (t >= 0.75) {
     type = "green";
+  }else {
+    type = "MST";
   }
   return type;
 }
@@ -376,10 +378,11 @@ var genCirculationCorner=function(doRandom,offset){
     }else{
       type=getRandomType();
     }  
-    var p=new nsPt(a.x-offset,a.y, a.z-offset);
-    var q=new nsPt(a.x+offset,a.y, a.z-offset);
-    var r=new nsPt(a.x+offset,a.y, a.z+offset);
-    var s=new nsPt(a.x-offset,a.y, a.z+offset);
+    var p=new nsPt(a.x-offset, a.y, a.z-offset);
+    var q=new nsPt(a.x+offset, a.y, a.z-offset);
+    var r=new nsPt(a.x+offset, a.y, a.z+offset);
+    var s=new nsPt(a.x-offset, a.y, a.z+offset);   
+    //debugQuad(p,q,r,s);
     var quad=new nsQuad(p,q,r,s);
     quad.type=type;
     circulationQuads.push(quad);
