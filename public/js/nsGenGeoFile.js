@@ -107,7 +107,7 @@ buildingGUI.add(bldgGuiControls, "show_RCN");
 
 // main functions about the generation
 var genGuiControls = new function() {
-  this.hide_Ground = true;
+  this.hide_Ground = false;
   this.hide_Buildings = true;
   this.show_Network = true;
   this.show_Information = false;
@@ -229,12 +229,18 @@ var clrGround=function(){
     evacArr[i].material.dispose();
     scene.remove(evacArr[i]);
   }
+  for (var i = 0; i < mstArr.length; i++) {
+    mstArr[i].geometry.dispose();
+    mstArr[i].material.dispose();
+    scene.remove(mstArr[i]);
+  }
   pathArr = Array();
   roadArr = Array();
   greenArr = Array();
   groundArr = Array();
   evacArr=[];
   intxArr=[];
+  mstArr=[];
 }
 
 var genGroundTiles=function(){
@@ -256,6 +262,9 @@ var genGroundTiles=function(){
   for (var i = 0; i < groundArr.length; i++) {
     scene.add(groundArr[i]);
   }
+  for (var i = 0; i < mstArr.length; i++) {
+    scene.add(mstArr[i]);
+  }
 }
 
 //generate the passage: returnNodeType
@@ -265,14 +274,18 @@ var constructGroundTiles = function(doRandom) {
   var pathQuadArr = Array();
   var w = (varCellNumLe - 1) / 2;
   var t = (varCellNumDe - 1) / 2;
-
+  mstArr=[]
   circulationQuads=[];
   var offset=gridGuiControls.global_offset;
   genCirculationCorner(doRandom,offset);
   genCirculationLinear(doRandom,offset);
   for (var i = 0; i < circulationQuads.length; i++) {
     var name = circulationQuads[i].type;
-    var PA = new setPath(circulationQuads[i], name);
+    var ht=0.0;
+    if(name==="MST"){
+      ht=0.15;
+    }
+    var PA = new setPath(circulationQuads[i], name, ht);
     PA.generateGround();
   }
 
@@ -303,6 +316,7 @@ var genCirculationLinear=function(doRandom, offset){
     }else{
       type=getRandomType();
     }    
+    console.log("type : " + type);
     var a=networkEdgesArr[i].getNode0().getPt();
     var b=networkEdgesArr[i].getNode1().getPt();
     var p,q;
@@ -324,10 +338,35 @@ var genCirculationLinear=function(doRandom, offset){
 
 //util function to generate linear circulation along edge : ver
 var genVerticalCirculationQuad=function(p,q,offset, type){
-  var a=new nsPt(p.x-offset, p.y, p.z+offset);
-  var b=new nsPt(p.x+offset, p.y, p.z+offset);
-  var c=new nsPt(q.x+offset, q.y, q.z-offset);
-  var d=new nsPt(q.x-offset, q.y, q.z-offset);
+  var a,b,c,d;
+  var r=0.5*offset;
+  //if(type==="green" || type==="path"){
+    //a=new nsPt(p.x-offset, p.y, p.z+offset);
+    //b=new nsPt(p.x+offset, p.y, p.z+offset);
+    //c=new nsPt(q.x+offset, q.y, q.z-offset);
+    //d=new nsPt(q.x-offset, q.y, q.z-offset);
+  //}else if(type === "road"){
+  var r=0.5*offset;
+  a=new nsPt(p.x-r, p.y, p.z+2*r);
+  b=new nsPt(p.x+r, p.y, p.z+2*r);
+  c=new nsPt(q.x+r, q.y, q.z-2*r);
+  d=new nsPt(q.x-r, q.y, q.z-2*r);
+  if(type === "MST"){
+    //mst
+    a=new nsPt(p.x-2*r, p.y, p.z+2*r);
+    b=new nsPt(p.x-r, p.y, p.z+2*r);
+    c=new nsPt(q.x-r, q.y, q.z-2*r);
+    d=new nsPt(q.x-2*r, q.y, q.z-2*r);
+    
+    e=new nsPt(p.x+2*r, p.y, p.z+2*r);
+    f=new nsPt(q.x+2*r, q.y, q.z-2*r);
+    g=new nsPt(q.x+r, q.y, q.z-2*r);
+    h=new nsPt(p.x+r, p.y, p.z+2*r);
+
+    var quad2=new nsQuad(e,f,g,h);
+    quad2.type=type;
+    circulationQuads.push(quad2);
+  }
   var quad=new nsQuad(a,b,c,d);
   quad.type=type;
   circulationQuads.push(quad);
@@ -335,10 +374,34 @@ var genVerticalCirculationQuad=function(p,q,offset, type){
 
 //util function to generate  linear circulation along edge : hor
 var genHorizontalCirculationQuad=function(p,q,offset, type){
-  var a=new nsPt(p.x+offset, p.y, p.z-offset);
-  var b=new nsPt(q.x-offset, q.y, q.z-offset);
-  var c=new nsPt(q.x-offset, q.y, p.z+offset);
-  var d=new nsPt(p.x+offset, p.y, p.z+offset);
+  var a,b,c,d;
+  var r=0.5*offset;
+  //if(type==="green" || type==="path" || type==="intx"){
+    //a=new nsPt(p.x+offset, p.y, p.z-offset);
+    //b=new nsPt(q.x-offset, q.y, q.z-offset);
+    //c=new nsPt(q.x-offset, q.y, p.z+offset);
+    //d=new nsPt(p.x+offset, p.y, p.z+offset);
+  //}else if(type === "road"){
+    a=new nsPt(p.x+2*r, p.y, p.z-r);
+    b=new nsPt(q.x-2*r, q.y, q.z-r);
+    c=new nsPt(q.x-2*r, q.y, p.z+r);
+    d=new nsPt(p.x+2*r, p.y, p.z+r);
+  if(type === "MST"){
+    //top MST
+    //var r=0.5*offset;
+    a=new nsPt(p.x+2*r, p.y, p.z-2*r);
+    b=new nsPt(q.x-2*r, q.y, q.z-2*r);
+    c=new nsPt(q.x-2*r, q.y, q.z-r);
+    d=new nsPt(p.x+2*r, p.y, p.z-r);
+
+    e=new nsPt(p.x+2*r, p.y, p.z+r);
+    f=new nsPt(q.x-2*r, q.y, q.z+r);
+    g=new nsPt(q.x-2*r, q.y, q.z+2*r);
+    h=new nsPt(p.x+2*r, p.y, p.z+2*r);
+    var quad2=new nsQuad(e,f,g,h);
+    quad2.type=type;
+    circulationQuads.push(quad2);
+  }
   var quad=new nsQuad(a,b,c,d);
   quad.type=type;
   circulationQuads.push(quad);

@@ -194,7 +194,7 @@ function nsDis(a,b){
     return norm;
 }
 
-function setPath(quad, name){
+function setPath(quad, name, ht){
     this.quad=quad;
     this.name=name;
     this.generateGround=function(){
@@ -203,7 +203,7 @@ function setPath(quad, name){
         var c=quad.r;
         var d=quad.s;
         var p=new THREE.Geometry();
-        var t=0;//Math.random()*4;
+        var t=ht;//Math.random()*4;
         p.vertices.push(new THREE.Vector3(a.x,t,a.z));
         p.vertices.push(new THREE.Vector3(b.x,t,b.z));
         p.vertices.push(new THREE.Vector3(c.x,t,c.z));
@@ -212,15 +212,15 @@ function setPath(quad, name){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)")}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(100,100,100)")}); 
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,255,0)")});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,155,0)")});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if(name==="green"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,0)")});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(50,255,50)")});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }
@@ -228,8 +228,13 @@ function setPath(quad, name){
             mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)")});
             var mesh=new THREE.Mesh(p, mat);    
             intxArr.push(mesh);
+        }else if(name==="MST"){
+            //for mst
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")});
+            var mesh=new THREE.Mesh(p, mat);    
+            mstArr.push(mesh);
         }else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,155,255)")});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,15,55)")});
             var mesh=new THREE.Mesh(p, mat);    
             evacArr.push(mesh);
         }

@@ -393,7 +393,6 @@ function sendEVACSPTAlg(invertCost, typeNode, typeEdge){
 
 }
 
-
 // step 0. set parent node as closest to node
 function setEvacParentNode(allNodes, evacNodes){
        // for each not evac node, set its closest evac node as parent 
