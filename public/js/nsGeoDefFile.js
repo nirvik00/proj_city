@@ -184,24 +184,44 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
-    this.genCube=function(){
-        var reqLe=utilDi(this.p,this.q);
-        var reqHt=0.5;
-        var reqDe=utilDi(this.q,this.r);
-        var geox = new THREE.BoxGeometry(reqLe, reqHt, reqDe);
-        var matx=getBuildingMaterialFromType(this.type);
-        var mesh = new THREE.Mesh(geox, matx);
-        mesh.position.x = this.p.x+reqLe/2;
-        mesh.position.y = (reqHt/2);
-        mesh.position.z = this.p.z+reqDe/2;    
-        if(this.types==="GCN"){
-            GCNCubeArr.push(mesh);
-        }else if(this.types==="NCN"){
-            NCNCubeArr.push(mesh);
-        }else if(this.types==="RCN"){
-            RCNCubeArr.push(mesh);
-        }else{ //evacuation
-            evacArr.push(mesh);    
+    this.genCube=function(num){
+        var ht=0.5
+        var htCounter=ht;
+        var numx=Math.ceil(Math.random()*num/2 + 1);
+        for(var i=0; i<numx; i++){
+            var reqLe=utilDi(this.p,this.q);
+            var reqHt=0.0;
+            var reqDe=utilDi(this.q,this.r);
+
+            var geox = new THREE.BoxGeometry(reqLe, ht, reqDe);
+            var matx=getBuildingMaterialFromType(this.type);
+            var mesh = new THREE.Mesh(geox, matx);
+            mesh.position.x = this.p.x+reqLe/2;
+            mesh.position.y = htCounter- ht/2;
+            mesh.position.z = this.p.z+reqDe/2;    
+            
+            var geox2 = new THREE.BoxGeometry(reqLe, ht, reqDe);
+            var matx2=new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(0,0,0)"), wireframe:true});
+            var mesh2 = new THREE.Mesh(geox2, matx2);
+            mesh2.position.x = this.p.x+reqLe/2;
+            mesh2.position.y = htCounter- ht/2;
+            mesh2.position.z = this.p.z+reqDe/2;    
+       
+    
+            if(this.type==="GCN"){
+                GCNCubeArr.push(mesh);
+                GCNCubeArr.push(mesh2);
+            }else if(this.type==="NCN"){
+                NCNCubeArr.push(mesh);
+                NCNCubeArr.push(mesh2);
+            }else if(this.type==="RCN"){
+                RCNCubeArr.push(mesh);
+                RCNCubeArr.push(mesh2);
+            }else{ //evacuation
+                evacArr.push(mesh);    
+                evacArr.push(mesh2);
+            }
+            htCounter+=(ht);
         }
     }
 }
@@ -241,86 +261,38 @@ function setPath(quad, name, ht){
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
         if(name==="road"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(100,100,100)")}); 
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(100,100,100)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);   
             roadArr.push(mesh); 
         }else if (name==="path"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,155,0)")});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(255,155,0)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);
             pathArr.push(mesh);    
         }else if(name==="green"){
-            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(50,255,50)")});
+            mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(50,255,50)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);    
             greenArr.push(mesh);
         }
         else if(name==="intx"){
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)")});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,0,255)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);    
             intxArr.push(mesh);
         }else if(name==="MST"){
             //for mst
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);    
             mstArr.push(mesh);
         }else{
-            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,15,55)")});
+            mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(255,15,55)"),side:THREE.DoubleSide});
             var mesh=new THREE.Mesh(p, mat);    
             evacArr.push(mesh);
         }
     }
 }
 
-// CUBE DECISIONS
-// three types of buildings: GCN, NCN, RCN
-// max heights: 3, 7, 20
-// make the cube from properties - RANDOM
-function makeBuildings(quad, numlyr, types, maxht){
-    this.quad=quad;
-    this.numLayers=numlyr;
-    this.types=types;
-    this.maxHt=maxht;
-    this.pt=this.quad.mp();
-    this.genBuilding=function(){
-        var n = this.maxHt/ this.types.length;
-        var p=this.pt;
-        var htarr=Array();
-        var meshArr=Array();
-        for(var i=0; i<this.types.length; i++){
-            var selfHt=parseInt(Math.random()*2 + 1);
-            if(types[i]=="evac"){
-                selfHt=1;
-            }
-            var prevHt=0;
-            if(i>0){
-                for(var j=0; j<htarr.length; j++){
-                    prevHt+=htarr[j];    
-                }                
-            } 
-            htarr.push(selfHt);
-            var reqLe=varCellLe-3*gridGuiControls.global_offset;
-            var reqDe=varCellDe-3*gridGuiControls.global_offset;
-            var geox = new THREE.BoxGeometry(reqLe, selfHt, reqDe);
-            var matx=getBuildingMaterialFromType(this.types[i]);
-            var mesh = new THREE.Mesh(geox, matx);
-            mesh.position.x = p.x;
-            mesh.position.y = (selfHt/2) + prevHt;
-            mesh.position.z = p.z;    
-            if(this.types[i]=="GCN"){
-                GCNCubeArr.push(mesh);
-            }else if(this.types[i]=="NCN"){
-                NCNCubeArr.push(mesh);
-            }else if(this.types[i]=="RCN"){
-                RCNCubeArr.push(mesh);
-            }else{ //evacuation
-                evacArr.push(mesh);    
-            }
-        }
-    }
-}
-
 function getBuildingMaterialFromType(type){
-    this.mat=this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
-        wireframe:wireframeVal});;
+    this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
+        wireframe:wireframeVal});
     if(type=="GCN"){
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(0,255,0)"),
@@ -331,7 +303,7 @@ function getBuildingMaterialFromType(type){
         wireframe: wireframeVal});        
     }else if(type=="RCN"){
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(50,50,50)"),
+        color: new THREE.Color("rgb(150,150,150)"),
         wireframe:wireframeVal});
     }else{//evac
         this.mat = new THREE.MeshBasicMaterial ({
@@ -382,6 +354,5 @@ var debugQuad=function(p,q,r,s,y){
     var line = new THREE.Line( geox, matx);
     scene.add(line);
 }
-
 
 

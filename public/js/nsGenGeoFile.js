@@ -87,9 +87,6 @@ var bldgGuiControls = new function() {
   this.NCN_FSR = 0.3;
   this.RCN_FSR = 0.3;
   this.EVAC_FSR = 0.1;
-  this.min_Ht = 3;
-  this.mid_Ht = 7;
-  this.max_Ht = 20;
   this.show_Evacuation = true;
   this.show_GCN = true;
   this.show_NCN = true;
@@ -102,9 +99,6 @@ buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "EVAC_FSR", 0.1, 1);
-buildingGUI.add(bldgGuiControls, "min_Ht", 1, 5);
-buildingGUI.add(bldgGuiControls, "mid_Ht", 5, 12);
-buildingGUI.add(bldgGuiControls, "max_Ht", 12, 25);
 buildingGUI.add(bldgGuiControls, "show_Evacuation");
 buildingGUI.add(bldgGuiControls, "show_GCN");
 buildingGUI.add(bldgGuiControls, "show_NCN");
@@ -187,9 +181,6 @@ var genGrid = function() {
     scene.add(gridArr[i]);
   }
   initNetwork();
-  //genCubes();
-  //constructRandomGroundTiles();
-  //findMinCost();
 };
 
 function utilDi(a, b) {
@@ -283,9 +274,9 @@ var constructGroundTiles = function(doRandom) {
   for (var i = 0; i < circulationQuads.length; i++) {
     var name = circulationQuads[i].type;
     var ht=0.0;
-    if(name==="MST"){
-      ht=0.15;
-    }
+    //if(name==="MST"){
+      //ht=0.15;
+    //}
     var PA = new setPath(circulationQuads[i], name, ht);
     PA.generateGround();
   }
@@ -472,7 +463,6 @@ var clrBuildings=function(){
   RCNCubeArr = Array();
 }
 
-
 function addBldgs(){
   for (var i = 0; i < GCNCubeArr.length; i++) {
     scene.add(GCNCubeArr[i]);
@@ -487,7 +477,6 @@ function addBldgs(){
     scene.add(evacArr[i]);
   }
 }
-
 
 //generate the cubes
 var genCubes = function(doRandom) {
@@ -592,7 +581,7 @@ function allocateSubCells(){
   for(var i=0; i<cellQuadArr.length; i++){
     var subCellQuadArr=cellQuadArr[i].subCellQuads;
     var mainQuad=cellQuadArr[i];
-    console.log(i+". Areas= " + mainQuad.gcnArea+", "+mainQuad.ncnArea+", "+mainQuad.rcnArea);
+    //console.log(i+". Areas= " + mainQuad.gcnArea+", "+mainQuad.ncnArea+", "+mainQuad.rcnArea);
     cumuArea+=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
     var arCell=0.0;
     for(var j=0; j<subCellQuadArr.length; j++){
@@ -606,23 +595,60 @@ function allocateSubCells(){
           type=networkEdgesArr[k].getType();
         }
       }
-      var quad=subCellQuadArr[j];
-      quad.type=type;
-      quad.genCube();
-      
       var a=subCellQuadArr[j].p;
       var b=subCellQuadArr[j].q;
       var c=subCellQuadArr[j].r;
       var d=subCellQuadArr[j].s;
-      //debugQuad(a,b,c,d);
       arCell=utilDi(a,b)*utilDi(b,c);
     }
-    numCellsGcn=Math.ceil(parseFloat(mainQuad.gcnArea)/parseFloat(arCell));
+
     numCellsNcn=Math.ceil(parseFloat(mainQuad.ncnArea)/parseFloat(arCell));
     numCellsRcn=Math.ceil(parseFloat(mainQuad.rcnArea)/parseFloat(arCell));
-    console.log(arCell+"; numbers = "+ numCellsGcn+", "+ numCellsNcn +", "+ numCellsRcn);
+    
+    var totalNum=subCellQuadArr.length;
+    var totalArea=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
+    numCellsGcn=Math.ceil(totalNum*mainQuad.gcnArea/totalArea);
+    numCellsNcn=Math.ceil(totalNum*mainQuad.ncnArea/totalArea);
+    numCellsRcn=Math.ceil(totalNum*mainQuad.rcnArea/totalArea);
+
+    
+    //console.log(arCell+"; numbers = "+ numCellsGcn+", "+ numCellsNcn +", "+ numCellsRcn+ " -"+totalNum+", "+totalArea);
+    
+    shuffleArray(subCellQuadArr);
+    var numCellsGcnGot=0;
+    var numCellsNcnGot=0;
+    var numCellsRcnGot=0;
+    var counter=0;
+    for(var j=0; j<subCellQuadArr.length; j++){
+      
+      if(numCellsGcnGot<numCellsGcn){
+        var quad=subCellQuadArr[j];
+        quad.type="GCN";
+        quad.genCube(numCellsGcn);
+        numCellsGcnGot++;
+        counter++;
+      }      
+    }
+    for(var j=counter; j<subCellQuadArr.length; j++){
+      if(numCellsNcnGot<numCellsNcn){
+        var quad=subCellQuadArr[j];
+        quad.type="NCN";
+        quad.genCube(numCellsNcn);
+        numCellsNcnGot++;
+        counter++;
+      }      
+    }
+    for(var j=counter; j<subCellQuadArr.length; j++){
+      if(numCellsRcnGot<numCellsRcn){
+        var quad=subCellQuadArr[j];
+        quad.type="RCN";
+        quad.genCube(numCellsRcn);
+        numCellsRcnGot++;
+        counter++;
+      }      
+    }
   }
-  console.log("\nTotal Area= "+cumuArea);
+  //console.log("\nTotal Area= "+cumuArea);
 }
 
 function genHorSubCells(p,q,r,s){
