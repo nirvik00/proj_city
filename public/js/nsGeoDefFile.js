@@ -18,9 +18,10 @@ function nsNetworkNode(a,b,c, nodeId){
     this.id=nodeId;
     this.parent=0;
     this.dist=1000;
+    this.pt=new nsPt(this.x,this.y,this.z);
 
     this.getPt=function(){
-        return new nsPt(this.x, this.y, this.z);
+        return this.pt;
     }
     this.setType=function(){
         
