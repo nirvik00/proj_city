@@ -349,15 +349,14 @@ var debugSphere=function(p){
     scene.add(mesh);
 }
   
-var debugQuad=function(p,q,r,s){
+var debugQuad=function(p,q,r,s,y){
     var geox = new THREE.Geometry();
-    var y=1;
     geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
     geox.vertices.push(new THREE.Vector3(q.x,y,q.z));
     geox.vertices.push(new THREE.Vector3(r.x,y,r.z));
     geox.vertices.push(new THREE.Vector3(s.x,y,s.z));
     geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
-    var matx=new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
     var line = new THREE.Line( geox, matx);
     scene.add(line);
 }

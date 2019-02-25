@@ -474,11 +474,78 @@ var genCubes = function(doRandom) {
   clrBuildings();
   cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
   for (var i = 0; i < cellQuadArr.length; i++) {
+    var gcnAr=cellQuadArr[i].gcnArea;
+    var ncnAr=cellQuadArr[i].ncnArea;
+    var rcnAr=cellQuadArr[i].rcnArea;
+    console.log(i+". Areas: "+gcnAr+", "+ncnAr+", "+rcnAr);
     var quad = cellQuadArr[i];  
+    var offset=gridGuiControls.global_offset;
+    var p=new nsPt(quad.p.x+offset, quad.p.y, quad.p.z+offset);
+    var q=new nsPt(quad.q.x-offset, quad.q.y, quad.q.z+offset);
+    var r=new nsPt(quad.r.x-offset, quad.r.y, quad.r.z-offset);
+    var s=new nsPt(quad.s.x+offset, quad.s.y, quad.s.z-offset);    
+    var quadAr=gcnAr+ncnAr+rcnAr;
+
+    //req offset is given by a quadratic equation multiplied by a constant for number of floors
+    var d=0.3*(-(varCellLe-(2*offset)+varCellDe)+Math.sqrt(((varCellLe-(2*offset)+varCellDe)*(varCellLe-(2*offset)+varCellDe)) + 4*quadAr))/2;
     
-    //var MK = new makeBuildings(quad);
-    //MK.genBuilding();
+    var subCellQuadArr=[];
+    //quad A : PQ
+    var h1=1; // for debug quad
+    var a1=new nsPt(p.x,p.y,p.z);
+    var b1=new nsPt(q.x,q.y,q.z);
+    var c1=new nsPt(q.x,q.y,q.z+d);
+    var d1=new nsPt(p.x,p.y,p.z+d);
+    var quads=genHorSubCells(a1,b1,c1,d1);
+    for(var i=0; i<quads.length; i++){
+      subCellQuadArr.push(quads[i]);
+    }
+    // debugQuad(a1,b1,c1,d1,h1);
+    
+    //quad B : QR
+    var h2=1;
+    var a2=new nsPt(q.x-d,q.y,q.z+d);
+    var b2=new nsPt(q.x,q.y,q.z+d);
+    var c2=new nsPt(r.x,r.y,r.z-d);
+    var d2=new nsPt(r.x-d,r.y,r.z-d);
+    var quadB=new nsQuad(a2,b2,c2,d2);
+    if(utilDi(b2,c2)>varCellDe/3){
+      // debugQuad(a2,b2,c2,d2,h2);
+      var quads=genVerSubCells(a2,b2,c2,d2);
+      for(var i=0; i<quads.length; i++){
+        subCellQuadArr.push(quads[i]);
+      }
+    }
+    
+    //quad C : RS
+    var h3=1;
+    var a3=new nsPt(s.x,s.y,s.z-d);
+    var b3=new nsPt(r.x,r.y,r.z-d);
+    var c3=new nsPt(r.x,r.y,r.z);
+    var d3=new nsPt(s.x,s.y,s.z);
+    var quadC=new nsQuad(a3,b3,c3,d3);
+    // debugQuad(a3,b3,c3,d3,h3);
+    var quads=genHorSubCells(a3,b3,c3,d3)
+    for(var i=0; i<quads.length; i++){
+      subCellQuadArr.push(quads[i]);
+    }
+
+    //quad D : SP
+    var h4=1;
+    var a4=new nsPt(p.x,p.y,p.z+d);
+    var b4=new nsPt(p.x+d,p.y,p.z+d);
+    var c4=new nsPt(s.x+d,s.y,s.z-d);
+    var d4=new nsPt(s.x,s.y,s.z-d);
+    var quadD=new nsQuad(a4,b4,c4,d4);
+    if(utilDi(b4,c4)>varCellDe/3){
+      var quadsd=genVerSubCells(a4,b4,c4,d4)
+      // debugQuad(a4,b4,c4,d4,h4);
+      for(var i=0; i<quads.length; i++){
+        subCellQuadArr.push(quads[i]);
+      }
+    }
   }
+
   for (var i = 0; i < GCNCubeArr.length; i++) {
     scene.add(GCNCubeArr[i]);
   }
@@ -492,6 +559,38 @@ var genCubes = function(doRandom) {
     scene.add(evacArr[i]);
   }
 };
+
+function genHorSubCells(p,q,r,s){
+  var subCellQuadArr=[];
+  var t=0.3;
+  var u=new nsPt((q.x-p.x),(q.y-p.y),(q.z-p.z));
+  var v=new nsPt((r.x-s.x),(r.y-s.y),(r.z-s.z));
+  for(var i=0.0; i<1.0-t; i+=t){
+    var a=new nsPt( p.x + (u.x*i), p.y, p.z + (u.z*i) );
+    var b=new nsPt( p.x + (u.x*(i+t)), p.y, p.z + u.z*(i+t));
+    var c=new nsPt( s.x + (v.x*(i+t)), s.y, s.z + (v.z*(i+t)) );
+    var d=new nsPt( s.x + (v.x*i), s.y, s.z + (v.z*i) );
+    var quadA=new nsQuad(a,b,c,d);      
+    subCellQuadArr.push(quad);
+    //debugQuad(a,b,c,d);
+  }
+}
+
+function genVerSubCells(p,q,r,s){
+  var subCellQuadArr=[];
+  var t=0.3;
+  var u=new nsPt((r.x-q.x),(r.y-q.y),(r.z-q.z));
+  var v=new nsPt((s.x-p.x),(s.y-p.y),(s.z-p.z));
+  for(var i=0.0; i<1.0-t; i+=t){
+    var a=new nsPt( p.x + (v.x*i), p.y, p.z + (v.z*i) );
+    var b=new nsPt( q.x + (u.x*(i)), q.y, q.z + u.z*(i));
+    var c=new nsPt( q.x + (v.x*(i+t)), q.y, q.z + (v.z*(i+t)) );
+    var d=new nsPt( p.x + (v.x*(i+t)), p.y, p.z + (v.z*(i+t)) );
+    var quad=new nsQuad(a,b,c,d);      
+    subCellQuadArr.push(quad);
+    //debugQuad(a,b,c,d);
+  }
+}
 
 function cellQuadsAlignment() {
   var bua=(cellQuadArr.length*varCellLe*varCellDe);
@@ -567,10 +666,6 @@ function cellQuadsAlignment() {
       cellQuadArr[i].rcnArea=rcnArea*cellQuadArr[i].rcnRat/cumuRcnRat;
       cumuRcnArea+=cellQuadArr[i].rcnArea;
     }
-    //console.log("\n" + i);
-    //console.log("ratios: "+cellQuadArr[i].gcnRat+ ", "+ cellQuadArr[i].ncnRat+", "+ cellQuadArr[i].rcnRat);
-    //console.log("Req areas : "+gcnDistributedArea+ ", "+ncnDistributedArea + ", "+rcnDistributedArea);
-    //console.log("Got areas : "+cellQuadArr[i].gcnArea+ ", "+cellQuadArr[i].ncnArea + ", "+cellQuadArr[i].rcnArea);
   }
 
   console.log("\n\n\nGot Areas :\nCumulative areas : G=" + cumuGcnArea+ ", N="+cumuNcnArea + ", R="+cumuRcnArea);
