@@ -63,6 +63,8 @@ var groundGuiControls = new function() {
   this.show_Green = true;
   this.show_Path = true;
   this.show_Road = true;
+  this.show_Intx=true;
+  this.show_MST=true;
 };
 var groundGUI = datgui.addFolder("groundGuiControls");
 groundGUI.add(groundGuiControls, "cost_GCN_GCN", 0.01, 1);
@@ -75,6 +77,8 @@ groundGUI.add(groundGuiControls, "cost_EVAC", 0.01, 1);
 groundGUI.add(groundGuiControls, "show_Green");
 groundGUI.add(groundGuiControls, "show_Path");
 groundGUI.add(groundGuiControls, "show_Road");
+groundGUI.add(groundGuiControls, "show_Intx");
+groundGUI.add(groundGuiControls, "show_MST");
 
 //building gui controls
 var bldgGuiControls = new function() {
@@ -90,6 +94,7 @@ var bldgGuiControls = new function() {
   this.show_GCN = true;
   this.show_NCN = true;
   this.show_RCN = true;
+
 };
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "evacuation_density", 0.01, 0.1);
@@ -107,7 +112,7 @@ buildingGUI.add(bldgGuiControls, "show_RCN");
 
 // main functions about the generation
 var genGuiControls = new function() {
-  this.hide_Ground = false;
+  this.hide_Ground = true;
   this.hide_Buildings = true;
   this.show_Network = true;
   this.show_Information = false;
@@ -267,7 +272,6 @@ var genGroundTiles=function(){
 //generate the passage: returnNodeType
 var constructGroundTiles = function(doRandom) {
   clrGround();
-
   var pathQuadArr = Array();
   var w = (varCellNumLe - 1) / 2;
   var t = (varCellNumDe - 1) / 2;
@@ -285,7 +289,6 @@ var constructGroundTiles = function(doRandom) {
     var PA = new setPath(circulationQuads[i], name, ht);
     PA.generateGround();
   }
-
   genGroundTiles(); // definition files
 };
 
@@ -634,8 +637,8 @@ function genVerSubCells(p,q,r,s){
 }
 
 function cellQuadsAlignment() {
+
   var bua=(cellQuadArr.length*varCellLe*varCellDe);
-  
   //normalize the FSR input to 1 and then distribute the FSR
   var gcnFsr=bldgGuiControls.GCN_FSR
   var ncnFsr=bldgGuiControls.NCN_FSR

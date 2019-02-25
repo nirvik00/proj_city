@@ -183,12 +183,12 @@ var mainLoop = function() {
     scene.remove(axes);
   }
 
-  if (groundGuiControls.show_Green == false) {
+  if (groundGuiControls.show_Green === false) {
     for (var i = 0; i < greenArr.length; i++) {
       scene.remove(greenArr[i]);
     }
   } else {
-    if(genGuiControls.hide_Ground==false){
+    if(genGuiControls.hide_Ground=== false){
       for (var i = 0; i < greenArr.length; i++) {
         scene.add(greenArr[i]);
       }
@@ -203,6 +203,30 @@ var mainLoop = function() {
     if(genGuiControls.hide_Ground==false){
       for (var i = 0; i < pathArr.length; i++) {
         scene.add(pathArr[i]);
+      }
+    }
+  }
+
+  if (groundGuiControls.show_Intx === false) {
+    for (var i = 0; i < intxArr.length; i++) {
+      scene.remove(intxArr[i]);
+    }
+  } else {
+    if(genGuiControls.hide_Ground==false){
+      for (var i = 0; i < intxArr.length; i++) {
+        scene.add(intxArr[i]);
+      }
+    }
+  }
+
+  if (groundGuiControls.show_MST === false) {
+    for (var i = 0; i < mstArr.length; i++) {
+      scene.remove(mstArr[i]);
+    }
+  } else {
+    if(genGuiControls.hide_Ground==false){
+      for (var i = 0; i < mstArr.length; i++) {
+        scene.add(mstArr[i]);
       }
     }
   }
@@ -234,6 +258,9 @@ var mainLoop = function() {
     }
     for (var i = 0; i < evacArr.length; i++) {
       scene.remove(evacArr[i]);
+    }
+    for (var i = 0; i < mstArr.length; i++) {
+      scene.remove(mstArr[i]);
     }
   }
   
