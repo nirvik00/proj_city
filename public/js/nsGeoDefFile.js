@@ -163,6 +163,8 @@ function nsQuad(a,b,c,d,i){
     this.r=c;
     this.s=d;
     this.type="";
+    
+    this.subCellQuads=[];
 
     this.cellId=i;
     

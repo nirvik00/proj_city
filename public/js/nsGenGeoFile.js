@@ -472,19 +472,44 @@ var clrBuildings=function(){
   RCNCubeArr = Array();
 }
 
+
+function addBldgs(){
+  for (var i = 0; i < GCNCubeArr.length; i++) {
+    scene.add(GCNCubeArr[i]);
+  }
+  for (var i = 0; i < NCNCubeArr.length; i++) {
+    scene.add(NCNCubeArr[i]);
+  }
+  for (var i = 0; i < RCNCubeArr.length; i++) {
+    scene.add(RCNCubeArr[i]);
+  }
+  for (var i = 0; i < evacArr.length; i++) {
+    scene.add(evacArr[i]);
+  }
+}
+
+
 //generate the cubes
 var genCubes = function(doRandom) {
-  var gcnSubCells=[];
-  var ncnSubCells=[];
-  var rcnSubCells=[];
-  var subCellQuadArr=[];
+  var numGcnSubCells=0;
+  var numNcnSubCells=0;
+  var numRcnSubCells=0;
+  //var subCellQuadArr=[];
   clrBuildings();
   cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
+  genSubCells();
+  allocateSubCells();
+  addBldgs();
+};
+
+
+function genSubCells(){
   for (var i = 0; i < cellQuadArr.length; i++) {
     var gcnAr=cellQuadArr[i].gcnArea;
     var ncnAr=cellQuadArr[i].ncnArea;
     var rcnAr=cellQuadArr[i].rcnArea;
-    console.log(i+". Areas: "+gcnAr+", "+ncnAr+", "+rcnAr);
+
+    //console.log(i+". Areas: "+gcnAr+", "+ncnAr+", "+rcnAr);
     var quad = cellQuadArr[i];  
     var offset=gridGuiControls.global_offset+0.1;
     var p=new nsPt(quad.p.x+offset, quad.p.y, quad.p.z+offset);
@@ -506,13 +531,11 @@ var genCubes = function(doRandom) {
     var quads=genHorSubCells(a1,b1,c1,d1);
     try{
       for(var j=0; j<quads.length; j++){
-        subCellQuadArr.push(quads[j]);
+        cellQuadArr[i].subCellQuads.push(quads[j]);
       }
-    }catch(err){
-    }
-    
+    }catch(err){}
+
     // debugQuad(a1,b1,c1,d1,h1);
-    
     //quad B : QR
     var h2=1;
     var a2=new nsPt(q.x-d,q.y,q.z+d);
@@ -525,13 +548,11 @@ var genCubes = function(doRandom) {
       var quads=genVerSubCells(a2,b2,c2,d2);
       try{
         for(var j=0; j<quads.length; j++){
-          subCellQuadArr.push(quads[j]);
+          cellQuadArr[i].subCellQuads.push(quads[j]);
         }
-      }catch(err){
-
-      }      
+      }catch(err){}      
     }
-    
+
     //quad C : RS
     var h3=1;
     var a3=new nsPt(s.x,s.y,s.z-d);
@@ -543,11 +564,9 @@ var genCubes = function(doRandom) {
     var quads=genHorSubCells(a3,b3,c3,d3)
     try{
       for(var j=0; j<quads.length; j++){
-        subCellQuadArr.push(quads[j]);
+        cellQuadArr[i].subCellQuads.push(quads[j]);
       }
-    }catch(err){
-
-    }   
+    }catch(err){}  
 
     //quad D : SP
     var h4=1;
@@ -561,46 +580,50 @@ var genCubes = function(doRandom) {
       // debugQuad(a4,b4,c4,d4,h4);
       try{
         for(var j=0; j<quads.length; j++){
-          subCellQuadArr.push(quads[j]);
+          cellQuadArr[i].subCellQuads.push(quads[j]);
         }
-      }catch(err){
-      }
+      }catch(err){}
     }
   }
+}
 
-  for(var i=0; i<subCellQuadArr.length; i++){
-    var p=subCellQuadArr[i].mp();
-    var minDi=1000000000;
-    var type;
-    for(var j=0; j<networkEdgesArr.length; j++){
-      var q=networkEdgesArr[j].getMp();
-      if(utilDi(p,q)<minDi){
-        minDi=utilDi(p,q);
-        type=networkEdgesArr[j].getType();
+function allocateSubCells(){
+  var cumuArea=0.0;
+  for(var i=0; i<cellQuadArr.length; i++){
+    var subCellQuadArr=cellQuadArr[i].subCellQuads;
+    var mainQuad=cellQuadArr[i];
+    console.log(i+". Areas= " + mainQuad.gcnArea+", "+mainQuad.ncnArea+", "+mainQuad.rcnArea);
+    cumuArea+=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
+    var arCell=0.0;
+    for(var j=0; j<subCellQuadArr.length; j++){
+      var p=subCellQuadArr[j].mp();
+      var minDi=1000000000;
+      var type;
+      for(var k=0; k<networkEdgesArr.length; k++){
+        var q=networkEdgesArr[k].getMp();
+        if(utilDi(p,q)<minDi){
+          minDi=utilDi(p,q);
+          type=networkEdgesArr[k].getType();
+        }
       }
+      var quad=subCellQuadArr[j];
+      quad.type=type;
+      quad.genCube();
+      
+      var a=subCellQuadArr[j].p;
+      var b=subCellQuadArr[j].q;
+      var c=subCellQuadArr[j].r;
+      var d=subCellQuadArr[j].s;
+      //debugQuad(a,b,c,d);
+      arCell=utilDi(a,b)*utilDi(b,c);
     }
-    var quad=subCellQuadArr[i];
-    quad.type=type;
-    quad.genCube();
-    var a=subCellQuadArr[i].p;
-    var b=subCellQuadArr[i].q;
-    var c=subCellQuadArr[i].r;
-    var d=subCellQuadArr[i].s;
-    debugQuad(a,b,c,d);
+    numCellsGcn=Math.ceil(parseFloat(mainQuad.gcnArea)/parseFloat(arCell));
+    numCellsNcn=Math.ceil(parseFloat(mainQuad.ncnArea)/parseFloat(arCell));
+    numCellsRcn=Math.ceil(parseFloat(mainQuad.rcnArea)/parseFloat(arCell));
+    console.log(arCell+"; numbers = "+ numCellsGcn+", "+ numCellsNcn +", "+ numCellsRcn);
   }
-  for (var i = 0; i < GCNCubeArr.length; i++) {
-    scene.add(GCNCubeArr[i]);
-  }
-  for (var i = 0; i < NCNCubeArr.length; i++) {
-    scene.add(NCNCubeArr[i]);
-  }
-  for (var i = 0; i < RCNCubeArr.length; i++) {
-    scene.add(RCNCubeArr[i]);
-  }
-  for (var i = 0; i < evacArr.length; i++) {
-    scene.add(evacArr[i]);
-  }
-};
+  console.log("\nTotal Area= "+cumuArea);
+}
 
 function genHorSubCells(p,q,r,s){
   var subCellQuadArr=[];
@@ -648,7 +671,7 @@ function cellQuadsAlignment() {
   var rcnArea = bua * rcnFsr/sumFsr;
   var ncnArea = bua * ncnFsr/sumFsr; 
   
-  console.log(gcnArea + ", " + ncnArea + ", " + rcnArea);
+  //console.log(gcnArea + ", " + ncnArea + ", " + rcnArea);
   var GCNCellsArr = [];
   var NCNCellsArr = [];
   var RCNCellsArr = [];
