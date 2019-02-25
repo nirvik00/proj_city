@@ -182,6 +182,26 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
+    this.genCube=function(){
+        var reqLe=utilDi(this.p,this.q);
+        var reqHt=0.5;
+        var reqDe=utilDi(this.q,this.r);
+        var geox = new THREE.BoxGeometry(reqLe, reqHt, reqDe);
+        var matx=getBuildingMaterialFromType(this.type);
+        var mesh = new THREE.Mesh(geox, matx);
+        mesh.position.x = this.p.x+reqLe/2;
+        mesh.position.y = (reqHt/2);
+        mesh.position.z = this.p.z+reqDe/2;    
+        if(this.types==="GCN"){
+            GCNCubeArr.push(mesh);
+        }else if(this.types==="NCN"){
+            NCNCubeArr.push(mesh);
+        }else if(this.types==="RCN"){
+            RCNCubeArr.push(mesh);
+        }else{ //evacuation
+            evacArr.push(mesh);    
+        }
+    }
 }
 
 function nsUnitVec(a,b){
