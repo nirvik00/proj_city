@@ -35,7 +35,7 @@ function addBldgs(){
   }
 }
 
-//generate the cubes
+//MAIN DRIVER FUNCTION generate the cubes
 var genCubes = function(doRandom) {
   var numGcnSubCells=0;
   var numNcnSubCells=0;
@@ -44,7 +44,8 @@ var genCubes = function(doRandom) {
   clrBuildings();
   cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
   genSubCells();
-  allocateSubCells();
+  allocateSubCellsRandomShuffle();
+  //allocateSubCells();
   addBldgs();
 };
 
@@ -133,7 +134,9 @@ function genSubCells(){
   }
 }
 
-function allocateSubCells(){
+//randomly place buildings
+
+function allocateSubCellsRandomShuffle(){
   var cumuArea=0.0;
   for(var i=0; i<cellQuadArr.length; i++){
     var subCellQuadArr=cellQuadArr[i].subCellQuads;
@@ -177,7 +180,6 @@ function allocateSubCells(){
     var numCellsRcnGot=0;
     var counter=0;
     for(var j=0; j<subCellQuadArr.length; j++){
-      
       if(numCellsGcnGot<numCellsGcn){
         var quad=subCellQuadArr[j];
         quad.type="GCN";
@@ -198,6 +200,85 @@ function allocateSubCells(){
     for(var j=counter; j<subCellQuadArr.length; j++){
       if(numCellsRcnGot<numCellsRcn){
         var quad=subCellQuadArr[j];
+        quad.type="RCN";
+        quad.genCube(numCellsRcn);
+        numCellsRcnGot++;
+        counter++;
+      }      
+    }
+  }
+  //console.log("\nTotal Area= "+cumuArea);
+}
+
+function allocateSubCells(){
+  var cumuArea=0.0;
+  for(var i=0; i<cellQuadArr.length; i++){
+    var subCellQuadArr=cellQuadArr[i].subCellQuads;
+    var mainQuad=cellQuadArr[i];
+    //console.log(i+". Areas= " + mainQuad.gcnArea+", "+mainQuad.ncnArea+", "+mainQuad.rcnArea);
+    cumuArea+=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
+    var arCell=0.0;
+    for(var j=0; j<subCellQuadArr.length; j++){
+      var p=subCellQuadArr[j].mp();
+      var minDi=1000000000;
+      var type;
+      for(var k=0; k<networkEdgesArr.length; k++){
+        var q=networkEdgesArr[k].getMp();
+        if(utilDi(p,q)<minDi){
+          minDi=utilDi(p,q);
+          type=networkEdgesArr[k].getType();
+        }
+      }
+      var a=subCellQuadArr[j].p;
+      var b=subCellQuadArr[j].q;
+      var c=subCellQuadArr[j].r;
+      var d=subCellQuadArr[j].s;
+      arCell=utilDi(a,b)*utilDi(b,c);
+    }
+
+    numCellsNcn=Math.ceil(parseFloat(mainQuad.ncnArea)/parseFloat(arCell));
+    numCellsRcn=Math.ceil(parseFloat(mainQuad.rcnArea)/parseFloat(arCell));
+    
+    var totalNum=subCellQuadArr.length;
+    var totalArea=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
+    numCellsGcn=Math.ceil(totalNum*mainQuad.gcnArea/totalArea);
+    numCellsNcn=Math.ceil(totalNum*mainQuad.ncnArea/totalArea);
+    numCellsRcn=Math.ceil(totalNum*mainQuad.rcnArea/totalArea);
+
+    
+    //console.log(arCell+"; numbers = "+ numCellsGcn+", "+ numCellsNcn +", "+ numCellsRcn+ " -"+totalNum+", "+totalArea);
+    
+    var numCellsGcnGot=0;
+    var numCellsNcnGot=0;
+    var numCellsRcnGot=0;
+    var counter=0;
+   
+    var sortedSubCells0=sortSubCellsByDistFromEdgeType(subCellQuadArr, cellQuadArr[i], "green");
+    if(numCellsGcnGot<numCellsGcn){
+      for(var j=0; j<sortedSubCells0.length; j++){
+        var quad=sortedSubCells0[j];
+        quad.type="GCN";
+        quad.genCube(numCellsGcn);
+        numCellsGcnGot++;
+        counter++;
+        sortedSubCells0.splice(j,1);
+      }      
+    }
+    var sortedSubCells1=sortSubCellsByDistFromEdgeType(sortedSubCells0, cellQuadArr[i],"path");
+    if(numCellsNcnGot<numCellsNcn){      
+      for(var j=counter; j<sortedSubCells1.length; j++){
+        var quad=sortedSubCells1[j];
+        quad.type="NCN";
+        quad.genCube(numCellsNcn);
+        numCellsNcnGot++;
+        counter++;
+        sortedSubCells1.splice(j,1);
+      }      
+    }
+    var sortedSubCells2=sortSubCellsByDistFromEdgeType(sortedSubCells1, cellQuadArr[i],"road");
+    if(numCellsRcnGot<numCellsRcn){      
+      for(var j=counter; j<sortedSubCells2.length; j++){
+        var quad=sortedSubCells2[j];
         quad.type="RCN";
         quad.genCube(numCellsRcn);
         numCellsRcnGot++;
@@ -320,4 +401,64 @@ function cellQuadsAlignment() {
 
   console.log("\n\n\nGot Areas :\nCumulative areas : G=" + cumuGcnArea+ ", N="+cumuNcnArea + ", R="+cumuRcnArea);
   console.log("Total Area : " + (cumuGcnArea+ cumuNcnArea +cumuRcnArea));
+}
+
+function sortSubCellsByDistFromEdgeType(cells,quad,edgeType){
+  console.log("\n\n\nin sorting function");
+  var p=quad.p;
+  var q=quad.q;
+  var r=quad.r;
+  var s=quad.s;
+  var e0,e1,e2,e3;
+  var tmpEdges=[];
+  for(var i=0; i<networkEdgesArr.length; i++){
+    var a=networkEdgesArr[i].getNode0().getPt();
+    var b=networkEdgesArr[i].getNode1().getPt();
+    if((utilDi(p,a)<0.01 && utilDi(q,b)<0.01) || (utilDi(p,b)<0.01 && utilDi(q,a)<0.01)){
+      e0=networkEdgesArr[i];
+      tmpEdges.push(e0);
+    }
+
+    if((utilDi(q,a)<0.01 && utilDi(r,b)<0.01) || (utilDi(q,b)<0.01 && utilDi(r,a)<0.01)){
+      e1=networkEdgesArr[i];
+      tmpEdges.push(e1);
+    }
+    if((utilDi(r,a)<0.01 && utilDi(s,b)<0.01) || (utilDi(r,b)<0.01 && utilDi(s,a)<0.01)){
+      e2=networkEdgesArr[i];
+      tmpEdges.push(e2);
+    }
+    if((utilDi(s,a)<0.01 && utilDi(p,b)<0.01) || (utilDi(s,b)<0.01 && utilDi(p,a)<0.01)){
+      e3=networkEdgesArr[i];
+      tmpEdges.push(e3);
+    }
+  }
+  console.log("length of tmp edges = "+ tmpEdges.length);
+  if(tmpEdges.length<1){
+    return cells;
+  }
+  var sortable = new Array();
+  for(var i=0; i<cells; i++){
+    for(var j=0; j<tmpEdges.length; j++){
+      if(edgeType===tmpEdges[j].type){
+        var d=utilDi(tmpEdges[j].getMp(),cells[i].mp())
+        sortable.push([cells[i], d]);
+      }
+    }    
+  }
+  if(sortable.length<1){
+    return cells;
+  }
+  sortable.sort(function(a, b) {
+         return a[1] - b[1];
+  });
+  console.log("\nsorting: ");
+  console.log(sortable);
+
+
+  newCells = Array();
+  for (var i = 0; i < sortable.length; i++) {
+    newCells.push(sortable[i][0]);
+  }
+  sortable = [];// end of sorting
+  return newCells;
 }

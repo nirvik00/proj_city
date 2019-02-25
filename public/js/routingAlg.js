@@ -509,6 +509,16 @@ function genEvacPath(sink, allEdges){
        return reqEdges;
 }
 
+
+
+
+
+
+
+
+
+
+
 // util function for EVAC SPT Algorithm: initiate edge weights - green network
 function initEdgeCost(inv){
        for (var i = 0; i < networkEdgesArr.length; i++) {
