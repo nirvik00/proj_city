@@ -163,7 +163,7 @@ function nsQuad(a,b,c,d,i){
     this.q=b;
     this.r=c;
     this.s=d;
-    this.type="";
+    this.type;
     
     this.subCellQuads=[];
 
@@ -176,53 +176,73 @@ function nsQuad(a,b,c,d,i){
     this.gcnArea=0.0;
     this.ncnArea=0.0;
     this.rcnArea=0.0;
+    this.cellArea=0.0;
 
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
     }
-    this.type="";
     this.setType=function(t){
         this.type=t;
     }
-    this.genCube=function(num){
+    this.display=function(){
+        console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
+    }
+    this.genCube=function(){
+        console.log("\n\n\n GEN CUBE FUNCTION");
         var ht=0.5
         var htCounter=ht;
-        var numx=Math.ceil(Math.random()*num/2 + 1);
-        for(var i=0; i<numx; i++){
-            var reqLe=utilDi(this.p,this.q);
-            var reqHt=0.0;
-            var reqDe=utilDi(this.q,this.r);
+        var areas=[];
+        var arTypes=[];
+        if(this.type==="GCN"){
+            areas=[this.gcnArea, this.ncnArea, this.rcnArea];
+            arTypes=["GCN", "NCN", "RCN"];
+        }
+        if(this.type==="NCN"){
+            areas=[this.ncnArea, this.gcnArea, this.rcnArea];
+            arTypes=["NCN", "GCN", "RCN"];
+        }
+        if(this.type==="RCN"){
+            areas=[this.rcnArea, this.gcnArea, this.ncnArea];
+            arTypes=["RCN", "GCN", "NCN"];
+        }
+        for(var i=0; i<areas.length; i++){
+            var numx=Math.ceil(areas[i]/this.cellArea);
 
-            var geox = new THREE.BoxGeometry(reqLe, ht, reqDe);
-            var matx=getBuildingMaterialFromType(this.type);
-            var mesh = new THREE.Mesh(geox, matx);
-            mesh.position.x = this.p.x+reqLe/2;
-            mesh.position.y = htCounter- ht/2;
-            mesh.position.z = this.p.z+reqDe/2;    
-            
-            var geox2 = new THREE.BoxGeometry(reqLe, ht, reqDe);
-            var matx2=new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(0,0,0)"), wireframe:true});
-            var mesh2 = new THREE.Mesh(geox2, matx2);
-            mesh2.position.x = this.p.x+reqLe/2;
-            mesh2.position.y = htCounter- ht/2;
-            mesh2.position.z = this.p.z+reqDe/2;    
-       
-    
-            if(this.type==="GCN"){
-                GCNCubeArr.push(mesh);
-                GCNCubeArr.push(mesh2);
-            }else if(this.type==="NCN"){
-                NCNCubeArr.push(mesh);
-                NCNCubeArr.push(mesh2);
-            }else if(this.type==="RCN"){
-                RCNCubeArr.push(mesh);
-                RCNCubeArr.push(mesh2);
-            }else{ //evacuation
-                evacArr.push(mesh);    
-                evacArr.push(mesh2);
+            for(var j=0; j<numx; j++){
+                var reqLe=utilDi(this.p,this.q);
+                var reqHt=0.0;
+                var reqDe=utilDi(this.q,this.r);
+
+                var geox = new THREE.BoxGeometry(reqLe, ht, reqDe);
+                var matx=getBuildingMaterialFromType(arTypes[i]);
+                var mesh = new THREE.Mesh(geox, matx);
+                mesh.position.x = this.p.x+reqLe/2;
+                mesh.position.y = htCounter- ht/2;
+                mesh.position.z = this.p.z+reqDe/2;    
+                
+                var geox2 = new THREE.BoxGeometry(reqLe, ht, reqDe);
+                var matx2=new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(0,0,0)"), wireframe:true});
+                var mesh2 = new THREE.Mesh(geox2, matx2);
+                mesh2.position.x = this.p.x+reqLe/2;
+                mesh2.position.y = htCounter- ht/2;
+                mesh2.position.z = this.p.z+reqDe/2;          
+
+                if(arTypes[i]==="GCN"){
+                    GCNCubeArr.push(mesh);
+                    GCNCubeArr.push(mesh2);
+                }else if(arTypes[i]==="NCN"){
+                    NCNCubeArr.push(mesh);
+                    NCNCubeArr.push(mesh2);
+                }else if(arTypes[i]==="RCN"){
+                    RCNCubeArr.push(mesh);
+                    RCNCubeArr.push(mesh2);
+                }else{ //evacuation
+                    evacArr.push(mesh);    
+                    evacArr.push(mesh2);
+                }
+                htCounter+=(ht);
             }
-            htCounter+=(ht);
         }
     }
 }

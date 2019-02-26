@@ -46,7 +46,7 @@ var genCubes = function(doRandom) {
   genSubCells();
   //allocateSubCellsRandomShuffle();
   allocateSubCells();
-  //addBldgs();
+  addBldgs();
 };
 
 
@@ -212,11 +212,12 @@ function allocateSubCellsRandomShuffle(){
 
 function allocateSubCells(){
   var cumuArea=0.0;
+  var CellAr=0.0;
   for(var i=0; i<cellQuadArr.length; i++){
     var subCellQuadArr=cellQuadArr[i].subCellQuads;
     var mainQuad=cellQuadArr[i];
     //console.log(i+". Areas= " + mainQuad.gcnArea+", "+mainQuad.ncnArea+", "+mainQuad.rcnArea);
-    cumuArea+=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
+    cumuArea+=(mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea);
     var arCell=0.0;
     for(var j=0; j<subCellQuadArr.length; j++){
       var p=subCellQuadArr[j].mp();
@@ -234,6 +235,7 @@ function allocateSubCells(){
       var c=subCellQuadArr[j].r;
       var d=subCellQuadArr[j].s;
       arCell=utilDi(a,b)*utilDi(b,c);
+      CellAr=arCell;
     }
 
     //total number of sub cells
@@ -246,16 +248,21 @@ function allocateSubCells(){
     var pGcnAreaCell=mainQuad.gcnArea/totalNum;
     var pNcnAreaCell=mainQuad.ncnArea/totalNum;
     var pRcnAreaCell=mainQuad.rcnArea/totalNum;
-
-    var checkArea=pGcnAreaCell+ pNcnAreaCell + pRcnAreaCell;  
-
-    console.log(arCell.toFixed(2)+"; area types = "+ pGcnAreaCell.toFixed(2)+", "+ pNcnAreaCell.toFixed(2) +", "+ pRcnAreaCell.toFixed(2) + " : "+totalNum+", total Area="+totalArea.toFixed(2) +", check Area="+checkArea.toFixed(2));
+    // var checkArea=pGcnAreaCell+ pNcnAreaCell + pRcnAreaCell;  
+    // console.log(arCell.toFixed(2)+"; area types = "+ pGcnAreaCell.toFixed(2)+", "+ pNcnAreaCell.toFixed(2) +", "+ pRcnAreaCell.toFixed(2) + " : "+totalNum+", total Area="+totalArea.toFixed(2) +", check Area="+checkArea.toFixed(2));
     
     // find edge type and generate the buildings
-    //if(i==0){
-      var sortedSubCells=sortSubCellsByDistFromEdgeType(subCellQuadArr, mainQuad);
-    //}    
-   }
+    var sortedSubCells=sortSubCellsByDistFromEdgeType(subCellQuadArr, mainQuad);
+    for(var j=0; j<sortedSubCells.length; j++){
+      var cell=sortedSubCells[j];
+      cell.gcnArea=pGcnAreaCell;
+      cell.ncnArea=pNcnAreaCell;
+      cell.rcnArea=pRcnAreaCell;
+      cell.cellArea=CellAr;
+      cell.display();
+      cell.genCube();
+    }
+  }
   //console.log("\nTotal Area= "+cumuArea);
 }
 
@@ -415,19 +422,20 @@ function sortSubCellsByDistFromEdgeType(cells,quad){
   for(var i=0; i<cells.length; i++){
     var intxEdges=[];
     var pC=cells[i].mp();
-    var a0=new nsPt(pC.x+f, 0, pC.z); // right
-    var b0=new nsPt(pC.x-f, 0, pC.z); // left
     var c0=new nsPt(pC.x, 0, pC.z+f); // up
     var d0=new nsPt(pC.x, 0, pC.z-f); // down
-    intxEdges.push(new nsEdge(pC,a0));
-    intxEdges.push(new nsEdge(pC,b0));
+    var a0=new nsPt(pC.x+f, 0, pC.z); // right
+    var b0=new nsPt(pC.x-f, 0, pC.z); // left
     intxEdges.push(new nsEdge(pC,c0));
     intxEdges.push(new nsEdge(pC,d0));
-    debugLine(pC,a0,0);
-    debugLine(pC,b0,0);
-    debugLine(pC,c0,0);
-    debugLine(pC,d0,0);
-    debugSphere(pC,0.1);
+    intxEdges.push(new nsEdge(pC,a0));
+    intxEdges.push(new nsEdge(pC,b0));
+    
+    // debugLine(pC,c0,0);
+    // debugLine(pC,d0,0);
+    // debugLine(pC,a0,0);
+    // debugLine(pC,b0,0);
+    // debugSphere(pC,0.1);
     
     for(var j=0; j<intxEdges.length; j++){
       var e=intxEdges[j];
@@ -437,10 +445,19 @@ function sortSubCellsByDistFromEdgeType(cells,quad){
         var g=tmpEdges[k];        
         var r0=new nsPt(g.p.x,0,g.p.z);
         var s0=new nsPt(g.q.x,0,g.q.z);
-        checkIntx(p0,q0,r0,s0);
+        var t=checkIntx(p0,q0,r0,s0);
+        if(t===true){
+          if(g.type==="green"){
+            cells[i].setType("GCN");
+          }else if(g.type==="path"){
+            cells[i].setType("NCN");
+          }else if(g.type==="road"){
+            cells[i].setType("RCN");
+          }
+          break;
+        }
       }
-    }
-    
+    }    
   }
   return cells;
 }
@@ -457,8 +474,8 @@ function checkIntx(p,q,r,s){
   var d_pq=Math.abs(utilDi(p,pt)+utilDi(pt,q)-utilDi(p,q));
   var d_rs=Math.abs(utilDi(r,pt)+utilDi(pt,s)-utilDi(r,s));
   if(d_pq<0.1 && d_rs<0.1){
-    console.log("INTX found");
-    debugSphere(pt, 0.25);
+    //console.log("INTX found");
+    //debugSphere(pt, 0.25);
     return true;
   }
 }
