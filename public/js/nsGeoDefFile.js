@@ -42,7 +42,7 @@ function nsNetworkNode(a,b,c, nodeId){
     this.geoNode=new THREE.SphereGeometry(0.25,32,32);
     this.matNode; 
     this.nodeMesh;
-    this.getObj=function(){        
+    this.getObj=function(){
         this.matNode=getBuildingMaterialFromType(this.type);
         this.nodeMesh=new THREE.Mesh(this.geoNode, this.matNode);
         this.nodeMesh.position.x=this.x;
@@ -332,8 +332,8 @@ function getPathMaterialFromType(name, id){
     return mat;
 }
 
-var debugSphere=function(p){
-    var geox = new THREE.SphereGeometry(.5,10,10);
+var debugSphere=function(p,r){
+    var geox = new THREE.SphereGeometry(r,10,10);
     var matx = new THREE.MeshBasicMaterial ({
       color: new THREE.Color("rgb(102,153,255)"),
       wireframe: wireframeVal});
@@ -356,4 +356,13 @@ var debugQuad=function(p,q,r,s,y){
     scene.add(line);
 }
 
+
+var debugLine=function(p,q,y){
+    var geox = new THREE.Geometry();
+    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
+    geox.vertices.push(new THREE.Vector3(q.x,y,q.z));
+    var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
+    var line = new THREE.Line( geox, matx);
+    scene.add(line);
+}
 

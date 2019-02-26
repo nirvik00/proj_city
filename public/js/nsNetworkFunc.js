@@ -231,11 +231,11 @@ function setNodeType(max, numGcn, numNcn, numRcn, numEvac, doRandom){
         remNodes.push(i);
       }
     }
-    console.log("\n\n\ncentrality & dispersion");
-    console.log(cenNumGcn, outNumGcn, numGcn);
-    console.log(cenNumNcn, outNumNcn, numNcn);
-    console.log(cenNumRcn, outNumRcn, numRcn);
-    console.log(remNodes)
+    // console.log("\n\n\ncentrality & dispersion");
+    // console.log(cenNumGcn, outNumGcn, numGcn);
+    // console.log(cenNumNcn, outNumNcn, numNcn);
+    // console.log(cenNumRcn, outNumRcn, numRcn);
+    // console.log(remNodes)
 
     remNodes=shuffleArray(remNodes);
     for(var i=0; i<remNodes.length; i++){
@@ -294,9 +294,9 @@ function sortNodesByCenter(iniNodes){
   var pNcn=pGcn + (ncnCen/sumCen);
   var pRcn=pNcn + (rcnCen/sumCen);
 
-  console.log(pGcn, pNcn, pRcn);
-  console.log("\n\n\nbefore sorting");
-  console.log(iniNodes);
+  //console.log(pGcn, pNcn, pRcn);
+  //console.log("\n\n\nbefore sorting");
+  //console.log(iniNodes);
 
 
   var cenX=0.0; var cenZ=0.0;
@@ -314,7 +314,7 @@ function sortNodesByCenter(iniNodes){
   });
   cenZ=(sortableX[0][1]+sortableX[sortableX.length-1][1])/2;
 
-  console.log("\center: "+ cenX+","+ cenZ);
+  // console.log("\center: "+ cenX+","+ cenZ);
   var cen=new nsPt(cenX,0,cenZ);
 
   var sortableY=[];
@@ -339,8 +339,8 @@ function sortNodesByCenter(iniNodes){
   sortableY.sort(function(a,b){
     return a[1]-b[1];
   });
-  console.log("\n\n\nafter sorting based on d from c");
-  console.log(sortableY);
+  //console.log("\n\n\nafter sorting based on d from c");
+  //console.log(sortableY);
   nodes=[];
   for(var i=0; i<sortableY.length; i++){
     nodes.push(sortableY[i][0]);

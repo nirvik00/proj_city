@@ -115,7 +115,7 @@ buildingGUI.add(bldgGuiControls, "show_RCN");
 // main functions about the generation
 var genGuiControls = new function() {
   this.hide_Ground = true;
-  this.hide_Buildings = true;
+  this.hide_Buildings = false;
   this.show_Network = true;
   this.show_Information = false;
   this.show_Axis = false;

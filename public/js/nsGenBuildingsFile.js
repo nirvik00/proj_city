@@ -44,9 +44,9 @@ var genCubes = function(doRandom) {
   clrBuildings();
   cellQuadsAlignment(); //sets the cell Area for gcn, ncn, rcn based on node type
   genSubCells();
-  allocateSubCellsRandomShuffle();
-  //allocateSubCells();
-  addBldgs();
+  //allocateSubCellsRandomShuffle();
+  allocateSubCells();
+  //addBldgs();
 };
 
 
@@ -236,56 +236,26 @@ function allocateSubCells(){
       arCell=utilDi(a,b)*utilDi(b,c);
     }
 
-    numCellsNcn=Math.ceil(parseFloat(mainQuad.ncnArea)/parseFloat(arCell));
-    numCellsRcn=Math.ceil(parseFloat(mainQuad.rcnArea)/parseFloat(arCell));
+    //total number of sub cells
+    var totalNum=subCellQuadArr.length; 
     
-    var totalNum=subCellQuadArr.length;
-    var totalArea=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea;
-    numCellsGcn=Math.ceil(totalNum*mainQuad.gcnArea/totalArea);
-    numCellsNcn=Math.ceil(totalNum*mainQuad.ncnArea/totalArea);
-    numCellsRcn=Math.ceil(totalNum*mainQuad.rcnArea/totalArea);
+    //total area required for all cells of the quad
+    var totalArea=mainQuad.gcnArea+mainQuad.ncnArea+mainQuad.rcnArea; 
+    
+    // find proportion of area of each type allocated to a cell
+    var pGcnAreaCell=mainQuad.gcnArea/totalNum;
+    var pNcnAreaCell=mainQuad.ncnArea/totalNum;
+    var pRcnAreaCell=mainQuad.rcnArea/totalNum;
 
+    var checkArea=pGcnAreaCell+ pNcnAreaCell + pRcnAreaCell;  
+
+    console.log(arCell.toFixed(2)+"; area types = "+ pGcnAreaCell.toFixed(2)+", "+ pNcnAreaCell.toFixed(2) +", "+ pRcnAreaCell.toFixed(2) + " : "+totalNum+", total Area="+totalArea.toFixed(2) +", check Area="+checkArea.toFixed(2));
     
-    //console.log(arCell+"; numbers = "+ numCellsGcn+", "+ numCellsNcn +", "+ numCellsRcn+ " -"+totalNum+", "+totalArea);
-    
-    var numCellsGcnGot=0;
-    var numCellsNcnGot=0;
-    var numCellsRcnGot=0;
-    var counter=0;
-   
-    var sortedSubCells0=sortSubCellsByDistFromEdgeType(subCellQuadArr, cellQuadArr[i], "green");
-    if(numCellsGcnGot<numCellsGcn){
-      for(var j=0; j<sortedSubCells0.length; j++){
-        var quad=sortedSubCells0[j];
-        quad.type="GCN";
-        quad.genCube(numCellsGcn);
-        numCellsGcnGot++;
-        counter++;
-        sortedSubCells0.splice(j,1);
-      }      
-    }
-    var sortedSubCells1=sortSubCellsByDistFromEdgeType(sortedSubCells0, cellQuadArr[i],"path");
-    if(numCellsNcnGot<numCellsNcn){      
-      for(var j=counter; j<sortedSubCells1.length; j++){
-        var quad=sortedSubCells1[j];
-        quad.type="NCN";
-        quad.genCube(numCellsNcn);
-        numCellsNcnGot++;
-        counter++;
-        sortedSubCells1.splice(j,1);
-      }      
-    }
-    var sortedSubCells2=sortSubCellsByDistFromEdgeType(sortedSubCells1, cellQuadArr[i],"road");
-    if(numCellsRcnGot<numCellsRcn){      
-      for(var j=counter; j<sortedSubCells2.length; j++){
-        var quad=sortedSubCells2[j];
-        quad.type="RCN";
-        quad.genCube(numCellsRcn);
-        numCellsRcnGot++;
-        counter++;
-      }      
-    }
-  }
+    // find edge type and generate the buildings
+    //if(i==0){
+      var sortedSubCells=sortSubCellsByDistFromEdgeType(subCellQuadArr, mainQuad);
+    //}    
+   }
   //console.log("\nTotal Area= "+cumuArea);
 }
 
@@ -325,22 +295,27 @@ function genVerSubCells(p,q,r,s){
 
 function cellQuadsAlignment() {
 
-  var bua=(cellQuadArr.length*varCellLe*varCellDe);
   //normalize the FSR input to 1 and then distribute the FSR
   var gcnFsr=bldgGuiControls.GCN_FSR
   var ncnFsr=bldgGuiControls.NCN_FSR
   var rcnFsr=bldgGuiControls.RCN_FSR
-  var sumFsr= (gcnFsr+ncnFsr+rcnFsr);
+  var sumFsr= (gcnFsr + ncnFsr + rcnFsr);
+
+  //total bua required
+  var bua=(cellQuadArr.length*varCellLe*varCellDe)*sumFsr;
+  
+  //area of each type based on normalized FSR
   var gcnArea = bua * gcnFsr/sumFsr;
   var rcnArea = bua * rcnFsr/sumFsr;
   var ncnArea = bua * ncnFsr/sumFsr; 
-  
+
   //console.log(gcnArea + ", " + ncnArea + ", " + rcnArea);
   var GCNCellsArr = [];
   var NCNCellsArr = [];
   var RCNCellsArr = [];
-  // calculate the number of node of each type in quad
-  // set the gcn, ncn, rcn ratios to the quad
+
+  // calculate the number of node of each type for each quad
+  // set the gcn, ncn, rcn ratios to the quad based on the number above
   // add quads to gcnArr, ncnArr, rcnArr
   var cumuGcnRat=0;
   var cumuNcnRat=0;
@@ -399,12 +374,11 @@ function cellQuadsAlignment() {
     }
   }
 
-  console.log("\n\n\nGot Areas :\nCumulative areas : G=" + cumuGcnArea+ ", N="+cumuNcnArea + ", R="+cumuRcnArea);
+  console.log("\n\n\nGot Areas :\nCumulative areas : G=" + cumuGcnArea + ", N="+cumuNcnArea + ", R="+cumuRcnArea);
   console.log("Total Area : " + (cumuGcnArea+ cumuNcnArea +cumuRcnArea));
 }
 
-function sortSubCellsByDistFromEdgeType(cells,quad,edgeType){
-  console.log("\n\n\nin sorting function");
+function sortSubCellsByDistFromEdgeType(cells,quad){
   var p=quad.p;
   var q=quad.q;
   var r=quad.r;
@@ -432,33 +406,59 @@ function sortSubCellsByDistFromEdgeType(cells,quad,edgeType){
       tmpEdges.push(e3);
     }
   }
-  console.log("length of tmp edges = "+ tmpEdges.length);
+  //console.log("length of tmp edges = "+ tmpEdges.length);
   if(tmpEdges.length<1){
     return cells;
   }
-  var sortable = new Array();
-  for(var i=0; i<cells; i++){
-    for(var j=0; j<tmpEdges.length; j++){
-      if(edgeType===tmpEdges[j].type){
-        var d=utilDi(tmpEdges[j].getMp(),cells[i].mp())
-        sortable.push([cells[i], d]);
+
+  var f=gridGuiControls.global_offset+(gridGuiControls.cell_Length+gridGuiControls.cell_Depth)/5;
+  for(var i=0; i<cells.length; i++){
+    var intxEdges=[];
+    var pC=cells[i].mp();
+    var a0=new nsPt(pC.x+f, 0, pC.z); // right
+    var b0=new nsPt(pC.x-f, 0, pC.z); // left
+    var c0=new nsPt(pC.x, 0, pC.z+f); // up
+    var d0=new nsPt(pC.x, 0, pC.z-f); // down
+    intxEdges.push(new nsEdge(pC,a0));
+    intxEdges.push(new nsEdge(pC,b0));
+    intxEdges.push(new nsEdge(pC,c0));
+    intxEdges.push(new nsEdge(pC,d0));
+    debugLine(pC,a0,0);
+    debugLine(pC,b0,0);
+    debugLine(pC,c0,0);
+    debugLine(pC,d0,0);
+    debugSphere(pC,0.1);
+    
+    for(var j=0; j<intxEdges.length; j++){
+      var e=intxEdges[j];
+      var p0=new nsPt(e.p.x,0,e.p.z);
+      var q0=new nsPt(e.q.x,0,e.q.z);
+      for(var k=0; k<tmpEdges.length; k++){
+        var g=tmpEdges[k];        
+        var r0=new nsPt(g.p.x,0,g.p.z);
+        var s0=new nsPt(g.q.x,0,g.q.z);
+        checkIntx(p0,q0,r0,s0);
       }
-    }    
+    }
+    
   }
-  if(sortable.length<1){
-    return cells;
-  }
-  sortable.sort(function(a, b) {
-         return a[1] - b[1];
-  });
-  console.log("\nsorting: ");
-  console.log(sortable);
+  return cells;
+}
 
-
-  newCells = Array();
-  for (var i = 0; i < sortable.length; i++) {
-    newCells.push(sortable[i][0]);
+function checkIntx(p,q,r,s){
+  var a1=q.z-p.z; var b1=p.x-q.x; var c1=(a1*q.x)+(b1*q.z);
+  var a2=s.z-r.z; var b2=r.x-s.x; var c2=(a2*s.x)+(b2*s.z);
+  var det=((a1*b2)-(a2*b1));
+  var x=((c1*b2)-(c2*b1))/det; var z=((c2*a1)-(c1*a2))/det;
+  
+  var pt=new nsPt(x,0,z);  
+  //console.log(pt);
+  //check:
+  var d_pq=Math.abs(utilDi(p,pt)+utilDi(pt,q)-utilDi(p,q));
+  var d_rs=Math.abs(utilDi(r,pt)+utilDi(pt,s)-utilDi(r,s));
+  if(d_pq<0.1 && d_rs<0.1){
+    console.log("INTX found");
+    debugSphere(pt, 0.25);
+    return true;
   }
-  sortable = [];// end of sorting
-  return newCells;
 }
