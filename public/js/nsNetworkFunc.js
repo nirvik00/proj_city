@@ -331,7 +331,7 @@ function sortNodesByCenter(iniNodes){
       iniNodes[i].pt=new nsPt(x,y,z,i);
       p=new nsPt(x,y,z);
       d=utilDi(cen,p);
-    } 
+    }
     //console.log("dist = " + d);
     //console.log(p, cen);
     sortableY.push([iniNodes[i], d]);   

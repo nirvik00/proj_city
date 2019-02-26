@@ -222,7 +222,7 @@ function nsQuad(a,b,c,d,i){
             }  
         }
         for(var i=0; i<areas.length; i++){
-            var numx=Math.ceil((areas[i]/this.cellArea)+Math.random()*ht*2);
+            var numx=Math.ceil((areas[i]/this.cellArea)+Math.random()*ht);
             for(var j=0; j<numx; j++){
                 var reqLe=utilDi(this.p,this.q);
                 var reqHt=0.0;

@@ -449,12 +449,12 @@ function sortSubCellsByDistFromEdgeType(cells,quad){
         if(t===true){
           if(g.type==="green"){
             cells[i].setType("GCN");
+            break;
           }else if(g.type==="path"){
             cells[i].setType("NCN");
           }else if(g.type==="road"){
             cells[i].setType("RCN");
-          }
-          break;
+          }          
         }
       }
     }    
