@@ -190,25 +190,39 @@ function nsQuad(a,b,c,d,i){
     }
     this.genCube=function(){
         console.log("\n\n\n GEN CUBE FUNCTION");
-        var ht=0.5
+        var ht=bldgGuiControls.Bldg_HT;
         var htCounter=ht;
         var areas=[];
         var arTypes=[];
         if(this.type==="GCN"){
             areas=[this.gcnArea, this.ncnArea, this.rcnArea];
-            arTypes=["GCN", "NCN", "RCN"];
+            var t=Math.random();
+            if(t>0.5){
+                arTypes=["GCN", "NCN", "RCN"];
+            }else{
+                arTypes=["GCN", "RCN", "NCN"];
+            }            
         }
         if(this.type==="NCN"){
             areas=[this.ncnArea, this.gcnArea, this.rcnArea];
-            arTypes=["NCN", "GCN", "RCN"];
+            var t=Math.random();
+            if(t>0.5){
+                arTypes=["NCN", "GCN", "RCN"];
+            }else{
+                arTypes=["NCN", "RCN", "GCN"];
+            }            
         }
         if(this.type==="RCN"){
             areas=[this.rcnArea, this.gcnArea, this.ncnArea];
-            arTypes=["RCN", "GCN", "NCN"];
+            var t=Math.random();
+            if(t>0.5){
+                arTypes=["RCN", "GCN", "NCN"];
+            }else{
+                arTypes=["RCN", "NCN", "GCN"];
+            }  
         }
         for(var i=0; i<areas.length; i++){
-            var numx=Math.ceil(areas[i]/this.cellArea);
-
+            var numx=Math.ceil((areas[i]/this.cellArea)+Math.random()*ht*2);
             for(var j=0; j<numx; j++){
                 var reqLe=utilDi(this.p,this.q);
                 var reqHt=0.0;
@@ -315,17 +329,39 @@ function getBuildingMaterialFromType(type){
     this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
         wireframe:wireframeVal});
     if(type=="GCN"){
-        this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(0,255,0)"),
-        wireframe: wireframeVal});        
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(0,255,0)"),
+                wireframe: wireframeVal});        
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(0,255,150)"),
+                wireframe: wireframeVal});        
+        }
     }else if(type=="NCN"){
-        this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(255,102,0)"),
-        wireframe: wireframeVal});        
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(255,102,0)"),
+                wireframe: wireframeVal});        
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(225,125,0)"),
+                wireframe: wireframeVal});        
+        }
+        
     }else if(type=="RCN"){
-        this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(150,150,150)"),
-        wireframe:wireframeVal});
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(150,150,150)"),
+                wireframe:wireframeVal});
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(200,200,200)"),
+                wireframe:wireframeVal});
+        }
     }else{//evac
         this.mat = new THREE.MeshBasicMaterial ({
         color: new THREE.Color("rgb(255,0,0)"),
@@ -375,7 +411,6 @@ var debugQuad=function(p,q,r,s,y){
     var line = new THREE.Line( geox, matx);
     scene.add(line);
 }
-
 
 var debugLine=function(p,q,y){
     var geox = new THREE.Geometry();

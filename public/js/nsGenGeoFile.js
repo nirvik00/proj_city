@@ -90,7 +90,7 @@ groundGUI.add(groundGuiControls, "show_MST");
 
 //building gui controls
 var bldgGuiControls = new function() {
-  this.evacuation_density = 0.05;
+  this.Bldg_HT = 0.25;
   this.GCN_FSR = 0.3;
   this.NCN_FSR = 0.3;
   this.RCN_FSR = 0.3;
@@ -102,7 +102,7 @@ var bldgGuiControls = new function() {
 
 };
 var buildingGUI = datgui.addFolder("bldgGuiControls");
-buildingGUI.add(bldgGuiControls, "evacuation_density", 0.01, 0.1);
+buildingGUI.add(bldgGuiControls, "Bldg_HT", 0.1, 1.0);
 buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 1);
