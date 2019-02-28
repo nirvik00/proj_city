@@ -58,7 +58,7 @@ function genSubCells(){
 
     //console.log(i+". Areas: "+gcnAr+", "+ncnAr+", "+rcnAr);
     var quad = cellQuadArr[i];  
-    var offset=gridGuiControls.global_offset+0.1;
+    var offset=bldgGuiControls.global_offset+0.1;
     var p=new nsPt(quad.p.x+offset, quad.p.y, quad.p.z+offset);
     var q=new nsPt(quad.q.x-offset, quad.q.y, quad.q.z+offset);
     var r=new nsPt(quad.r.x-offset, quad.r.y, quad.r.z-offset);
@@ -91,7 +91,7 @@ function genSubCells(){
           cellQuadArr[i].subCellQuads.push(quad2[j]);
         }
       }catch(err){}
-    }else{ //pq>qr : horizontal
+    } else { //pq>qr : horizontal
       var t=new nsPt((p.x+s.x)/2, 0, (p.z+s.z)/2); 
       var u=new nsPt((q.x+r.x)/2, 0, (q.z+r.z)/2); 
       var D=(((7/8)*utilDi(p,t))>1)?1:utilDi(p,t);
@@ -104,7 +104,6 @@ function genSubCells(){
           cellQuadArr[i].subCellQuads.push(quad1[j]);
         }
       }catch(err){}
-
       var r_=new nsPt((D*(u.x-r.x))/(utilDi(u,r)) + r.x, 0, (D*(u.z-r.z))/(utilDi(u,r)) + r.z);
       var s_=new nsPt((D*(t.x-s.x))/(utilDi(t,s)) + s.x, 0, (D*(t.z-s.z))/(utilDi(t,s)) + s.z);
       //quad2=new nsQuad(s_,r_,r,s);
@@ -113,7 +112,7 @@ function genSubCells(){
         for(var j=0; j<quad2.length; j++){
           cellQuadArr[i].subCellQuads.push(quad2[j]);
         }
-      }catch(err){}
+      } catch(err){}
     }
   }
 }
@@ -401,7 +400,7 @@ function sortSubCellsByDistFromEdgeType(cells,quad){
     return cells;
   }
 
-  var f=gridGuiControls.global_offset+(gridGuiControls.cell_Length+gridGuiControls.cell_Depth)/5;
+  var f=bldgGuiControls.global_offset+(gridGuiControls.cell_Length+gridGuiControls.cell_Depth)/5;
   for(var i=0; i<cells.length; i++){
     var intxEdges=[];
     var pC=cells[i].mp();

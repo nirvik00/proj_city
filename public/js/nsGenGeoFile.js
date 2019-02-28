@@ -24,7 +24,6 @@ var gridGuiControls = new function() {
   this.num_Depth = 1.5;
   this.cell_Length = 5;
   this.cell_Depth = 2.5;
-  this.global_offset = 0.5;
   this.GCN_Centrality=0.33;
   this.NCN_Centrality=0.33;
   this.RCN_Centrality=0.33;
@@ -41,7 +40,7 @@ var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
 var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 2.5, 7);
 var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 2.5, 7);
-var varGlobalOffset = cellGUI.add(gridGuiControls, "global_offset", 0.1, 1);
+
 cellGUI.add(gridGuiControls, "GCN_Centrality",0.0,1);
 cellGUI.add(gridGuiControls, "NCN_Centrality",0.0,1);
 cellGUI.add(gridGuiControls, "RCN_Centrality",0.0,1);
@@ -57,7 +56,7 @@ varCellNumLe = gridGuiControls.num_Length;
 varCellNumDe = gridGuiControls.num_denpth;
 varCellLe = gridGuiControls.cell_Length;
 varCellDe = gridGuiControls.cell_Depth;
-varGlobalOffset = gridGuiControls.global_offset;
+
 
 //ground gui controls
 var groundGuiControls = new function() {
@@ -91,6 +90,7 @@ groundGUI.add(groundGuiControls, "show_MST");
 //building gui controls
 var bldgGuiControls = new function() {
   this.Bldg_HT = 0.25;
+  this.global_offset = 0.5;  
   this.GCN_FSR = 0.3;
   this.NCN_FSR = 0.3;
   this.RCN_FSR = 0.3;
@@ -103,6 +103,7 @@ var bldgGuiControls = new function() {
 };
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "Bldg_HT", 0.1, 1.0);
+var varGlobalOffset = buildingGUI.add(bldgGuiControls, "global_offset", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 1);
 buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 1);
@@ -111,7 +112,7 @@ buildingGUI.add(bldgGuiControls, "show_Evacuation");
 buildingGUI.add(bldgGuiControls, "show_GCN");
 buildingGUI.add(bldgGuiControls, "show_NCN");
 buildingGUI.add(bldgGuiControls, "show_RCN");
-
+varGlobalOffset = bldgGuiControls.global_offset;
 // main functions about the generation
 var genGuiControls = new function() {
   this.hide_Ground = true;

@@ -76,7 +76,7 @@ var clrGround=function(){
        var t = (varCellNumDe - 1) / 2;
        mstArr=[]
        circulationQuads=[];
-       var offset=gridGuiControls.global_offset;
+       var offset=bldgGuiControls.global_offset;
        genCirculationCorner(doRandom,offset);
        genCirculationLinear(doRandom,offset);
        for (var i = 0; i < circulationQuads.length; i++) {
