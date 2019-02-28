@@ -65,69 +65,53 @@ function genSubCells(){
     var s=new nsPt(quad.s.x+offset, quad.s.y, quad.s.z-offset);    
     var quadAr=gcnAr+ncnAr+rcnAr;
 
-    //req offset is given by a quadratic equation multiplied by a constant for number of floors
-    //var d=0.3*(-(varCellLe-(2*offset)+varCellDe)+Math.sqrt(((varCellLe-(2*offset)+varCellDe)*(varCellLe-(2*offset)+varCellDe)) + 4*quadAr))/2;
-    var d=gridGuiControls.global_offset*(varCellLe+varCellDe)/3.5;
-    
-    //quad A : PQ
-    var h1=1; // for debug quad
-    var a1=new nsPt(p.x,p.y,p.z);
-    var b1=new nsPt(q.x,q.y,q.z);
-    var c1=new nsPt(q.x,q.y,q.z+d);
-    var d1=new nsPt(p.x,p.y,p.z+d);
-    var quads=genHorSubCells(a1,b1,c1,d1);
-    try{
-      for(var j=0; j<quads.length; j++){
-        cellQuadArr[i].subCellQuads.push(quads[j]);
-      }
-    }catch(err){}
 
-    // debugQuad(a1,b1,c1,d1,h1);
-    //quad B : QR
-    var h2=1;
-    var a2=new nsPt(q.x-d,q.y,q.z+d);
-    var b2=new nsPt(q.x,q.y,q.z+d);
-    var c2=new nsPt(r.x,r.y,r.z-d);
-    var d2=new nsPt(r.x-d,r.y,r.z-d);
-    var quadB=new nsQuad(a2,b2,c2,d2);
-    if(utilDi(b2,c2)>varCellDe/3){
-      // debugQuad(a2,b2,c2,d2,h2);
-      var quads=genVerSubCells(a2,b2,c2,d2);
+    //find the longest side
+    var d_pq=utilDi(p,q);
+    var d_qr=utilDi(q,r);
+    if(d_pq < d_qr){
+      var t= new nsPt((p.x+q.x)/2, 0, (p.z+q.z)/2);
+      var u= new nsPt((r.x+s.x)/2, 0, (r.z+s.z)/2);
+      var D=(((7/8)*utilDi(p,t))>1)? 1 : utilDi(p,t);
+      var p_=new nsPt((D*(q.x-p.x))/utilDi(q,p) + p.x, 0, (D*(q.z-p.z))/utilDi(q,p) + p.z);
+      var s_=new nsPt((D*(r.x-s.x))/utilDi(r,s) + s.x, 0, (D*(r.z-s.z))/utilDi(r,s) + s.z);
+      //quad1=new nsQuad(p,p_,s_,s,0);
+      var quad1=genVerSubCells(p,p_,s_,s);
       try{
-        for(var j=0; j<quads.length; j++){
-          cellQuadArr[i].subCellQuads.push(quads[j]);
+        for(var j=0; j<quad1.length; j++){
+          cellQuadArr[i].subCellQuads.push(quad1[j]);
         }
-      }catch(err){}      
-    }
-
-    //quad C : RS
-    var h3=1;
-    var a3=new nsPt(s.x,s.y,s.z-d);
-    var b3=new nsPt(r.x,r.y,r.z-d);
-    var c3=new nsPt(r.x,r.y,r.z);
-    var d3=new nsPt(s.x,s.y,s.z);
-    var quadC=new nsQuad(a3,b3,c3,d3);
-    // debugQuad(a3,b3,c3,d3,h3);
-    var quads=genHorSubCells(a3,b3,c3,d3)
-    try{
-      for(var j=0; j<quads.length; j++){
-        cellQuadArr[i].subCellQuads.push(quads[j]);
-      }
-    }catch(err){}  
-
-    //quad D : SP
-    var h4=1;
-    var a4=new nsPt(p.x,p.y,p.z+d);
-    var b4=new nsPt(p.x+d,p.y,p.z+d);
-    var c4=new nsPt(s.x+d,s.y,s.z-d);
-    var d4=new nsPt(s.x,s.y,s.z-d);
-    var quadD=new nsQuad(a4,b4,c4,d4);
-    if(utilDi(b4,c4)>varCellDe/3){
-      var quadsd=genVerSubCells(a4,b4,c4,d4)
-      // debugQuad(a4,b4,c4,d4,h4);
+      }catch(err){}
+      var q_=new nsPt((D*(t.x-q.x))/utilDi(t,q) + q.x, 0, (D*(t.z-q.z))/utilDi(t,q) + q.z);
+      var r_=new nsPt((D*(u.x-r.x))/utilDi(r,u) + r.x, 0, (D*(u.z-r.z))/utilDi(r,u) + r.z);
+      //quad2=new nsQuad(q_,q,r,r_);
+      var quad2=genVerSubCells(q_,q,r,r_);
       try{
-        for(var j=0; j<quads.length; j++){
-          cellQuadArr[i].subCellQuads.push(quads[j]);
+        for(var j=0; j<quad2.length; j++){
+          cellQuadArr[i].subCellQuads.push(quad2[j]);
+        }
+      }catch(err){}
+    }else{ //pq>qr : horizontal
+      var t=new nsPt((p.x+s.x)/2, 0, (p.z+s.z)/2); 
+      var u=new nsPt((q.x+r.x)/2, 0, (q.z+r.z)/2); 
+      var D=(((7/8)*utilDi(p,t))>1)?1:utilDi(p,t);
+      var q_=new nsPt((D*(u.x-q.x))/(utilDi(u,q)) + q.x, 0, (D*(u.z-q.z))/(utilDi(u,q)) + q.z);
+      var p_=new nsPt((D*(t.x-p.x))/(utilDi(t,p)) + p.x, 0, (D*(t.z-p.z))/(utilDi(t,p)) + p.z);
+      //quad1=new nsQuad(p,q,q_,p_);
+      var quad1=genHorSubCells(p,q,q_,p_);
+      try{
+        for(var j=0; j<quad1.length; j++){
+          cellQuadArr[i].subCellQuads.push(quad1[j]);
+        }
+      }catch(err){}
+
+      var r_=new nsPt((D*(u.x-r.x))/(utilDi(u,r)) + r.x, 0, (D*(u.z-r.z))/(utilDi(u,r)) + r.z);
+      var s_=new nsPt((D*(t.x-s.x))/(utilDi(t,s)) + s.x, 0, (D*(t.z-s.z))/(utilDi(t,s)) + s.z);
+      //quad2=new nsQuad(s_,r_,r,s);
+      var quad2=genHorSubCells(s_,r_,r,s);
+      try{
+        for(var j=0; j<quad2.length; j++){
+          cellQuadArr[i].subCellQuads.push(quad2[j]);
         }
       }catch(err){}
     }
@@ -278,7 +262,6 @@ function genHorSubCells(p,q,r,s){
     var d=new nsPt( s.x + (v.x*i), s.y, s.z + (v.z*i) );
     var quad=new nsQuad(a,b,c,d);      
     subCellQuadArr.push(quad);
-    //debugQuad(a,b,c,d);
   }
   return subCellQuadArr;
 }

@@ -186,10 +186,10 @@ function nsQuad(a,b,c,d,i){
         this.type=t;
     }
     this.display=function(){
-        console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
+        //console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
     }
     this.genCube=function(){
-        console.log("\n\n\n GEN CUBE FUNCTION");
+        //console.log("\n\n\n GEN CUBE FUNCTION");
         var ht=bldgGuiControls.Bldg_HT;
         var htCounter=ht;
         var areas=[];
