@@ -39,8 +39,8 @@ var gridGuiControls = new function() {
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
-var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 1, 5);
-var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 1, 5);
+var cellLe = cellGUI.add(gridGuiControls, "cell_Length", 2.5, 7);
+var cellDe = cellGUI.add(gridGuiControls, "cell_Depth", 3, 7);
 var varGlobalOffset = cellGUI.add(gridGuiControls, "global_offset", 0.1, 1);
 cellGUI.add(gridGuiControls, "GCN_Centrality",0.0,1);
 cellGUI.add(gridGuiControls, "NCN_Centrality",0.0,1);
