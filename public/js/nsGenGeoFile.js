@@ -104,10 +104,10 @@ var bldgGuiControls = new function() {
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "Bldg_HT", 0.1, 1.0);
 var varGlobalOffset = buildingGUI.add(bldgGuiControls, "global_offset", 0.1, 1);
-buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.1, 1);
-buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.1, 1);
-buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.1, 1);
-buildingGUI.add(bldgGuiControls, "EVAC_FSR", 0.1, 1);
+buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "EVAC_FSR", 0.0, 1);
 buildingGUI.add(bldgGuiControls, "show_Evacuation");
 buildingGUI.add(bldgGuiControls, "show_GCN");
 buildingGUI.add(bldgGuiControls, "show_NCN");
