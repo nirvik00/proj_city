@@ -388,7 +388,6 @@ function getPathMaterialFromType(name, id){
     return mat;
 }
 
-
 function getNodeMaterialFromType(type){
     this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
         wireframe:wireframeVal});

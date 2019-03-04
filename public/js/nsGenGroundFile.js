@@ -185,7 +185,7 @@ var clrGround=function(){
          c=new nsPt(q.x-2*r, q.y, p.z+r);
          d=new nsPt(p.x+2*r, p.y, p.z+r);
        if(type === "MST"){
-         //top MST
+         //top MSTc fn                            
          //var r=0.5*offset;
          a=new nsPt(p.x+2*r, p.y, p.z-2*r);
          b=new nsPt(q.x-2*r, q.y, q.z-2*r);

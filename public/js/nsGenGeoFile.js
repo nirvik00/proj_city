@@ -95,12 +95,15 @@ var bldgGuiControls = new function() {
   this.NCN_FSR = 0.3;
   this.RCN_FSR = 0.3;
   this.EVAC_FSR = 0.1;
+  this.GCN_setback=0.1;
+  this.NCN_setback=0.12;
+  this.RCN_setback=0.25;
   this.show_Evacuation = true;
   this.show_GCN = true;
   this.show_NCN = true;
   this.show_RCN = true;
-
 };
+
 var buildingGUI = datgui.addFolder("bldgGuiControls");
 buildingGUI.add(bldgGuiControls, "Bldg_HT", 0.1, 1.0);
 var varGlobalOffset = buildingGUI.add(bldgGuiControls, "global_offset", 0.1, 1);
@@ -108,6 +111,9 @@ buildingGUI.add(bldgGuiControls, "GCN_FSR", 0.0, 1);
 buildingGUI.add(bldgGuiControls, "NCN_FSR", 0.0, 1);
 buildingGUI.add(bldgGuiControls, "RCN_FSR", 0.0, 1);
 buildingGUI.add(bldgGuiControls, "EVAC_FSR", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "GCN_setback", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "NCN_setback", 0.0, 1);
+buildingGUI.add(bldgGuiControls, "RCN_setback", 0.0, 1);
 buildingGUI.add(bldgGuiControls, "show_Evacuation");
 buildingGUI.add(bldgGuiControls, "show_GCN");
 buildingGUI.add(bldgGuiControls, "show_NCN");
