@@ -67,6 +67,12 @@ app.get('/concept',(req, res)=>{
   res.render('concept');
 });
 
+//concept route
+app.get('/app_tokyo',(req, res)=>{
+  res.render('app_tokyo');
+});
+
+
 //add idea form 
 app.get('/ideas/add', (req, res)=>{
   res.render('ideas/add');
