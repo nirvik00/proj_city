@@ -1,6 +1,9 @@
+var wireframeVal=false;
 var ALLJSONOBJS=[];
-var NODEARR=[];
-var EDGEARR=[];
+var nodeArr=[];
+var edgeArr=[];
+var networkEdgesArr=[];
+var networkNodesArr=[];
 
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
@@ -38,35 +41,11 @@ var mainLoop = function() {
    
 var render = function() {
        renderer.render(scene, camera);
-       if(NODEARR.length>0){
-              for(var i=0; i<NODEARR.length; i++){
-                     scene.add(NODEARR);
-              }       
-       }       
 };
 
 var getData=function(allobjs){
        ALLJSONOBJS=allobjs;
-       //console.log("got the data!!!!");
-       //console.log(ALLJSONOBJS);
-       var nodeArr=[];
-       var edgeArr=[];
-       for(var i=0; i<ALLJSONOBJS.length; i++){
-              obj=ALLJSONOBJS[i];
-              if(obj.element_type==="node"){
-                     nodeArr[i]=obj;
-              }else if(obj.element_type==="edge"){
-                     edgeArr[i]=obj;
-              }
-       }
-       console.log("node array = ");
-       for(var i=0; i<nodeArr.length; i++){
-              console.log(nodeArr[i]);
-       }
-       console.log("edge array = ");
-       for(var i=0; i<edgeArr.length; i++){
-              console.log(edgeArr[i]);
-       }
+       initNetwork(ALLJSONOBJS);
 }
 
 init();

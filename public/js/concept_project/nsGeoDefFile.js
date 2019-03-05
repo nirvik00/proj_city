@@ -51,7 +51,7 @@ function nsNetworkNode(a,b,c, nodeId){
         return this.nodeMesh;
     }
     this.display=function(){
-        var s="Node ="+this.x+","+this.y+","+this.z +" , type=" + this.type + ", dist="+this.dist;
+        var s="Pt ="+this.x+","+this.y+","+this.z +" , type=" + this.type + ", dist="+this.dist;
         console.log(s);
     }
 }
@@ -383,7 +383,7 @@ function getPathMaterialFromType(name, id){
     }else if(name === "MST"){
         mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(30,155,255)")}); 
     }else{
-        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(150,150,150)")});
+        mat=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(250,0,0)")});
     }
     return mat;
 }
@@ -406,7 +406,7 @@ function getNodeMaterialFromType(type){
                 wireframe:wireframeVal});
     }else{//evac
         this.mat = new THREE.MeshBasicMaterial ({
-        color: new THREE.Color("rgb(150,150,150)"),
+        color: new THREE.Color("rgb(255,0,0)"),
         wireframe:wireframeVal});
     }
     return this.mat
