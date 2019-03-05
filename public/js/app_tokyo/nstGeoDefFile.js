@@ -46,7 +46,7 @@ function nsNetworkNode(a,b,c, nodeId){
         this.matNode=getNodeMaterialFromType(this.type);
         this.nodeMesh=new THREE.Mesh(this.geoNode, this.matNode);
         this.nodeMesh.position.x=this.x;
-        this.nodeMesh.position.y=this.y+0.5;
+        this.nodeMesh.position.y=this.y;
         this.nodeMesh.position.z=this.z;    
         return this.nodeMesh;
     }
@@ -128,14 +128,14 @@ function nsNetworkEdge(a,b){
     this.getObj=function(t){
         var path = new THREE.Geometry();
         if(this.getType() === "MST"){
-            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.0, this.p.z ));
-            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.0, this.q.z ));
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y, this.q.z ));
         }else if(this.getType() === "EVAC"){
-            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+1.5+(t/10), this.p.z ));
-            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+1.5+(t/10), this.q.z ));
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y, this.q.z ));
         }else{
-            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y+0.5, this.p.z ));
-            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y+0.5, this.q.z ));
+            path.vertices.push(new THREE.Vector3( this.p.x, this.p.y, this.p.z ));
+            path.vertices.push(new THREE.Vector3( this.q.x, this.q.y, this.q.z ));
         }
         var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
@@ -288,10 +288,10 @@ function setPath(quad, name, ht){
         var d=quad.s;
         var p=new THREE.Geometry();
         var t=ht;//Math.random()*4;
-        p.vertices.push(new THREE.Vector3(a.x,t,a.z));
-        p.vertices.push(new THREE.Vector3(b.x,t,b.z));
-        p.vertices.push(new THREE.Vector3(c.x,t,c.z));
-        p.vertices.push(new THREE.Vector3(d.x,t,d.z));
+        p.vertices.push(new THREE.Vector3(a.x,a.y,a.z));
+        p.vertices.push(new THREE.Vector3(b.x,b.y,b.z));
+        p.vertices.push(new THREE.Vector3(c.x,c.y,c.z));
+        p.vertices.push(new THREE.Vector3(d.x,d.y,d.z));
         p.faces.push(new THREE.Face3(0,2,1));
         p.faces.push(new THREE.Face3(0,3,2));
         var mat;
@@ -426,11 +426,11 @@ var debugSphere=function(p,r){
   
 var debugQuad=function(p,q,r,s,y){
     var geox = new THREE.Geometry();
-    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
-    geox.vertices.push(new THREE.Vector3(q.x,y,q.z));
-    geox.vertices.push(new THREE.Vector3(r.x,y,r.z));
-    geox.vertices.push(new THREE.Vector3(s.x,y,s.z));
-    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+    geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+    geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
+    geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
     var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
     var line = new THREE.Line( geox, matx);
     scene.add(line);
@@ -438,8 +438,8 @@ var debugQuad=function(p,q,r,s,y){
 
 var debugLine=function(p,q,y){
     var geox = new THREE.Geometry();
-    geox.vertices.push(new THREE.Vector3(p.x,y,p.z));
-    geox.vertices.push(new THREE.Vector3(q.x,y,q.z));
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+    geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
     var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
     var line = new THREE.Line( geox, matx);
     scene.add(line);

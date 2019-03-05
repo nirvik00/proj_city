@@ -4,12 +4,15 @@ function initNetwork() {
   networkEdgesArr = [];
   networkNodesArr = [];
   evacEdges = [];
+
+  parkCoordsArr=[];
+
   console.log("got the data!!!!");
   //console.log(ALLJSONOBJS);
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "node") {
-      var node = new nsNetworkNode(obj.x, obj.z, obj.y, obj.nsId);
+      var node = new nsNetworkNode(obj.x, obj.y, obj.z, obj.nsId);
       node.type=obj.t;
       networkNodesArr.push(node);
       //console.log(obj.x, obj.z, obj.y, obj.nsId);
@@ -23,8 +26,8 @@ function initNetwork() {
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "edge") {
-      var p = new nsPt(obj.x0, obj.z0, obj.y0);
-      var q = new nsPt(obj.x1, obj.z1, obj.y1);
+      var p = new nsPt(obj.x0, obj.y0, obj.z0);
+      var q = new nsPt(obj.x1, obj.y1, obj.z1);
       var node0, node1;
       var sum0=0;
       var sum1=0;
@@ -51,6 +54,27 @@ function initNetwork() {
       networkEdgesArr.push(edge);
     }
   }
+
+
+  for (var i = 0; i < ALLJSONOBJS.length; i++) {
+    obj = ALLJSONOBJS[i];
+    if (obj.element_type === "park") {
+      var coords=obj.pts.split(";");
+      //console.log("\n\n"+i);
+      var ptArr=[];
+      for(var j=0; j<coords.length-2; j++){
+        var p,x,y,z;
+          p=coords[j].split(",");
+          x=p[0];
+          y=p[1];
+          z=0;
+          //console.log(x,y,z);
+        ptArr.push(new THREE.Vector2(x,y));
+      }
+      parkCoordsArr.push(ptArr);
+    }
+  }
+  //console.log(parkCoordsArr);
   //next function
   genNetworkGeometry();
 }
@@ -58,6 +82,12 @@ function initNetwork() {
 //for network: nodes and edges
 //set property of nodes to res, comm, off
 function genNetworkGeometry() {
+  for (var i = 0; i < parkArr.length; i++) {
+    parkArr[i].geometry.dispose();
+    parkArr[i].material.dispose();
+    scene.remove(parkArr[i]);
+  }
+
   for (var i = 0; i < nodeArr.length; i++) {
     nodeArr[i].geometry.dispose();
     nodeArr[i].material.dispose();
@@ -85,9 +115,52 @@ function genNetworkGeometry() {
     nodeArr.push(n0.getObj());
   }
   for (var i = 0; i < nodeArr.length; i++) {
-    scene.add(nodeArr[i]);
+    //scene.add(nodeArr[i]);
+  }
+
+  parkArr = Array();
+  for(var i=0; i<parkCoordsArr.length; i++){
+    var p=parkCoordsArr[i][0];
+    var geox=new THREE.Geometry();
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
+    for(var j=1; j<parkCoordsArr[i].length; j++){
+      var q=parkCoordsArr[i][j];
+      geox.vertices.push(new THREE.Vector3(q.x,q.y,0.25));
+    }
+    geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
+    var matx=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(250,50,100)")});
+    var line=new THREE.Line(geox,matx);
+    parkArr.push(line);
+  }
+  console.log("number of parks: "+parkArr.length);
+  for(var i=0; i<parkArr.length; i++) {
+    scene.add(parkArr[i]);
+  }
+
+
+  for(var i=0; i<parkCoordsArr.length; i++){
+    //if(i==1) break;
+    //console.log("\n\n"+i);
+    var p=parkCoordsArr[i][0];
+    var geox=new THREE.Shape();
+    geox.moveTo(0,0);    
+    for(var j=1; j<parkCoordsArr[i].length; j++){
+      var q=parkCoordsArr[i][j];
+      //console.log(q.x-p.x,q.y-p.y);
+      geox.lineTo(q.x-p.x,q.y-p.y);    
+    }    
+    geox.autoClose=true;
+    var geometry = new THREE.ShapeGeometry( geox );
+    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    var mesh = new THREE.Mesh( geometry, material ) ;
+    mesh.position.x=p.x;
+    mesh.position.y=p.y;
+    scene.add( mesh );
   }
 }
+
+
+
 
 //check if the network edge already exists in networkEdgesArr
 function checkNetworkEdgeRepetition(arr, e0) {
