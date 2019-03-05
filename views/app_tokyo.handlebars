@@ -1,15 +1,8 @@
-{{#each edges}}
-    <h4> element_type: {{element_type}} </h4>
-    <p> {{nsId}}  {{x0}} {{y0}} {{x1}} {{y1}} </p>
-{{else}}
-    <p> NULL</p>
-{{/each}}
-{{#each nodes}}
-    <h4> {{element_type}} </h4>
-    <p> {{nsId}} {{x}} {{y}}</p>
-{{else}}
-    <p> NULL</p>
-{{/each}}
+<script>
+    var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+    var jsonObj = JSON.parse(decodedJson);
+    console.log(jsonObj);
+</script>
 
 <style>
     #container {
@@ -34,10 +27,5 @@
         </div> 
         <div id="scene3d"></div>
     </div>
-<script>
-    var id="{{nodes.nsid}}";
-    var x="{{nodes.x}}";
-    var y="{{nodes.y}}";
-    console.log(id, x, y);
-</script>
+
 <script src="/public/js/app_tokyo/nsMain.js"></script>

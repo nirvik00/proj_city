@@ -32,12 +32,16 @@ require('./models/Node');
 const Node=mongoose.model('nodes');
 require('./models/Edge');
 const Edge=mongoose.model('edges');
+require('./models/NsElement');
+const NsElement=mongoose.model('ns_elements');
 
 //handlebars middleware
 app.engine('handlebars', exphbs({
   defaultLayout:'main'
 }));
 app.set('view engine', 'handlebars');
+
+
 
 //body parser middleware
 app.use(bodyParser.urlencoded({extended:false}));
@@ -72,26 +76,12 @@ app.get('/concept',(req, res)=>{
 
 //Tokyo project route - get information from db
 app.get('/app_tokyo',(req, res)=>{
-  var nodeArr=[];
-  var edgeArr=[];
-  Node.find({})
-  .then(nodes=>{
-    console.log(nodes);
-    for(var i=0; i<nodes.length; i++){
-      nodeArr[i]=nodes[i];
-    }    
+  NsElement.find({})
+  .then(ns_elements =>{
+    res.render('app_tokyo',{
+      encodedJson : encodeURIComponent(JSON.stringify(ns_elements))
+    });  
   });
-  Edge.find({})
-  .then(edges=>{
-    console.log(edges);
-    for(var i=0; i<edges.length; i++){
-      edgeArr[i]=edges[i];
-    }    
-  });
-  console.log(nodeArr);
-  console.log(edgeArr);
-  
-  res.render('app_tokyo',{nodes:nodeArr, edges:edgeArr});  
 });
 
 
