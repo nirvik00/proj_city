@@ -88,7 +88,9 @@ app.get('/app_tokyo',(req, res)=>{
       edgeArr[i]=edges[i];
     }    
   });
-  console.log(nodeArr,edgeArr);
+  console.log(nodeArr);
+  console.log(edgeArr);
+  
   res.render('app_tokyo',{nodes:nodeArr, edges:edgeArr});  
 });
 
