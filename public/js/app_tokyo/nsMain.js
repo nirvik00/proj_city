@@ -1,6 +1,6 @@
-var BUILDING_FOOTPRINTS_STR="";
-var BUILDING_FOOTPRINTS=[];
-
+var ALLJSONOBJS=[];
+var NODEARR=[];
+var EDGEARR=[];
 
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
@@ -28,7 +28,6 @@ var init = function() {
        controls = new THREE.OrbitControls(camera, renderer.domElement);
        controls.addEventListener("change", render);
        controls.enableZoom = true;
-       renderFootprints();
      };
      
 var mainLoop = function() {
@@ -39,13 +38,36 @@ var mainLoop = function() {
    
 var render = function() {
        renderer.render(scene, camera);
+       if(NODEARR.length>0){
+              for(var i=0; i<NODEARR.length; i++){
+                     scene.add(NODEARR);
+              }       
+       }       
 };
 
-
-var renderFootprints=function(){
-       console.log(BUILDING_FOOTPRINTS);
+var getData=function(allobjs){
+       ALLJSONOBJS=allobjs;
+       //console.log("got the data!!!!");
+       //console.log(ALLJSONOBJS);
+       var nodeArr=[];
+       var edgeArr=[];
+       for(var i=0; i<ALLJSONOBJS.length; i++){
+              obj=ALLJSONOBJS[i];
+              if(obj.element_type==="node"){
+                     nodeArr[i]=obj;
+              }else if(obj.element_type==="edge"){
+                     edgeArr[i]=obj;
+              }
+       }
+       console.log("node array = ");
+       for(var i=0; i<nodeArr.length; i++){
+              console.log(nodeArr[i]);
+       }
+       console.log("edge array = ");
+       for(var i=0; i<edgeArr.length; i++){
+              console.log(edgeArr[i]);
+       }
 }
-   
 
 init();
 mainLoop();

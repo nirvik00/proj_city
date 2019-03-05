@@ -1,8 +1,4 @@
-<script>
-    var decodedJson = decodeURIComponent("{{{encodedJson}}}");
-    var jsonObj = JSON.parse(decodedJson);
-    console.log(jsonObj);
-</script>
+
 
 <style>
     #container {
@@ -29,3 +25,9 @@
     </div>
 
 <script src="/public/js/app_tokyo/nsMain.js"></script>
+<script>
+    var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+    var jsonObj = JSON.parse(decodedJson);
+    //console.log(jsonObj);
+    getData(jsonObj);
+</script>
