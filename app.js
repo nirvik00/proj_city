@@ -23,12 +23,15 @@ if(process.env.NODE_ENV === 'production'){
     'mongodb://localhost/plugs-dev')
   .then(()=> console.log('Mongo DB connected...'))
   .catch(err => console.log(err));
-      
 }
 
 //load idea model
 require('./models/Idea');
 const Idea=mongoose.model('ideas');
+require('./models/Node');
+const Node=mongoose.model('nodes');
+require('./models/Edge');
+const Edge=mongoose.model('edges');
 
 //handlebars middleware
 app.engine('handlebars', exphbs({
@@ -67,11 +70,37 @@ app.get('/concept',(req, res)=>{
   res.render('concept');
 });
 
-//concept route
+//Tokyo project route - get information from db
 app.get('/app_tokyo',(req, res)=>{
-  res.render('app_tokyo');
+  var nodeArr=[];
+  var edgeArr=[];
+  Node.find({})
+  .then(nodes=>{
+    console.log(nodes);
+    for(var i=0; i<nodes.length; i++){
+      nodeArr[i]=nodes[i];
+    }    
+  });
+  Edge.find({})
+  .then(edges=>{
+    console.log(edges);
+    for(var i=0; i<edges.length; i++){
+      edgeArr[i]=edges[i];
+    }    
+  });
+  console.log(nodeArr,edgeArr);
+  res.render('app_tokyo',{nodes:nodeArr, edges:edgeArr});  
 });
 
+
+//ideas index page
+app.get('/ideas', (req, res)=>{
+  Idea.find({})
+  .sort({date:'desc'})
+  .then(ideas =>{    
+    res.render('ideas/index', {ideas:ideas});  
+  });  
+});
 
 //add idea form 
 app.get('/ideas/add', (req, res)=>{

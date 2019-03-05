@@ -1,3 +1,7 @@
+var BUILDING_FOOTPRINTS_STR="";
+var BUILDING_FOOTPRINTS=[];
+
+
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 var camera, scene, renderer, control, axes;
@@ -24,7 +28,7 @@ var init = function() {
        controls = new THREE.OrbitControls(camera, renderer.domElement);
        controls.addEventListener("change", render);
        controls.enableZoom = true;
-       //runSystem();
+       renderFootprints();
      };
      
 var mainLoop = function() {
@@ -36,6 +40,12 @@ var mainLoop = function() {
 var render = function() {
        renderer.render(scene, camera);
 };
+
+
+var renderFootprints=function(){
+       console.log(BUILDING_FOOTPRINTS);
+}
    
-   init();
-   mainLoop();
+
+init();
+mainLoop();
