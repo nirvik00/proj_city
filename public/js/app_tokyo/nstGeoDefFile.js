@@ -115,7 +115,7 @@ function nsNetworkEdge(a,b){
 
     //set the area required at that edge
     this.area=0.0;
-
+    this.renderedObject;
     //set type of edge:{green, path, road} based on two node-types at each end
     this.type="path";
     this.setType=function(name){
@@ -137,8 +137,8 @@ function nsNetworkEdge(a,b){
             path.vertices.push(new THREE.Vector3( this.q.x, this.q.y, this.q.z ));
         }
         var material = getPathMaterialFromType(this.getType(), this.id);
-        var line = new THREE.Line(path, material);
-        edgeArr.push(line);
+        this.renderedObject = new THREE.Line(path, material);
+        edgeArr.push(this.renderedObject);
         //return line;
     }
     this.display=function(){
@@ -147,10 +147,12 @@ function nsNetworkEdge(a,b){
     }
 }
 
-function nsPark(area, cen, pts){
+function nsPark(type, area, cen, pts){
+    this.type=type;
     this.area=area;
     this.cen=cen;
     this.pts=pts;
+    this.renderedObject;
     this.genGeo=function(){
         var geox=new THREE.Shape();
         var p=pts[0];
@@ -165,16 +167,30 @@ function nsPark(area, cen, pts){
         var mesh=new THREE.Mesh(geometry, material);
         mesh.position.x=p.x;
         mesh.position.y=p.y;
-        parkArr.push(mesh);
+        this.renderedObject=mesh;
+        parkArr.push(this.renderedObject);
         //return mesh;
+    }
+    this.display=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=0;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var s="Park area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
+        return s;
     }
 }
 
 
-function nsBldg(area, cen, pts){
+function nsBldg(type, area, cen, pts){
+    this.type=type;
     this.area=area;
     this.cen=cen;
     this.pts=pts;
+    this.renderedObject;
     this.genGeo=function(){
         var p=pts[0];
         var geox=new THREE.Shape();
@@ -198,8 +214,19 @@ function nsBldg(area, cen, pts){
         var mesh=new THREE.Mesh(geometry, material);
         mesh.position.x=p.x;
         mesh.position.y=p.y;
-        bldgArr.push(mesh);
-        //return mesh;
+        this.renderedObject=mesh;
+        bldgArr.push(this.renderedObject);
+    }
+    this.display=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=0;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var s="Building area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
+        return s;
     }
 }
 

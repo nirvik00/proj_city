@@ -64,7 +64,7 @@ function initNetwork() {
         var z=0;
         ptArr.push(new THREE.Vector2(x,y));
       }
-      var bldgObj=new nsBldg(area, cen, ptArr);  
+      var bldgObj=new nsBldg("bldg", area, cen, ptArr);  
       bldgObjArr.push(bldgObj);    
     }
   }
@@ -85,7 +85,7 @@ function initNetwork() {
           //console.log(x,y);
           ptArr.push(new THREE.Vector2(x,y));
       }
-      var parkObj=new nsPark(area, cen, ptArr);
+      var parkObj=new nsPark("park", area, cen, ptArr);
       parkObjArr.push(parkObj);
     }
   }
@@ -126,35 +126,35 @@ function genNetworkGeometry() {
   for (var i = 0; i < networkEdgesArr.length; i++) {
     networkEdgesArr[i].getObj();
   }
-
-  for (var i = 0; i < edgeArr.length; i++) {
-    scene.add(edgeArr[i]);
-  }
-
   nodeArr = Array();
   for (var i = 0; i < networkNodesArr.length; i++) {
     networkNodesArr[i].getObj();
   }
-
-  for (var i = 0; i < nodeArr.length; i++) {
-    scene.add(nodeArr[i]);
-  }
-  
   parkArr=[];
   for(var i=0; i<parkObjArr.length; i++) {
     parkObjArr[i].genGeo();
   }
-  for(var i=0; i<parkArr.length; i++){
-    scene.add(parkArr[i]);
-  }
-  
   bldgArr=[];
   for(var i=0; i<bldgObjArr.length; i++){
     bldgObjArr[i].genGeo();
   }
+
+
+  //sceneObjs=[];
+  for (var i = 0; i < nodeArr.length; i++) {
+    scene.add(nodeArr[i]);
+  }
+  for (var i = 0; i < edgeArr.length; i++) {
+    scene.add(edgeArr[i]);
+  }  
+  for(var i=0; i<parkArr.length; i++){
+    scene.add(parkArr[i]);
+    //sceneObjs[i]=parkArr[i].clone();
+  }
   for(var i=0; i<bldgArr.length; i++){
     scene.add(bldgArr[i]);
-  }  
+    //sceneObjs[i]=bldgArr[i].clone();
+  }
   console.log("INIT COMPLETE...scene rendered");
 }
 

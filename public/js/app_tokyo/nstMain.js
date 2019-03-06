@@ -8,14 +8,16 @@ var parkObjArr=[];//object
 var parkArr=[];//render object
 var bldgObjArr=[];//object
 var bldgArr=[];//rendered object
-var intersectedObj=[];//raycaster intersection with object
+var sceneObjs=[];//raycaster intersection with object
+
 
 
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 var camera, scene, renderer, control, axes;
 
-var raycaster;
+var raycaster,INTERSECTED;
+var raycasterLine;
 var intersects;
 var isShiftDown=false;
 var mouse = new THREE.Vector2();
@@ -149,33 +151,60 @@ function onDocumentKeyDown(event){
 
 function onDocumentMouseMove( event ) {
        event.preventDefault();
+       
        mouse.x= (event.clientX/window.innerWidth)*2 - 1;
        mouse.y=-(event.clientY/window.innerHeight)*2 + 1;
 
        //mouse.x = ( (event.clientX -renderer.domElement.offsetLeft) / renderer.domElement.width ) * 2 - 1;
        //mouse.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
 
-       var deltaX = event.clientX - mouse.x;
-       var deltaY = event.clientY - mouse.y;
-
        if(isShiftDown===true){
+              //drawRaycastLine(raycaster);
               raycaster.setFromCamera(mouse, camera);// find intersections
               intersects = raycaster.intersectObjects( scene.children );// calculate objects intersecting the picking ray
               for ( var i = 0; i < intersects.length; i++ ) {
                      if(intersects[i].faceIndex===null){
 
                      }else{
-                            console.log(intersects[i]);
-                            intersects[ i ].object.material.color.set(new THREE.Color("rgb(200,0,0)"));
-                            break;
+                            if(intersects[i].distance<2){
+                                   //console.log(intersects[i].object);
+                                   var g=intersects[i].object.position;
+                                   var pos=new nsPt(g.x,g.y,g.z);
+                                   intersects[i].object.material.color.set(new THREE.Color("rgb(200,0,0)"));
+                                   for(var j=0; j<bldgObjArr.length; j++){
+                                          var e=bldgObjArr[j].renderedObject.position;
+                                          var pos2=new nsPt(e.x,e.y,e.z);
+                                          var di=utilDi(pos, pos2);
+                                          if(di<0.01){
+                                                 //console.log(bldgObjArr[j]);
+                                                 var objInfo=bldgObjArr[j].display();
+                                                 console.log(objInfo);
+                                                 var source = infoPara.innerHTML;
+                                                 source = objInfo;
+                                                 infoPara.innerHTML = source;  
+                                                 break;
+                                          }
+                                   }
+                                   for(var j=0; j<parkObjArr.length; j++){
+                                          var e=parkObjArr[j].renderedObject.position;
+                                          var pos2=new nsPt(e.x,e.y,e.z);
+                                          var di=utilDi(pos, pos2);
+                                          if(di<0.01){
+                                                 //console.log(bldgObjArr[j]);
+                                                 var objInfo=parkObjArr[j].display();
+                                                 console.log(objInfo);
+                                                 var source = infoPara.innerHTML;
+                                                 source = objInfo;
+                                                 infoPara.innerHTML = source;  
+                                                 break;
+                                          }
+                                   }
+                                   break;
+                            }                            
                      }                     
               }              
        }
-
-       var lineGeo=new THREE.Shape();
-       lineGeo.moveTo(new THREE.Vector2(0,0));
-       lineGeo.moveTo(new THREE.Vector2(mouse.x,mouse.y));
-       var lineMat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
+       
        /*
        var sortableX = new Array();
        for (var i = 0; i < iniNodes.length; i++) {
@@ -203,6 +232,48 @@ var getData=function(allobjs){
        ALLJSONOBJS=allobjs;
        initNetwork(ALLJSONOBJS);
 }
+
+function drawRaycastLine(raycaster) {
+       try{
+              raycasterLine.material.dispose();
+              raycasterLine.geometry.dispose();
+              scene.remove(raycasterLine);
+       }catch(err){}
+       
+
+       var material = new THREE.LineBasicMaterial({
+         color: 0xff0000,
+         linewidth: 10
+       });
+       var geometry = new THREE.Geometry();
+       var startVec = new THREE.Vector3(
+         raycaster.ray.origin.x,
+         raycaster.ray.origin.y,
+         raycaster.ray.origin.z);
+   
+       var endVec = new THREE.Vector3(
+         raycaster.ray.direction.x,
+         raycaster.ray.direction.y,
+         raycaster.ray.direction.z);
+       
+       // could be any number
+       endVec.multiplyScalar(5000);
+       
+       // get the point in the middle
+       var midVec = new THREE.Vector3();
+       midVec.lerpVectors(startVec, endVec, 0.5);
+   
+       geometry.vertices.push(startVec);
+       geometry.vertices.push(midVec);
+       geometry.vertices.push(endVec);
+   
+       console.log('vec start', startVec);
+       console.log('vec mid', midVec);
+       console.log('vec end', endVec);
+   
+       raycasterLine = new THREE.Line(geometry, material);
+       scene.add(raycasterLine);
+     }
 
 init();
 mainLoop();
