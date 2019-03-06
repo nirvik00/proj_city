@@ -145,6 +145,7 @@ function onDocumentKeyDown(event){
        }
        if(event.keyCode===82){
               console.clear();
+              infoPara.innerHTML = "";
               genNetworkGeometry();
        }
 }
