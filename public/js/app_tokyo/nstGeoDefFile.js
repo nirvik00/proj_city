@@ -46,7 +46,8 @@ function nsNetworkNode(a,b,c, nodeId){
         this.nodeMesh.position.x=this.x;
         this.nodeMesh.position.y=this.y;
         this.nodeMesh.position.z=this.z;    
-        return this.nodeMesh;
+        nodeArr.push(this.nodeMesh);
+        //return this.nodeMesh;
     }
     this.display=function(){
         var s="Node ="+this.x+","+this.y+","+this.z +" , type=" + this.type + ", dist="+this.dist;
@@ -137,7 +138,8 @@ function nsNetworkEdge(a,b){
         }
         var material = getPathMaterialFromType(this.getType(), this.id);
         var line = new THREE.Line(path, material);
-        return line;
+        edgeArr.push(line);
+        //return line;
     }
     this.display=function(){
         var s= "EDGE id= "+this.id+", node0 type= "+this.node0.getType() +", node0 id= "+this.node0.id + ", node1 type= "+this.node1.getType() +", node1 id= "+this.node0.id + ", edge type= "+this.getType() +", cost= "+this.cost;
@@ -159,24 +161,15 @@ function nsPark(area, cen, pts){
         }
         geox.autoClose=true;
         var geometry=new THREE.ShapeGeometry(geox);
-        var material=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,70)"), side:THREE.DoubleSide});
+        var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(0,255,70)"), side:THREE.DoubleSide});
         var mesh=new THREE.Mesh(geometry, material);
         mesh.position.x=p.x;
         mesh.position.y=p.y;
         parkArr.push(mesh);
-        return mesh;
-    }
-    this.genOutLine=function(){
-        var geox=new THREE.Geometry()
-        for(var i=0; i<pts.length; i++){
-            geox.vertices.push(new THREE.Vector3(pts[i].x, pts[i].y, 15));
-        }
-        var matx=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
-        var line=new THREE.Line(geox, matx);
-        parkOutLineArr.push(line);
-        return line;
+        //return mesh;
     }
 }
+
 
 function nsBldg(area, cen, pts){
     this.area=area;
@@ -191,23 +184,22 @@ function nsBldg(area, cen, pts){
             geox.lineTo(q.x-p.x,q.y-p.y);
         }
         geox.autoClose=true;
-        var geometry=new THREE.ShapeGeometry(geox);
-        var material=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(100,100,100)"), side:THREE.DoubleSide})
+        //var geometry=new THREE.ShapeGeometry(geox);
+        var extsettings={
+            steps: 1,
+            amount: Math.random()+0.1,
+            bevelEnabled: false
+        }
+        var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
+        
+        var material = new THREE.MeshPhongMaterial({
+            color: 0xdddddd, specular: 0x000000, shininess: 10, flatShading: true 
+        });
         var mesh=new THREE.Mesh(geometry, material);
         mesh.position.x=p.x;
         mesh.position.y=p.y;
         bldgArr.push(mesh);
-        return mesh;
-    }
-    this.genOutLine=function(){
-        var geox=new THREE.Geometry();
-        for(var i=0; i<pts.length; i++){
-            geox.vertices.push(new THREE.Vector3(pts[i].x, pts[i].y, 0.15));
-        }
-        var matx=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
-        var line=new THREE.Line(geox, matx);
-        bldgOutLineArr.push(line);
-        return line;
+        //return mesh;
     }
 }
 
