@@ -39,19 +39,23 @@ function nsNetworkNode(a,b,c, nodeId){
     }
     this.geoNode=new THREE.SphereGeometry(0.15,32,32);
     this.matNode; 
-    this.nodeMesh;
+    this.renderedObject;
     this.getObj=function(){
         this.matNode=getNodeMaterialFromType(this.type);
-        this.nodeMesh=new THREE.Mesh(this.geoNode, this.matNode);
-        this.nodeMesh.position.x=this.x;
-        this.nodeMesh.position.y=this.y;
-        this.nodeMesh.position.z=this.z;    
-        nodeArr.push(this.nodeMesh);
+        this.renderedObject=new THREE.Mesh(this.geoNode, this.matNode);
+        this.renderedObject.position.x=this.x;
+        this.renderedObject.position.y=this.y;
+        this.renderedObject.position.z=this.z;    
+        nodeArr.push(this.renderedObject);
         //return this.nodeMesh;
     }
     this.display=function(){
         var s="Node ="+this.x+","+this.y+","+this.z +" , type=" + this.type + ", dist="+this.dist;
         console.log(s);
+    }
+    this.info=function(){
+        var t="Node cen: "+this.x+","+this.y+","+this.z +"\ntype=" + this.type + "\n dist="+this.dist;
+        return t;
     }
 }
 
@@ -145,6 +149,10 @@ function nsNetworkEdge(a,b){
         var s= "EDGE id= "+this.id+", node0 type= "+this.node0.getType() +", node0 id= "+this.node0.id + ", node1 type= "+this.node1.getType() +", node1 id= "+this.node0.id + ", edge type= "+this.getType() +", cost= "+this.cost;
         console.log(s);
     }
+    this.info=function(){
+        var s= "EDGE id= "+this.id+"\n node0 type= "+this.node0.getType() +"\n node0 id= "+this.node0.id + "\n node1 type= "+this.node1.getType() +"\n node1 id= "+this.node0.id + "\n edge type= "+this.getType() +"\n cost= "+this.cost;
+        return s;
+    }
 }
 
 function nsPark(type, area, cen, pts){
@@ -172,6 +180,17 @@ function nsPark(type, area, cen, pts){
         //return mesh;
     }
     this.display=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=0;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var s="Park area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
+        console.log(s);
+    }
+    this.info=function(){
         var sp="";
         for(var i=0; i<this.pts.length; i++){
             var x=this.pts[i].x;
@@ -225,12 +244,24 @@ function nsBldg(type, area, cen, pts){
             var z=0;
             sp+=x+","+y+","+z+"\n";
         }
+        var s="Building area: "+this.area+"\ncenter: "+x+","+y+","+z+"\npoints: \n"+sp;
+        console.log(s);
+    }
+    this.info=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=0;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var x=this.cen[0];
+        var y=this.cen[1];
+        var z=this.cen[2];
         var s="Building area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
         return s;
     }
 }
-
-
 
 function nsTile(a,b,c,d){
     this.p=a;

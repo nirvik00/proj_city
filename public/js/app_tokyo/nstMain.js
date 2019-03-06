@@ -178,8 +178,8 @@ function onDocumentMouseMove( event ) {
                                           var di=utilDi(pos, pos2);
                                           if(di<0.01){
                                                  //console.log(bldgObjArr[j]);
-                                                 var objInfo=bldgObjArr[j].display();
-                                                 console.log(objInfo);
+                                                 var objInfo=bldgObjArr[j].info();
+                                                 //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
                                                  infoPara.innerHTML = source;  
@@ -192,7 +192,7 @@ function onDocumentMouseMove( event ) {
                                           var di=utilDi(pos, pos2);
                                           if(di<0.01){
                                                  //console.log(bldgObjArr[j]);
-                                                 var objInfo=parkObjArr[j].display();
+                                                 var objInfo=parkObjArr[j].info();
                                                  //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
@@ -200,7 +200,20 @@ function onDocumentMouseMove( event ) {
                                                  break;
                                           }
                                    }
-                                   break;
+                                   for(var j=0; j<networkNodesArr.length; j++){
+                                          var e=networkNodesArr[j].renderedObject.position;
+                                          var pos2=new nsPt(e.x,e.y,e.z);
+                                          var di=utilDi(pos, pos2);
+                                          if(di<0.01){
+                                                 //console.log(bldgObjArr[j]);
+                                                 var objInfo=networkNodesArr[j].info();
+                                                 //console.log(objInfo);
+                                                 var source = infoPara.innerHTML;
+                                                 source = objInfo;
+                                                 infoPara.innerHTML = source;  
+                                                 break;
+                                          }
+                                   }
                             }                            
                      }                     
               }              
@@ -231,48 +244,6 @@ var getData=function(allobjs){
        ALLJSONOBJS=allobjs;
        initNetwork(ALLJSONOBJS);
 }
-
-function drawRaycastLine(raycaster) {
-       try{
-              raycasterLine.material.dispose();
-              raycasterLine.geometry.dispose();
-              scene.remove(raycasterLine);
-       }catch(err){}
-       
-
-       var material = new THREE.LineBasicMaterial({
-         color: 0xff0000,
-         linewidth: 10
-       });
-       var geometry = new THREE.Geometry();
-       var startVec = new THREE.Vector3(
-         raycaster.ray.origin.x,
-         raycaster.ray.origin.y,
-         raycaster.ray.origin.z);
-   
-       var endVec = new THREE.Vector3(
-         raycaster.ray.direction.x,
-         raycaster.ray.direction.y,
-         raycaster.ray.direction.z);
-       
-       // could be any number
-       endVec.multiplyScalar(5000);
-       
-       // get the point in the middle
-       var midVec = new THREE.Vector3();
-       midVec.lerpVectors(startVec, endVec, 0.5);
-   
-       geometry.vertices.push(startVec);
-       geometry.vertices.push(midVec);
-       geometry.vertices.push(endVec);
-   
-       console.log('vec start', startVec);
-       console.log('vec mid', midVec);
-       console.log('vec end', endVec);
-   
-       raycasterLine = new THREE.Line(geometry, material);
-       scene.add(raycasterLine);
-     }
 
 init();
 mainLoop();
