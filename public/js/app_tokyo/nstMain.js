@@ -204,7 +204,6 @@ function onDocumentMouseMove( event ) {
                      }                     
               }              
        }
-       
        /*
        var sortableX = new Array();
        for (var i = 0; i < iniNodes.length; i++) {
@@ -214,7 +213,6 @@ function onDocumentMouseMove( event ) {
          return a[0] - b[0];
        });
        */
-
 }
 
 
