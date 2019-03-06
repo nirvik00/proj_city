@@ -8,7 +8,6 @@ function initNetwork() {
   parkCoordsArr=[];
 
   console.log("got the data!!!!");
-  //console.log(ALLJSONOBJS);
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "node") {
@@ -100,12 +99,6 @@ function initNetwork() {
 //for network: nodes and edges
 //set property of nodes to res, comm, off
 function genNetworkGeometry() {
-  for (var i = 0; i < parkArr.length; i++) {
-    parkArr[i].geometry.dispose();
-    parkArr[i].material.dispose();
-    scene.remove(parkArr[i]);
-  }
-
   for (var i = 0; i < nodeArr.length; i++) {
     nodeArr[i].geometry.dispose();
     nodeArr[i].material.dispose();
@@ -116,6 +109,31 @@ function genNetworkGeometry() {
     edgeArr[i].material.dispose();
     scene.remove(edgeArr[i]);
   }
+
+  for(var i=0; i<parkArr.length; i++){
+    parkArr[i].geometry.dispose();
+    parkArr[i].material.dispose();
+    scene.remove(parkArr[i]);
+  }
+
+  for(var i=0; parkOutLineArr.length; i++){
+    parkOutLineArr[i].geometry.dispose();
+    parkOutLineArr[i].material.dispose();
+    scene.remove(parkOutLineArr[i]);
+  }
+
+  for(var i=0; i<bldgArr.length; i++){
+    bldgArr[i].geometry.dispose();
+    bldgArr[i].material.dispose();
+    scene.remove(bldgArr[i]);
+  }
+
+  for(var i=0; bldgOutLineArr.length; i++){
+    bldgOutLineArr[i].geometry.dispose();
+    bldgOutLineArr[i].material.dispose();
+    scene.remove(bldgOutLineArr[i]);
+  }
+
 
   edgeArr = Array();
   for (var i = 0; i < networkEdgesArr.length; i++) {
@@ -135,58 +153,31 @@ function genNetworkGeometry() {
   for (var i = 0; i < nodeArr.length; i++) {
     scene.add(nodeArr[i]);
   }
-
-  parkArr = Array();
-  for(var i=0; i<parkObjArr.length; i++){
-    var p=parkObjArr[i].pts[0];
-    var geox=new THREE.Geometry();
-    geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
-    for(var j=1; j<parkObjArr[i].pts.length; j++){
-      var q=parkObjArr[i].pts[j];
-      geox.vertices.push(new THREE.Vector3(q.x,q.y,0.25));
-    }
-    geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
-    var matx=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(250,50,100)")});
-    var line=new THREE.Line(geox,matx);
-    parkArr.push(line);
+  
+  parkOutLineArr = [];  
+  parkArr=[];
+  for(var i=0; i<parkObjArr.length; i++) {
+    parkObjArr[i].genGeo();
+    parkObjArr[i].genOutLine();
   }
-  //console.log("number of parks: "+parkArr.length);
-  for(var i=0; i<parkArr.length; i++) {
+  for(var i=0; i<parkArr.length; i++){
     scene.add(parkArr[i]);
   }
-
-  for(var i=0; i<parkObjArr.length; i++){
-    var p=parkObjArr[i].pts[0];
-    var geox=new THREE.Shape();
-    geox.moveTo(0,0);    
-    for(var j=1; j<parkObjArr[i].pts.length; j++){
-      var q=parkObjArr[i].pts[j];
-      geox.lineTo(q.x-p.x,q.y-p.y);    
-    }
-    geox.autoClose=true;
-    var geometry = new THREE.ShapeGeometry(geox);
-    var material = new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(0,200,150)"),side:THREE.DoubleSide});
-    var mesh = new THREE.Mesh(geometry, material);
-    mesh.position.x=p.x;
-    mesh.position.y=p.y;
-    scene.add( mesh );
+  for(var i=0; i<parkOutLineArr.length; i++){
+    //scene.add(parkOutLineArr[i]);
   }
-
+  
+  bldgArr=[];
+  bldgOutLineArr=[];
   for(var i=0; i<bldgObjArr.length; i++){
-    var p=bldgObjArr[i].pts[0];
-    var geox=new THREE.Shape();
-    geox.moveTo(0,0);
-    for(var j=1; j<bldgObjArr[i].pts.length; j++){
-      var q=bldgObjArr[i].pts[j];
-      geox.lineTo(q.x-p.x,q.y-p.y);
-    }
-    geox.autoClose=true;
-    var geometry=new THREE.ShapeGeometry(geox);
-    var material=new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(200,200,200)"),side:THREE.DoubleSide});
-    var mesh=new THREE.Mesh(geometry,material);
-    mesh.position.x=p.x;
-    mesh.position.y=p.y;
-    scene.add(mesh);
+    bldgObjArr[i].genGeo();
+    bldgObjArr[i].genOutLine();
+  }
+  for(var i=0; i<bldgArr.length; i++){
+    scene.add(bldgArr[i]);
+  }  
+  for(var i=0; i<bldgOutLineArr.length; i++){
+    scene.add(bldgOutLineArr[i]);
   }
 }
 

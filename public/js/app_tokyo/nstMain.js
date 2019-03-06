@@ -3,12 +3,13 @@ var ALLJSONOBJS=[];
 var nodeArr=[];
 var edgeArr=[];
 var parkArr=[];
+var parkOutLineArr=[];
+var bldgArr=[];
+var bldgOutLineArr=[];
 var networkEdgesArr=[];
 var networkNodesArr=[];
 var parkObjArr=[];
 var bldgObjArr=[];
-
-
 
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
@@ -36,7 +37,7 @@ var init = function() {
        controls.addEventListener("change", render);
        controls.enableZoom = true;
        window.addEventListener( 'resize', onWindowResize, false );
-};
+}
 
 function onWindowResize() {
        camera.aspect = window.innerWidth / window.innerHeight;
@@ -48,11 +49,11 @@ var mainLoop = function() {
        requestAnimationFrame(mainLoop);
        controls.update();
        render();
-};
+}
    
 var render = function() {
        renderer.render(scene, camera);
-};
+}
 
 var getData=function(allobjs){
        ALLJSONOBJS=allobjs;

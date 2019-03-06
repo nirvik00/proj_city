@@ -34,7 +34,7 @@ var gridGuiControls = new function() {
   this.show_NCN=true;
   this.show_MST=true;
   this.show_EVAC=true;
-};
+}
 var cellGUI = datgui.addFolder("gridGuiControls");
 var cellNumLe = cellGUI.add(gridGuiControls, "num_Length", 1, 5);
 var cellNumDe = cellGUI.add(gridGuiControls, "num_Depth", 1, 5);
@@ -72,7 +72,7 @@ var groundGuiControls = new function() {
   this.show_Road = true;
   this.show_Intx=true;
   this.show_MST=true;
-};
+}
 var groundGUI = datgui.addFolder("groundGuiControls");
 groundGUI.add(groundGuiControls, "cost_GCN_GCN", 0.01, 1);
 groundGUI.add(groundGuiControls, "cost_GCN_NCN", 0.01, 1);
@@ -196,7 +196,7 @@ var genGrid = function() {
     scene.add(gridArr[i]);
   }
   initNetwork();
-};
+}
 
 function utilDi(a, b) {
   return Math.sqrt(

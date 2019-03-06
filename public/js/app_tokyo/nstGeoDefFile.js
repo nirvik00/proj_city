@@ -19,12 +19,10 @@ function nsNetworkNode(a,b,c, nodeId){
     this.parent=0;
     this.dist=1000;
     this.pt=new nsPt(this.x,this.y,this.z);
-
     this.getPt=function(){
         return this.pt;
     }
     this.setType=function(){
-        
         var t=Math.random();
         if(t<0.35){
             this.type="GCN";
@@ -151,12 +149,66 @@ function nsPark(area, cen, pts){
     this.area=area;
     this.cen=cen;
     this.pts=pts;
+    this.genGeo=function(){
+        var geox=new THREE.Shape();
+        var p=pts[0];
+        geox.moveTo(0,0);
+        for(var i=1; i<pts.length; i++){
+            var q=pts[i];
+            geox.lineTo(q.x-p.x,q.y-p.y);
+        }
+        geox.autoClose=true;
+        var geometry=new THREE.ShapeGeometry(geox);
+        var material=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,255,70)"), side:THREE.DoubleSide});
+        var mesh=new THREE.Mesh(geometry, material);
+        mesh.position.x=p.x;
+        mesh.position.y=p.y;
+        parkArr.push(mesh);
+        return mesh;
+    }
+    this.genOutLine=function(){
+        var geox=new THREE.Geometry()
+        for(var i=0; i<pts.length; i++){
+            geox.vertices.push(new THREE.Vector3(pts[i].x, pts[i].y, 15));
+        }
+        var matx=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
+        var line=new THREE.Line(geox, matx);
+        parkOutLineArr.push(line);
+        return line;
+    }
 }
 
 function nsBldg(area, cen, pts){
     this.area=area;
     this.cen=cen;
     this.pts=pts;
+    this.genGeo=function(){
+        var p=pts[0];
+        var geox=new THREE.Shape();
+        geox.moveTo(0,0);
+        for(var i=1; i<pts.length; i++){
+            var q=pts[i];
+            geox.lineTo(q.x-p.x,q.y-p.y);
+        }
+        geox.autoClose=true;
+        var geometry=new THREE.ShapeGeometry(geox);
+        var material=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(100,100,100)"), side:THREE.DoubleSide})
+        var mesh=new THREE.Mesh(geometry, material);
+        mesh.position.x=p.x;
+        mesh.position.y=p.y;
+        bldgArr.push(mesh);
+        return mesh;
+    }
+    this.genOutLine=function(){
+        var geox=new THREE.Geometry();
+        for(var i=0; i<pts.length; i++){
+            geox.vertices.push(new THREE.Vector3(pts[i].x, pts[i].y, 0.15));
+        }
+        var matx=new THREE.LineBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
+        var line=new THREE.Line(geox, matx);
+        bldgOutLineArr.push(line);
+        return line;
+    }
 }
 
 
