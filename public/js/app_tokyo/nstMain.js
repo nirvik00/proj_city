@@ -192,7 +192,7 @@ function onDocumentMouseMove( event ) {
                                           if(di<0.01){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=parkObjArr[j].display();
-                                                 console.log(objInfo);
+                                                 //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
                                                  infoPara.innerHTML = source;  
