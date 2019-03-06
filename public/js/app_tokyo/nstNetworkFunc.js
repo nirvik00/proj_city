@@ -18,10 +18,6 @@ function initNetwork() {
       //console.log(obj.x, obj.z, obj.y, obj.nsId);
     }
   }
-  //console.log("node array = ");
- /// for (var i = 0; i < networkNodesArr.length; i++) {
-    //networkNodesArr[i].display();
-  //}
 
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
@@ -54,13 +50,32 @@ function initNetwork() {
       networkEdgesArr.push(edge);
     }
   }
-
-
+  
+  for(var i=0; i<ALLJSONOBJS.length; i++){
+    obj=ALLJSONOBJS[i];
+    if(obj.element_type === "bldg"){
+      var area=obj.area;
+      var cen=obj.cen;
+      var coords=obj.pts
+      var ptArr=[];
+      for(var j=0; j<coords.length; j++){
+        var p=coords[j].split(",");
+        var x=p[0];
+        var y=p[1];
+        var z=0;
+        ptArr.push(new THREE.Vector2(x,y));
+      }
+      var bldgObj=new nsBldg(area, cen, ptArr);  
+      bldgObjArr.push(bldgObj);    
+    }
+  }
+  
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "park") {
-      var coords=obj.pts.split(";");
-      //console.log("\n\n"+i);
+      var area=obj.area;
+      var cen=obj.cen;
+      var coords=obj.pts;
       var ptArr=[];
       for(var j=0; j<coords.length-2; j++){
         var p,x,y,z;
@@ -68,13 +83,16 @@ function initNetwork() {
           x=p[0];
           y=p[1];
           z=0;
-          //console.log(x,y,z);
-        ptArr.push(new THREE.Vector2(x,y));
+          console.log(x,y);
+          ptArr.push(new THREE.Vector2(x,y));
       }
-      parkCoordsArr.push(ptArr);
+      var parkObj=new nsPark(area, cen, ptArr);
+      parkObjArr.push(parkObj);
     }
   }
   //console.log(parkCoordsArr);
+  //
+  //
   //next function
   genNetworkGeometry();
 }
@@ -115,16 +133,16 @@ function genNetworkGeometry() {
     nodeArr.push(n0.getObj());
   }
   for (var i = 0; i < nodeArr.length; i++) {
-    //scene.add(nodeArr[i]);
+    scene.add(nodeArr[i]);
   }
 
   parkArr = Array();
-  for(var i=0; i<parkCoordsArr.length; i++){
-    var p=parkCoordsArr[i][0];
+  for(var i=0; i<parkObjArr.length; i++){
+    var p=parkObjArr[i].pts[0];
     var geox=new THREE.Geometry();
     geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
-    for(var j=1; j<parkCoordsArr[i].length; j++){
-      var q=parkCoordsArr[i][j];
+    for(var j=1; j<parkObjArr[i].pts.length; j++){
+      var q=parkObjArr[i].pts[j];
       geox.vertices.push(new THREE.Vector3(q.x,q.y,0.25));
     }
     geox.vertices.push(new THREE.Vector3(p.x,p.y,0.25));
@@ -137,30 +155,40 @@ function genNetworkGeometry() {
     scene.add(parkArr[i]);
   }
 
-
-  for(var i=0; i<parkCoordsArr.length; i++){
-    //if(i==1) break;
-    //console.log("\n\n"+i);
-    var p=parkCoordsArr[i][0];
+  for(var i=0; i<parkObjArr.length; i++){
+    var p=parkObjArr[i].pts[0];
     var geox=new THREE.Shape();
     geox.moveTo(0,0);    
-    for(var j=1; j<parkCoordsArr[i].length; j++){
-      var q=parkCoordsArr[i][j];
-      //console.log(q.x-p.x,q.y-p.y);
+    for(var j=1; j<parkObjArr[i].pts.length; j++){
+      var q=parkObjArr[i].pts[j];
       geox.lineTo(q.x-p.x,q.y-p.y);    
-    }    
+    }
     geox.autoClose=true;
-    var geometry = new THREE.ShapeGeometry( geox );
-    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    var mesh = new THREE.Mesh( geometry, material ) ;
+    var geometry = new THREE.ShapeGeometry(geox);
+    var material = new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(0,200,150)"),side:THREE.DoubleSide});
+    var mesh = new THREE.Mesh(geometry, material);
     mesh.position.x=p.x;
     mesh.position.y=p.y;
     scene.add( mesh );
   }
+
+  for(var i=0; i<bldgObjArr.length; i++){
+    var p=bldgObjArr[i].pts[0];
+    var geox=new THREE.Shape();
+    geox.moveTo(0,0);
+    for(var j=1; j<bldgObjArr[i].pts.length; j++){
+      var q=bldgObjArr[i].pts[j];
+      geox.lineTo(q.x-p.x,q.y-p.y);
+    }
+    geox.autoClose=true;
+    var geometry=new THREE.ShapeGeometry(geox);
+    var material=new THREE.MeshBasicMaterial({color: new THREE.Color("rgb(200,200,200)"),side:THREE.DoubleSide});
+    var mesh=new THREE.Mesh(geometry,material);
+    mesh.position.x=p.x;
+    mesh.position.y=p.y;
+    scene.add(mesh);
+  }
 }
-
-
-
 
 //check if the network edge already exists in networkEdgesArr
 function checkNetworkEdgeRepetition(arr, e0) {

@@ -63,10 +63,17 @@ var init = function() {
   scene3d.appendChild(renderer.domElement);
   axes = new THREE.AxesHelper(5);
   controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.addEventListener("change", render);
+  //controls.addEventListener("change", render);
+  window.addEventListener( 'resize', onWindowResize, false );
   controls.enableZoom = true;
   runSystem();
 };
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
 function checkNodeTypeExists(nodeType){
   var t=false;

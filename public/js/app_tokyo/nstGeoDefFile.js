@@ -147,6 +147,20 @@ function nsNetworkEdge(a,b){
     }
 }
 
+function nsPark(area, cen, pts){
+    this.area=area;
+    this.cen=cen;
+    this.pts=pts;
+}
+
+function nsBldg(area, cen, pts){
+    this.area=area;
+    this.cen=cen;
+    this.pts=pts;
+}
+
+
+
 function nsTile(a,b,c,d){
     this.p=a;
     this.q=b;

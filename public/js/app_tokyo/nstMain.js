@@ -5,7 +5,9 @@ var edgeArr=[];
 var parkArr=[];
 var networkEdgesArr=[];
 var networkNodesArr=[];
-var parkCoordsArr=[];
+var parkObjArr=[];
+var bldgObjArr=[];
+
 
 
 var scene3d = document.getElementById("scene3d");
@@ -25,8 +27,6 @@ var init = function() {
        camera.position.x = 0;
        camera.position.y = 0;
        camera.position.z = 50;
-
-     
        renderer = new THREE.WebGLRenderer({ antialias: true });
        renderer.setSize(window.innerWidth, window.innerHeight);
        scene3d.appendChild(renderer.domElement);
@@ -36,13 +36,13 @@ var init = function() {
        controls.addEventListener("change", render);
        controls.enableZoom = true;
        window.addEventListener( 'resize', onWindowResize, false );
+};
 
-     };
 function onWindowResize() {
        camera.aspect = window.innerWidth / window.innerHeight;
        camera.updateProjectionMatrix();
        renderer.setSize(window.innerWidth, window.innerHeight);
-   }
+}
 
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
