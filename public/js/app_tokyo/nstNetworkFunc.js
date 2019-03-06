@@ -83,7 +83,7 @@ function initNetwork() {
           x=p[0];
           y=p[1];
           z=0;
-          console.log(x,y);
+          //console.log(x,y);
           ptArr.push(new THREE.Vector2(x,y));
       }
       var parkObj=new nsPark(area, cen, ptArr);
@@ -150,7 +150,7 @@ function genNetworkGeometry() {
     var line=new THREE.Line(geox,matx);
     parkArr.push(line);
   }
-  console.log("number of parks: "+parkArr.length);
+  //console.log("number of parks: "+parkArr.length);
   for(var i=0; i<parkArr.length; i++) {
     scene.add(parkArr[i]);
   }
