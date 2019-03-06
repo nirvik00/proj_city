@@ -37,7 +37,7 @@ function nsNetworkNode(a,b,c, nodeId){
     this.getType=function(){
         return this.type;
     }
-    this.geoNode=new THREE.SphereGeometry(0.25,32,32);
+    this.geoNode=new THREE.SphereGeometry(0.15,32,32);
     this.matNode; 
     this.nodeMesh;
     this.getObj=function(){
