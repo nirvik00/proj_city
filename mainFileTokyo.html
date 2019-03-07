@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta http-equiv="X-UA-Compatible" content="ie=edge">
+       <title>Document</title>
+       <style>
+              #container {
+                     position: relative;
+              }
+              #container scene3d, #moveGUI, #informationDiv {
+                     position: absolute;
+              }
+              scene3d {
+                     border: 1px solid black;
+              }
+       </style>
+</head>
+<body>
+       <p> 
+               in progress...
+       </p>
+       <div id="container">
+       <div id="informationDiv">
+              <textarea id="information" style="position:relative; left: 300px; top:25px; width: 300px; overflow: auto; overflow-x: hidden; height: 100px;background: transparent; " readonly> Information</textarea>
+       </div>
+       <div id="moveGUI"  style="position: absolute; left:ss 0px; top:25px; ">
+       </div> 
+       <div id="scene3d"></div>
+       </div>
+       
+       <script src="/public/js/app_tokyo/nstMain.js"></script>
+       <script src="/public/js/app_tokyo/nstGeoDefFile.js"></script>
+       <script src="/public/js/app_tokyo/nstRoutingFunc.js"></script>
+       <script src="/public/js/app_tokyo/nstNetworkFunc.js"></script>
+       
+       <script src="/public/js/app_tokyo/nstGeoDefFile.js"></script>
+       
+       <script src="/public/js/app_tokyo/nstGenGeoFunc.js"></script>
+       <!--<script src="/public/js/app_tokyo/nstMain.js"></script>-->
+       <script>
+              var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+              var jsonObj = JSON.parse(decodedJson);
+              //console.log(jsonObj);
+              getData(jsonObj);
+       </script>
+       
+</body>
+</html>
+
+
+   
+
+   

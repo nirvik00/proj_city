@@ -3,7 +3,7 @@
 // res = GCN
 // comm = NCN
 // office= RCN
-
+/*
 var varCellNumLe = 2;
 var varCellNumDe = 2;
 var varCellLe = 5.0;
@@ -137,6 +137,7 @@ var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
 
 datgui.close();
+*/
 //
 //  END OF GUI
 //

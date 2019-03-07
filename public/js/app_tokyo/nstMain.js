@@ -14,35 +14,41 @@ var sceneObjs=[];//raycaster intersection with object
 
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
-var camera, scene, renderer, control, axes;
+
+var camera, scene, renderer, control, axes, stats;
 
 var raycaster,INTERSECTED;
 var raycasterLine;
 var intersects;
+var mouse;
 var isShiftDown=false;
 var mouse = new THREE.Vector2();
 
 var init = function() {
+       //container = document.createElement('mydiv');
+       //document.body.appendChild(container);
+
        scene = new THREE.Scene();
        scene.background = new THREE.Color("rgb(255,255,255)");
 
        raycaster = new THREE.Raycaster();
 
        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
        // position and point the camera to the center of the scene
        camera.position.x = 0;
        camera.position.y = -20;
        camera.position.z = 20;
-       //camera.rotation.x=Math.PI/6;
-       camera.lookAt(scene.position);
+       camera.rotation.x=Math.PI/6;       
 
-       //addHemiSphereLight();
        addPointLights();
 
-       renderer = new THREE.WebGLRenderer({ antialias: true });
+       renderer = new THREE.WebGLRenderer();
+       renderer.setPixelRatio(window.devicePixelRatio);
        renderer.setSize(window.innerWidth, window.innerHeight);
-
        scene3d.appendChild(renderer.domElement);
+       stats = new Stats();
+       scene3d.appendChild(stats.dom);
 
        axes = new THREE.AxesHelper(5);
        scene.add(axes);
@@ -58,21 +64,10 @@ var init = function() {
        //controls.minPolarAngle = -Math.PI / 10;
        //controls.maxPolarAngle = Math.PI / 10;
        
-       
        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
        document.addEventListener('keydown', onDocumentKeyDown, false);
        document.addEventListener('keyup', onDocumentKeyUp, false);
        window.addEventListener( 'resize', onWindowResize, false );
-}
-
-function addHemiSphereLight(){
-       hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0xffffff );
-       hemiLight.color.setHSL( 0.6, 1, 0.6 );
-       hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-       hemiLight.position.set( 0, 500, 500 );
-       scene.add( hemiLight );
-       hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
-       scene.add( hemiLightHelper );
 }
 
 function addPointLights(){
@@ -176,7 +171,7 @@ function onDocumentMouseMove( event ) {
                                           var e=bldgObjArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<0.01){
+                                          if(di<1){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=bldgObjArr[j].info();
                                                  //console.log(objInfo);
@@ -190,7 +185,7 @@ function onDocumentMouseMove( event ) {
                                           var e=parkObjArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<0.01){
+                                          if(di<1){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=parkObjArr[j].info();
                                                  //console.log(objInfo);
@@ -204,7 +199,7 @@ function onDocumentMouseMove( event ) {
                                           var e=networkNodesArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<0.01){
+                                          if(di<1){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=networkNodesArr[j].info();
                                                  //console.log(objInfo);
@@ -233,6 +228,7 @@ function onDocumentMouseMove( event ) {
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
        controls.update();
+       stats.update();
        render();
 }
    
