@@ -155,6 +155,7 @@ function onDocumentMouseMove( event ) {
        //mouse.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
 
        if(isShiftDown===true){
+              var distFromSource=5;
               //drawRaycastLine(raycaster);
               raycaster.setFromCamera(mouse, camera);// find intersections
               intersects = raycaster.intersectObjects( scene.children );// calculate objects intersecting the picking ray
@@ -162,7 +163,8 @@ function onDocumentMouseMove( event ) {
                      if(intersects[i].faceIndex===null){
 
                      }else{
-                            if(intersects[i].distance<2){
+                            var SUM=0;
+                            if(intersects[i].distance<distFromSource){
                                    //console.log(intersects[i].object);
                                    var g=intersects[i].object.position;
                                    var pos=new nsPt(g.x,g.y,g.z);
@@ -171,45 +173,51 @@ function onDocumentMouseMove( event ) {
                                           var e=bldgObjArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<1){
+                                          if(di<distFromSource){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=bldgObjArr[j].info();
                                                  //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
                                                  infoPara.innerHTML = source;  
+                                                 SUM++;
                                                  break;
                                           }
                                    }
+                                   if(SUM>0){break;}
                                    for(var j=0; j<parkObjArr.length; j++){
                                           var e=parkObjArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<1){
+                                          if(di<distFromSource){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=parkObjArr[j].info();
                                                  //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
                                                  infoPara.innerHTML = source;  
+                                                 SUM++;
                                                  break;
                                           }
                                    }
+                                   if(SUM>0){break;}
                                    for(var j=0; j<networkNodesArr.length; j++){
                                           var e=networkNodesArr[j].renderedObject.position;
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
-                                          if(di<1){
+                                          if(di<distFromSource){
                                                  //console.log(bldgObjArr[j]);
                                                  var objInfo=networkNodesArr[j].info();
                                                  //console.log(objInfo);
                                                  var source = infoPara.innerHTML;
                                                  source = objInfo;
                                                  infoPara.innerHTML = source;  
+                                                 SUM++;
                                                  break;
                                           }
                                    }
-                            }                            
+                                   if(SUM>0){break;}
+                            }
                      }                     
               }              
        }

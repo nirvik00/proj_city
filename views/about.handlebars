@@ -12,91 +12,351 @@
 
 </br></br>
 
-<div align="center">
+<div align="left">
 <br><br>
+This work is a continuation of the work we have developed with Perkins+Will (Dr. John R Haymaker’s team at P+W) as part of responsibility as GRA and internships. It is a part of PhD research on design generation.
+</div>
+<div align="center">
 <img src="/public/imgs/plugs_web2_pres_001.jpg" height="52.51%" width="100%">
 <br><br><br>
-<img src="/public/imgs/plugs_web2_pres_002.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_003.jpg" height="52.51%" width="100%">
-<br><br><br>
-<!--<img src="/public/imgs/plugs_web2_pres_004.jpg" height="52.51%" width="100%">-->
-</div>
-<div align="center" style="font-size:15px; font-family: times, serif;">
-  <a style="font-size:25px"><b>Objectives:</b></a>
-    Illustration of objectives considered and generation of results
+<div align="left">
+At the urban scale, we developed a plugin with a GUI to expose parameters to the user such as FSR, setbacks and step-backs.  We have tested the limits and optimized the algorithms to produce maximum FSR. Numerical requirements, design objectives and guidelines were cast into a model and processed. The project in Japan with Prof. Perry is an attempt to generalize and develop fundamental algorithms that can be used to design the policy.
 </div>
 
 <div align="center">
+<img src="/public/imgs/plugs_web2_pres_002.jpg" height="52.51%" width="100%">
+</div>
 <br><br><br>
-<img src="/public/imgs/plugs_web2_pres_005.jpg" height="52.51%" width="100%">
+
+
+<div align="left">
+Apart from generating the output, such computer programs can lead to collaboration and allow layers of automation through scripting 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_003.jpg" height="52.51%" width="100%">
+<img src="/public/imgs/ufg.gif" height="52.51%" width="100%">
+</div>
+
+
 <br><br><br>
-<img src="/public/imgs/plugs_web2_pres_006.jpg" height="52.51%" width="100%">
+</div>
+<div align="center" style="font-size:20px; font-family: times, serif;">
+  <a style="font-size:25px"><b>PLUGS-WEB:</b></a> &nbsp; &nbsp;Web-based design generation & visualization
+
+</div>
+<br>
+<div align="left">
+In this project, plugs-web, we explore the idea that design moves can be conceptualized as an abstract model – Markov Decision Process which can be used to extract a variety of options. Another important observation is that design variables can be changed to dynamically alter the objective function and yield different results. <br><br>
+In pursuit of the above objectives, a web-based design generation and visualization tool has been developed. It focuses on architecture, urban design and planning. Using the typical web technologies, it is possible to  expose design variables to the user at runtime. These are processed dynamically on the server and the output is displayed to user on the browser. The technology stack allows greater processing power. It also enhances the reach of the software. 
+</div>
+
+<div align="center" style=" font-style:italic; font-size:16px">
 <br><br><br>
+Cities are complex systems whose infrastructural, economic and social components are strongly interrelated and therefore difficult to understand in isolation. The many problems associated with urban growth and global sustainability, however, are typically treated as independent issues. This frequently results in ineffective policy and often leads to unfortunate and sometimes disastrous unintended consequences. Policies meant to control population movements and the spread of slums in megacities, or to reverse urban decay, have largely proven ineffective or counterproductive, despite huge expenditure. 
+</div><br>
+<div align="left;">
+–	Luís M. A. Bettencourt, Professor of Complex Systems at the Santa Fe Institute, 
+A unified theory of urban living, Article in Nature · October 2010,  DOI: 10.1038/467912a
+</div>
+<br><br><br>
+
+<div align="center" style="font-size:20px; font-family:times, serif;">
+<a style = "font-size:20px"><b>Models & Objectives:</b></a>&nbsp;&nbsp;Illustration of objectives considered and generation of results.<br><br>
+</div>
+
+<div align="left">
+  In this section, we consider routing on topological layer, generating the geometric attributes that transform it into circulation network consisting of various types of roads and streets. Allocation of activities in buildings are modelled as design variables can be manipulated by the user. Scope for optimization is discussed.
+</div>
+<br><br><br>
+
+
+<div align = "left">
+<b>Parametric Grid:</b> is generated with constraints for length, depth, cell length& depth<br>
+<b>Network:</b> It is initialized with 4 types of Vertices and 6 types of edges between them based on urban design objectives<br>
+<b>Circulation:</b> Geometry of streets, roads that are generated from the edges of the network<br>
+<b>Buildings / Space Allocation:</b> Based on node type, nearest edges and UI values for FAR, hts, etc.  They are considered as containers of activity spaces to achieve area requirements such that type of building matches the facing edge.<br>
+</div>
+<div align="center">
 <img src="/public/imgs/plugs_web2_pres_007.jpg" height="52.51%" width="100%">
+</div>
 <br><br><br>
+
+
+<div align="left">
+There are 4 types of nodes & 6 types of edges: <br>
+<b>GCN</b> green circulation network on which pedestrian movement is dominant. It contains activities such as residences and supporting facilities which can be traversed easily on foot, It is connected by <b>green</b> edges. Users on this network typically belong to the region under study.<br>
+<b>RCN</b>  road circulation network which contains larger commercial and office spaces which are used by people from outside the region under study. There is heavy vehicular traffic and they are connected by <b>road</b> edges.<br>
+<b>NCN</b> neutral circulation network which contains nodes for services and required activities such as healthcare and schools. There may or may not be vehicular traffic on them. They form a layer between the GCN and RCN, connecting the pedestrian edges to vehicular routes. They are connected with <b>neutral</b> path edge.<br>
+<b>EVAC</b> evacuation nodes are places for shelter in case of emergency. For each node in the circulation network, the shortest path to the closest emergency must be planned. It is connected with <b>EVAC</b> edges<br>
+<b>Intersection edge</b> is the intersection between green and road edges are displayed in magenta. <br>
+<b>MST</b> is a set of  minimum spanning tree is used to denote the movement of autonomous vehicle, bicycle track or light vehicles such as scooters. These are connected by <b>MST</b> edges.<br>
+</div>
+<div align="center">
 <img src="/public/imgs/plugs_web2_pres_008.jpg" height="52.51%" width="100%">
+</div>
+
+
 <br><br><br>
+<div align="left">
+  <ul>
+    The main assumptions that generate the routing are:
+    <li>Edges connecting GCN and RCN must be mutually exclusive if possible. In case of an intersection, it must be displayed</li>
+    <li>NCN must avoid green and road edges and where possible provide a minimum cost.</li>
+    <li>MST must connect all the nodes with minimum intersection with road or green edges.</li>
+    <li>Evac must be the shortest path each node and account for distance</li>
+    The illustrations demonstrate how the above-mentioned design objectives can be achieved and the scope for error in the form of intersections.
+  </ul>
+</div>
+
+<div align="center">
 <img src="/public/imgs/plugs_web2_pres_009.jpg" height="52.51%" width="100%">
 <br><br><br>
 </div>
 
-<!--<img src="/public/imgs/plugs_web2_pres_010.jpg" height="52.51%" width="100%">
-<br><br><br>-->
-<div align="center" style="font-size:15px; font-family: times, serif;">
-  <a style="font-size:25px"><b>Intuitive explanation for Algorithms:</b></a>
+
+<div align="left">
+  Once the topological network is optimized, physical attributes pertaining to geometric expression can be implemented. This forms the roads or the actual circulation network. There are four types of circulation in this model. The pedestrian network which emerges from the green edges that connect <b>GCN</b>. The road network generated from edges that connect <b>RCN</b>. The connections between <b>NCN</b> which do not belong to the pedestrian or road network are considered neutral such that they can be easily accessed from both networks. Finally, <b>MST</b> network is used to connect all the nodes to serve an appropriate purpose. 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_010.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  For each set of edges which form an enclosed region and which do not contain any other enclosed region, a set of buildings can be generated. Aspects like FSR, setback distance from each type of edge are input by the user. An enclosed region may have several types of nodes connected by its bounding edges. These determine the distribution of activities in the region. Overall FAR is distributed over the regions ensuring that the FAR for each activity (UI) is met and types of nodes and edges connecting them lead to maximum distribution of the FAR type.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_011.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  Overall generation is shown. First, the GCN nodes are connected by green edges. Then the RCN nodes are generated as a mutually exclusive set. The NCN nodes are simply the subset which are neither. The physical circulation with geometric attributes is generated from this topological layer. Finally, activities for each type is allocated to enclosed region along the preferred routes.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_012.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  The samples provide a picture of the elements of design that are organized into an over-arching model. The elements include various types of routing, their geometric interpretation or a representation of the physical artifact that constitutes roads, pedestrian path, autonomous vehicle and evacuation routes from all points of the model. The buildings generated are a function of the distribution of activities.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_013.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+<div align="left">
+  The algorithm was tested for a large number of networks. A stochastic algorithm was used to generate the nodes and provided an unbiased testing platform.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_014.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="center" style="font-size:20px; font-family: times, serif;">
+  <a style="font-size:25px"><b>Intuitive explanation of Algorithms:</b></a><br>
     Urban design Objectives based on network optimization and building generation 
+</div><br>
+<div align="left">
+  In this section, an intuitive explanation of the algorithms is provided along with the development of the Markov chain Monte Carlo methods which is used to generate the model and find optimal solutions from UI input.
+</div>
+
+<br><br>
+<div align="left">
+Typically, Djikstra and Prim’s algorithms are sufficient to find shortest path or minimum spanning trees in a graph. This works by searching for neighbors of a node and accepting the node with a minimum cost. Due to the presence of negative cycles, Bellman ford algorithm is used here. It ensures the detection of the negative cycle and provides a path through the graph at a minimum cost.
 </div>
 
 <div align="center">
-<img src="/public/imgs/plugs_web2_pres_011.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_012.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_013.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_014.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_015.jpg" height="52.51%" width="100%">
-<br><br><br>
 <img src="/public/imgs/plugs_web2_pres_016.jpg" height="52.51%" width="100%">
-<br><br><br>
 </div>
-
-<!--<img src="/public/imgs/plugs_web2_pres_017.jpg" height="52.51%" width="100%">-->
 <br><br><br>
-<div align="center" style="font-size:15px; font-family: times, serif;">
-  <a style="font-size:25px"><b>Salient Features For designers:</b></a>
-    Using the GUI to develop variations or restrict variations or develop pre-conceived ideas 
+
+
+<div align="left">
+  In order to organize multiple objective functions, first a model representing various states or design variables are constructed. Instead of directly computing the cost using the edge weights, discounted rewards are computed based on the Bellman Equation. A table for the cost between any two nodes provides a reference to reach a goal from any given state. This form of learning is known as <b>Q-learning</b>, commonly used in <b>Reinforcement learning</b>. It ensures that the agent will not try to maximize immediate rewards, greedily. Rather, cumulative rewards based on future states will be computed. This matrix, known as the <b>transition matrix</b>, constitutes the probabilities between states and taken together forms a policy which determines the best path from all nodes to reach the goal. Although heuristics such as genetic algorithms or simulated annealing may be used to find the path,the transition matrix makes it possible to understand the implications of adopting any path.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_017.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+
+<div align ="left">
+  To illustrate this method, a simple example is shown where classrooms of a K8 were organized. A sample of the Markov Decision Process is generated based on discussion with designers. Area, aspect ratio of rooms and other dimensional attributes were fixed. 
 </div>
 
 <div align="center">
 <img src="/public/imgs/plugs_web2_pres_018.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_019.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_020.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_021.jpg" height="52.51%" width="100%">
-<br><br><br>
 </div>
-<!--<img src="/public/imgs/plugs_web2_pres_022.jpg" height="52.51%" width="100%">
-<br><br><br>-->
-<div align="center" style="font-size:15px; font-family: times, serif;">
-  <a style="font-size:25px"><b>Graphical User Interface:</b></a>
-    Elements of the GUI and brief explanation of usage
+<br><br><br>
+
+
+<div align ="left">
+  As the algorithm or the agent traverses the MDP, each expression or node in the graph is translated into logical and geometric transformations. The agent processes the decision tree and collects the result of expressions in an array in a until it reaches the pendant node. These are then transformed into geometry with the given inputs. Once the geometry is generated, it was used to feed the energy & performance models to find the right design directions for refinement.
 </div>
 <div align="center">
-<img src="/public/imgs/plugs_web2_pres_023.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_024.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_025.jpg" height="52.51%" width="100%">
-<br><br><br>
-<img src="/public/imgs/plugs_web2_pres_026.jpg" height="52.51%" width="100%">
-<br><br><br>
-<br><br><br>
+<img src="/public/imgs/plugs_web2_pres_019.jpg" height="52.51%" width="100%">
+<img src="/public/imgs/k8.gif" height="52.51%" width="100%">
 </div>
+
+
+<div align="left">
+  For the program to compute various paths through the model, a set of numerical values are input from the GUI. These are all the costs for any two nodes to be connected by an edge. The user feeds the values for the green  edges and the other edge types are inferred from it. It is possible to change the score and alter the objective functions as shown in the subsequent slides. A tabular form for the score is used to represent the values. Scores for the RCN network is simply the inverse of GCN network because they must be mutually exclusive. MST and EVAC edges are accompanied by additional rules as shown.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_020.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  The scoring system results in the edges of the network. Numerical values that give rise to a set of green edges have been shown. Its inverse demonstrates the RCN and road network. Additionally, MST and EVAC can be visually verified from these illustrations.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_020.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  The scoring system results in the edges of the network. Numerical values that give rise to a set of green edges have been shown. Its inverse demonstrates the RCN and road network. Additionally, MST and EVAC can be visually verified from these illustrations.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_021.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  In this case, the effect of changing the score is demonstrated. The GCN-GCN was minimum in the previous slide which led to the shortest path for GCN & RCN networks. In this case, GCN-NCN has the minimum score, which leads to a longer GCN and RCN network, while the EVAC remains the same because these routes must still be the shortest path from each of the nodes. Finally MST is influenced by the green and road edges and a longer path is illustrated.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_022.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="center" style="font-size:15px; font-family: times, serif;">
+  <a style="font-size:25px"><b>Salient Features For designers:</b></a><br>
+    Using the GUI to develop variations or restrict variations or develop pre-conceived ideas 
+</div>
+<div align="left">
+  Apart from network optimization, elements of the model includes frequency, centrality and dispersal, randomness of nodes. The user change the values through the GUI. This affects the allocation of activity types and circulation. In this section, an explanation of these features have been provided.
+</div>
+<br><br><br>
+
+
+<div align="left">
+The underlying grid is based on four fields, length and depth of the overall region and the length and depth of cells. Based on this a network is initialized.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_024.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  The frequency of node types is controlled by the FSR values for each type. These contribute to the required gross floor area of each activity type. These value are taken as a real number between 0 and 1. The three values (GCN_FSR, NCN_FSR and RCN_FSR) are normalized by dividing each by the sum of the FSR. This ensures that the sum of normalized values is 1. Then given the total number of nodes, the ratio of each node type can be easily computed. It is possible to randomly place these nodes.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_025.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+
+<div align="left">
+  Each node type or a part of the total nodes of each type can be placed in a central position and the remaining nodes dispersed. Or, they can be randomly dispersed. Centrally locating all nodes of each type GCN, NCN & RCN is demonstrated. A certain type of node can be placed at the end or in between the center and end as demonstrated for RCN. 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_026.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  While generating the building types, their FSR and floor to floor heights can be dynamically changed through the GUI. For circulation, various offsets, depths can be controlled. Further, distance of a building from an edge (road) type can be controlled. Errors may occur in the form of overlaps and intersection between various geometry. This can been checked.
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_027.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  The GUI allows designers to change various aspects of the overall model from grid, network optimization and building generation . This represents a change in the objective function. Thus the objective of the algorithm can be dynamically changed at runtime allowing a great flexibility in generating the design. While some effects such as frequency of node types produces an immediate response, other effects like changing the cost of edge connecting two node types is more fundamental and cause many indirect effects. <br>
+  As illustrated in this slide, controlling the randomness is an important feature in this project because it allows exploration of certain attributes of the model while tightly constraining other aspects. 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_028.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  Another important feature of such models is the correlation between different types of states. To create a successful generative model, various aspects of design must be simultaneously resolved. In this slide, the correlation between numerical allocation of building types and their geometric manifestation is shown. 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_029.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="center" style="font-size:20px; font-family: times, serif;">
+  <a style="font-size:25px"><b>Graphical User Interface:</b></a><br>
+    Elements of the GUI and brief explanation of usage
+</div>
+<div align="left">
+  The graphical user interface is an important part of the generative system because it allows the designer to develop a customized objective function such that the generative system may be equally applicable in various contexts. 
+</div>
+<br><br><br>
+
+
+<div align="left">
+<ul>The GUI is hierarchical with controls for:
+  <li>Grid and network generation.</li>
+  <li>Ground and circulation</li>
+  <li>Buildings</li>
+  <li>Quick access to display or hide major class of elements</li>
+</ul>
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_031.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<div align="left">
+  Most of the numerical inputs are in the form of a slider which take values between 0 and 1. They are typically normalized and distributed over the set of relevant node or edge type. Visibility controls for easy display of classes of elements are provided. 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_032.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+
+<div align="left">
+  A studio project for Kyojima district, Japan is being used to test the general approach illustrated. This is a studio project led by Prof. Perry Yang. 
+  <br>The technology stack is Mongoose, Express, Angular and Node. Three.js is used to generate the graphics and display it on the browser. The model for Kyojima district, Japan, is loaded to the mongoose DB through Python by extracting the information from arcGis and Rhino.
+  <br>As a first step, the model has been loaded, network generated and various aspects of the model may be queried by simple user interaction.
+  <br>Future work on plugs-web will allow all the previously described algorithm to be implemented. It is hoped that this platform will demonstrate the participation of general users as they view the information about the region through graphs. 
+  <br>Once the generation process is successfully implemented and various aspects of the model such as energy and performance analysis is completed, an API is planned such that other developers may make use of this service to load their models or conduct various analysis.
+ 
+</div>
+<div align="center">
+<img src="/public/imgs/plugs_web2_pres_033.jpg" height="52.51%" width="100%">
+</div>
+<br><br><br>
+
+
+<br><br><br>
 <div align="center" style="font-size:25px; font-family: times, serif;">
   <a style="font-size:30px"><b>Thank you</b></a>
 </div>

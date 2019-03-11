@@ -52,7 +52,7 @@ app.use(methodOverride('_method'));
 
 //index route
 app.get('/', (req, res)=>{
-  const title='PLUGS'
+  const title='PLUGS - WEB'
   res.render('index',{
     title:title
   });
