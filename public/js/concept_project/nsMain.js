@@ -66,7 +66,7 @@ var init = function() {
   //controls.addEventListener("change", render);
   window.addEventListener( 'resize', onWindowResize, false );
   controls.enableZoom = true;
-  runSystem();
+  runSystem(true);
 };
 
 function onWindowResize() {
