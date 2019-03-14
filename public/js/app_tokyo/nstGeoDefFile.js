@@ -204,6 +204,54 @@ function nsPark(type, area, cen, pts){
 }
 
 
+function nsSite(type, area, cen, pts){
+    this.type=type;
+    this.area=area;
+    this.cen=cen;
+    this.pts=pts;
+    this.renderedObject;
+    this.genGeo=function(){
+        var geox=new THREE.Shape();
+        var p=pts[0];
+        geox.moveTo(0,0);
+        for(var i=1; i<pts.length; i++){
+            var q=pts[i];
+            geox.lineTo(q.x-p.x,q.y-p.y);
+        }
+        geox.autoClose=true;
+        var geometry=new THREE.ShapeGeometry(geox);
+        var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(200,200,70)"), side:THREE.DoubleSide});
+        var mesh=new THREE.Mesh(geometry, material);
+        mesh.position.x=p.x;
+        mesh.position.y=p.y;
+        this.renderedObject=mesh;
+        siteArr.push(this.renderedObject);
+        //return mesh;
+    }
+    this.display=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=1;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var s="Site area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
+        console.log(s);
+    }
+    this.info=function(){
+        var sp="";
+        for(var i=0; i<this.pts.length; i++){
+            var x=this.pts[i].x;
+            var y=this.pts[i].y;
+            var z=0;
+            sp+=x+","+y+","+z+"\n";
+        }
+        var s="Site area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
+        return s;
+    }
+}
+
 function nsBldg(type, area, cen, pts){
     this.type=type;
     this.area=area;

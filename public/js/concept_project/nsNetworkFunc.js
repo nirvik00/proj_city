@@ -82,7 +82,8 @@ function initNetwork() {
         //next function
         genNetworkGeometry();
   }
-     
+  
+  
 //for network: nodes and edges
 //set property of nodes to res, comm, off
 function genNetworkGeometry() {
@@ -163,7 +164,7 @@ function checkNetworkEdgeRepetition(arr, e0) {
         return true;
   }
 }
-     
+
 // network node creation from edge - repetition
 function getNetworkNodes(e) {
   var sum0 = 0;

@@ -1,3 +1,8 @@
+
+
+var scene3d = document.getElementById("scene3d");
+var infoPara = document.getElementById("information");
+
 var wireframeVal=false;
 var ALLJSONOBJS=[];
 var networkEdgesArr=[];//object
@@ -8,13 +13,39 @@ var parkObjArr=[];//object
 var parkArr=[];//render object
 var bldgObjArr=[];//object
 var bldgArr=[];//rendered object
+var siteObjArr=[];//object
+var siteArr=[];//rendered object
 var sceneObjs=[];//raycaster intersection with object
 
 
+var showNodes=true; //global visibility of network nodes
+var showEdges=true; //global visibility of network edges
+var showParks=false; //global visibility of parks
+var showBldgs=false; //global visibility of buildings
+var showSites=false; //global visibility of sites
 
-var scene3d = document.getElementById("scene3d");
-var infoPara = document.getElementById("information");
 
+var datgui = new dat.GUI({ autoPlace: true });
+var genGuiControls = new function() {
+  this.show_Nodes = true;
+  this.show_Edges = true;
+  this.show_Parks = false;
+  this.show_Buildings = false;
+  this.show_Sites=false;
+  this.show_Axis = false;
+}
+showNodes = datgui.add(genGuiControls, "show_Nodes");
+showEdges = datgui.add(genGuiControls, "show_Edges");
+showParks = datgui.add(genGuiControls, "show_Parks");
+showBldgs = datgui.add(genGuiControls, "show_Buildings");
+showSites = datgui.add(genGuiControls, "show_Sites");
+showAxes = datgui.add(genGuiControls, "show_Axis");
+var customContainer = document.getElementById("scene3d");
+customContainer.appendChild(datgui.domElement);
+datgui.close();
+
+
+// main functions about the generation
 var camera, scene, renderer, control, axes, stats;
 
 var raycaster,INTERSECTED;
@@ -25,34 +56,24 @@ var isShiftDown=false;
 var mouse = new THREE.Vector2();
 
 var init = function() {
-       //container = document.createElement('mydiv');
-       //document.body.appendChild(container);
-
        scene = new THREE.Scene();
        scene.background = new THREE.Color("rgb(255,255,255)");
-
        raycaster = new THREE.Raycaster();
-
        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-
        // position and point the camera to the center of the scene
        camera.position.x = 0;
        camera.position.y = -20;
        camera.position.z = 20;
        camera.rotation.x=Math.PI/6;       
-
        addPointLights();
-
        renderer = new THREE.WebGLRenderer();
        renderer.setPixelRatio(window.devicePixelRatio);
        renderer.setSize(window.innerWidth, window.innerHeight);
        scene3d.appendChild(renderer.domElement);
        stats = new Stats();
        scene3d.appendChild(stats.dom);
-
        axes = new THREE.AxesHelper(5);
-       scene.add(axes);
-
+       //scene.add(axes);
        controls = new THREE.OrbitControls(camera, renderer.domElement);
        controls.addEventListener("change", render);
        controls.enableZoom = true;
@@ -63,7 +84,6 @@ var init = function() {
        // vertical angle control
        //controls.minPolarAngle = -Math.PI / 10;
        //controls.maxPolarAngle = Math.PI / 10;
-       
        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
        document.addEventListener('keydown', onDocumentKeyDown, false);
        document.addEventListener('keyup', onDocumentKeyUp, false);
@@ -118,7 +138,7 @@ function addPointLights(){
        var dlight = new THREE.DirectionalLight( 0xffffff, 0.05 );
        dlight.position.set( 0.5, 10, 5 ).normalize();
        scene.add( dlight );
-   }
+}
 
 function onWindowResize() {
        camera.aspect = window.innerWidth / window.innerHeight;
@@ -142,6 +162,8 @@ function onDocumentKeyDown(event){
               console.clear();
               infoPara.innerHTML = "";
               genNetworkGeometry();
+              genParkGeometry();
+              genBldgGeometry();              
        }
 }
 
@@ -155,14 +177,15 @@ function onDocumentMouseMove( event ) {
        //mouse.y = -( (event.clientY - renderer.domElement.offsetTop) / renderer.domElement.height ) * 2 + 1;
 
        if(isShiftDown===true){
-              var distFromSource=5;
+              //genNetworkGeometry();
+              var distFromSource=10;
               //drawRaycastLine(raycaster);
               raycaster.setFromCamera(mouse, camera);// find intersections
               intersects = raycaster.intersectObjects( scene.children );// calculate objects intersecting the picking ray
               for ( var i = 0; i < intersects.length; i++ ) {
-                     if(intersects[i].faceIndex===null){
+                     //if(intersects[i].faceIndex===null){
 
-                     }else{
+                     //}else{
                             var SUM=0;
                             if(intersects[i].distance<distFromSource){
                                    //console.log(intersects[i].object);
@@ -174,12 +197,7 @@ function onDocumentMouseMove( event ) {
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
                                           if(di<distFromSource){
-                                                 //console.log(bldgObjArr[j]);
-                                                 var objInfo=bldgObjArr[j].info();
-                                                 //console.log(objInfo);
-                                                 var source = infoPara.innerHTML;
-                                                 source = objInfo;
-                                                 infoPara.innerHTML = source;  
+                                                 INTERSECTED=bldgObjArr[j];
                                                  SUM++;
                                                  break;
                                           }
@@ -190,12 +208,7 @@ function onDocumentMouseMove( event ) {
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
                                           if(di<distFromSource){
-                                                 //console.log(bldgObjArr[j]);
-                                                 var objInfo=parkObjArr[j].info();
-                                                 //console.log(objInfo);
-                                                 var source = infoPara.innerHTML;
-                                                 source = objInfo;
-                                                 infoPara.innerHTML = source;  
+                                                 INTERSECTED=bldgObjArr[j];
                                                  SUM++;
                                                  break;
                                           }
@@ -206,30 +219,20 @@ function onDocumentMouseMove( event ) {
                                           var pos2=new nsPt(e.x,e.y,e.z);
                                           var di=utilDi(pos, pos2);
                                           if(di<distFromSource){
-                                                 //console.log(bldgObjArr[j]);
-                                                 var objInfo=networkNodesArr[j].info();
-                                                 //console.log(objInfo);
-                                                 var source = infoPara.innerHTML;
-                                                 source = objInfo;
-                                                 infoPara.innerHTML = source;  
+                                                 INTERSECTED=bldgObjArr[j];
                                                  SUM++;
                                                  break;
                                           }
                                    }
                                    if(SUM>0){break;}
-                            }
+                            //}
                      }                     
               }              
        }
-       /*
-       var sortableX = new Array();
-       for (var i = 0; i < iniNodes.length; i++) {
-         sortableX.push([iniNodes[i].x, iniNodes[i].z]);
-       }
-       sortableX.sort(function(a, b) {
-         return a[0] - b[0];
-       });
-       */
+       //var objInfo=INTERSECTED.info();
+       //var source = infoPara.innerHTML;
+       //source = objInfo;
+       //infoPara.innerHTML = source;  
 }
 
 
@@ -237,6 +240,33 @@ var mainLoop = function() {
        requestAnimationFrame(mainLoop);
        controls.update();
        stats.update();
+
+       if(genGuiControls.show_Axis===true){ 
+              scene.add(axes); 
+       }else{
+              scene.remove(axes); 
+       }
+
+       showNodes.onChange(function(){ 
+              genNetworkGeometry(); 
+       });
+
+       showEdges.onChange(function(){
+              genNetworkGeometry();
+       });
+
+       showParks.onChange(function(){
+              genParkGeometry();
+       });
+       
+       showBldgs.onChange(function(){
+              genBldgGeometry();
+       });
+
+       showSites.onChange(function(){
+              genSiteGeometry();
+       });
+
        render();
 }
    
@@ -247,6 +277,7 @@ var render = function() {
 var getData=function(allobjs){
        ALLJSONOBJS=allobjs;
        initNetwork(ALLJSONOBJS);
+       initGeometry(ALLJSONOBJS);
 }
 
 init();

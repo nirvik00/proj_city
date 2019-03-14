@@ -3,11 +3,9 @@
 function initNetwork() {
   networkEdgesArr = [];
   networkNodesArr = [];
-  evacEdges = [];
-
-  parkCoordsArr=[];
 
   console.log("got the data!!!!");
+  //network nodes
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "node") {
@@ -18,6 +16,7 @@ function initNetwork() {
     }
   }
 
+  //network edges
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "edge") {
@@ -42,7 +41,6 @@ function initNetwork() {
           minDi=utilDi(q,r);
         }
       }
-      //console.log(node0.getPt(), node1.getPt());
       var edge = new nsNetworkEdge(node0, node1);
       edge.id = obj.nsId;
       edge.type=obj.t;
@@ -50,45 +48,6 @@ function initNetwork() {
     }
   }
   
-  for(var i=0; i<ALLJSONOBJS.length; i++){
-    obj=ALLJSONOBJS[i];
-    if(obj.element_type === "bldg"){
-      var area=obj.area;
-      var cen=obj.cen;
-      var coords=obj.pts
-      var ptArr=[];
-      for(var j=0; j<coords.length; j++){
-        var p=coords[j].split(",");
-        var x=p[0];
-        var y=p[1];
-        var z=0;
-        ptArr.push(new THREE.Vector2(x,y));
-      }
-      var bldgObj=new nsBldg("bldg", area, cen, ptArr);  
-      bldgObjArr.push(bldgObj);    
-    }
-  }
-  
-  for (var i = 0; i < ALLJSONOBJS.length; i++) {
-    obj = ALLJSONOBJS[i];
-    if (obj.element_type === "park") {
-      var area=obj.area;
-      var cen=obj.cen;
-      var coords=obj.pts;
-      var ptArr=[];
-      for(var j=0; j<coords.length-2; j++){
-        var p,x,y,z;
-          p=coords[j].split(",");
-          x=p[0];
-          y=p[1];
-          z=0;
-          //console.log(x,y);
-          ptArr.push(new THREE.Vector2(x,y));
-      }
-      var parkObj=new nsPark("park", area, cen, ptArr);
-      parkObjArr.push(parkObj);
-    }
-  }
   //console.log(parkCoordsArr);
   //
   //
@@ -110,50 +69,24 @@ function genNetworkGeometry() {
     scene.remove(edgeArr[i]);
   }
 
-  for(var i=0; i<parkArr.length; i++){
-    parkArr[i].geometry.dispose();
-    parkArr[i].material.dispose();
-    scene.remove(parkArr[i]);
-  }
-
-  for(var i=0; i<bldgArr.length; i++){
-    bldgArr[i].geometry.dispose();
-    bldgArr[i].material.dispose();
-    scene.remove(bldgArr[i]);
+  nodeArr = Array();
+  if(genGuiControls.show_Nodes===true){
+    for (var i = 0; i < networkNodesArr.length; i++) {
+      networkNodesArr[i].getObj();
+    }
+    for (var i = 0; i < nodeArr.length; i++) {
+      scene.add(nodeArr[i]);
+    }
   }
 
   edgeArr = Array();
-  for (var i = 0; i < networkEdgesArr.length; i++) {
-    networkEdgesArr[i].getObj();
-  }
-  nodeArr = Array();
-  for (var i = 0; i < networkNodesArr.length; i++) {
-    networkNodesArr[i].getObj();
-  }
-  parkArr=[];
-  for(var i=0; i<parkObjArr.length; i++) {
-    parkObjArr[i].genGeo();
-  }
-  bldgArr=[];
-  for(var i=0; i<bldgObjArr.length; i++){
-    bldgObjArr[i].genGeo();
-  }
-
-
-  //sceneObjs=[];
-  for (var i = 0; i < nodeArr.length; i++) {
-    scene.add(nodeArr[i]);
-  }
-  for (var i = 0; i < edgeArr.length; i++) {
-    scene.add(edgeArr[i]);
-  }  
-  for(var i=0; i<parkArr.length; i++){
-    scene.add(parkArr[i]);
-    //sceneObjs[i]=parkArr[i].clone();
-  }
-  for(var i=0; i<bldgArr.length; i++){
-    scene.add(bldgArr[i]);
-    //sceneObjs[i]=bldgArr[i].clone();
+  if(genGuiControls.show_Edges===true){
+    for (var i = 0; i < networkEdgesArr.length; i++) {
+      networkEdgesArr[i].getObj();
+    }
+    for (var i = 0; i < edgeArr.length; i++) {
+      scene.add(edgeArr[i]);
+    }
   }
   console.log("INIT COMPLETE...scene rendered");
 }
