@@ -19,10 +19,6 @@ function nsSeg(a,b){
        }
 }
 
-
-
-
-
 function nsSite(type, area, cen, pts){
        this.type=type;
        this.area=area;
