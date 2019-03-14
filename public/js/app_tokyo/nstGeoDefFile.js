@@ -5,6 +5,26 @@ function nsPt(a,b,c){
     this.z=c;
 }
 
+function nsSeg(a,b){
+    this.p=new nsPt(parseFloat(a.x), parseFloat(a.y), 0);
+    this.q=new nsPt(parseFloat(b.x), parseFloat(b.y), 0);
+    this.mp=new nsPt((this.p.x+this.q.x)/2, (this.p.y+this.q.y)/2, 0);
+    this.renderedObject;
+    this.getObj=function(){
+        var path= new THREE.Geometry();
+        path.vertices.push(new THREE.Vector3(this.p.x, this.p.y, 0));
+        path.vertices.push(new THREE.Vector3(this.q.x, this.q.y, 0));
+        var material = getPathMaterialFromType({color:new THREE.Color("rgb(0,0,255)")});
+        this.renderedObject = new THREE.Line(path, material);
+        scene.add(this.renderedObject);
+    }
+    this.display=function(){
+        console.log("\nsegment: ")
+        console.log(this.p,this.q);
+    }
+}
+
+
 function nsEdge(a,b){
     this.p=a;
     this.q=b;
@@ -208,10 +228,29 @@ function nsSite(type, area, cen, pts){
     this.type=type;
     this.area=area;
     this.cen=cen;
-    this.pts=pts;
+    this.pts=[];
+    for(var i=0; i<pts.length; i++){
+        var x=pts[i].x;
+        var y=pts[i].y;
+        var z=0;
+        this.pts.push(new nsPt(x,y,z));
+    }
+    this.crvSegs=[];
+    for(var i=0; i<this.pts.length-1; i++){
+        var p=this.pts[i];
+        var q=this.pts[i+1];
+        var d=utilDi(p,q);
+        if(d>0.01){
+            this.crvSegs.push(new nsSeg(p,q));
+        }
+    }
+    this.diag;
+
     this.renderedObject;
+
     this.genGeo=function(){
         var geox=new THREE.Shape();
+        
         var p=pts[0];
         geox.moveTo(0,0);
         for(var i=1; i<pts.length; i++){
@@ -225,12 +264,24 @@ function nsSite(type, area, cen, pts){
         mesh.position.x=p.x;
         mesh.position.y=p.y;
         this.renderedObject=mesh;
-        siteArr.push(this.renderedObject);
+        //siteArr.push(this.renderedObject);
+        
+        
+        var geo2=new THREE.Geometry();
+        for(var i=0; i<this.pts.length; i++){
+            var p=this.pts[i];
+            geo2.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+        }
+        var mat2=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(0,0,0)")});
+        var lineGeo=new THREE.Line(geo2, mat2);
+        siteArr.push(lineGeo);
+        
         //return mesh;
     }
     this.display=function(){
         var sp="";
         for(var i=0; i<this.pts.length; i++){
+            console.log(this.pts[i]);
             var x=this.pts[i].x;
             var y=this.pts[i].y;
             var z=1;
@@ -250,6 +301,109 @@ function nsSite(type, area, cen, pts){
         var s="Site area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
         return s;
     }
+    this.getDiagonal=function(){
+        var diagArr=new Array();
+        for(var i=0; i<this.pts.length; i++){
+            var p=this.pts[i];
+            for(var j=0; j<this.pts.length; j++){
+                var q=this.pts[j];
+                var d=utilDi(p,q);
+                if(d>0){
+                    diagArr.push([p,q,d]);
+                }
+            }
+        }
+        diagArr.sort(function(a,b){
+            return a[2]-b[2];
+        });
+        var dia=diagArr[diagArr.length-1];
+        var p=dia[0];
+        var q=dia[1];
+        var d=dia[2];
+        var s=new nsSeg(p,q);
+        this.diag=s;
+        //console.log(this.diag);
+        return this.diag;
+    }
+
+    this.setBays=function(){
+        var p=this.diag.p;
+        var q=this.diag.q;
+        var r=this.diag.mp; 
+        var norm=utilDi(p,q);
+        var u=new nsPt((q.x-p.x)/norm, (q.y-p.y)/norm, 0);
+        var nR=new nsPt(-u.y, u.x, 0);
+        var nL=new nsPt(u.y, -u.x, 0);
+        var bayDepth=.5;
+        var intxDepth=100;
+        var n=Math.floor(utilDi(p,r)/bayDepth);
+        // top bays
+        for(var i=0; i<n; i++){
+            var s=i*bayDepth;
+            var a=new nsPt(r.x+u.x*s, r.y+u.y*s, 0);
+            var b=new nsPt(a.x+nR.x*intxDepth, a.y+nR.y*intxDepth,0);
+            var c=new nsPt(a.x+nL.x*intxDepth, a.y+nL.y*intxDepth,0);
+            var s1=new nsSeg(a,b);
+            var s2=new nsSeg(a,c);
+            var segR=this.getIntxSeg(a,b);
+            var segL=this.getIntxSeg(a,c);
+            if(segR!==0){
+                segR.getObj();
+            }
+            if(segL!==0){
+                segL.getObj();
+            }
+            var geo=new THREE.SphereGeometry(0.05,32,32);
+            var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
+            var mesh=new THREE.Mesh(geo,mat);
+            mesh.position.x=a.x;
+            mesh.position.y=a.y;
+            scene.add(mesh);                  
+        }      
+        // bottom bays
+        for(var i=0; i<n; i++){
+            var s=i*bayDepth;
+            var a=new nsPt(r.x-u.x*s, r.y-u.y*s, 0);
+            var b=new nsPt(a.x+nR.x*intxDepth, a.y+nR.y*intxDepth,0);
+            var c=new nsPt(a.x+nL.x*intxDepth, a.y+nL.y*intxDepth,0);
+            var s1=new nsSeg(a,b);
+            var s2=new nsSeg(a,c);
+            var segR=this.getIntxSeg(a,b);
+            var segL=this.getIntxSeg(a,c);
+            if(segR!==0){
+                segR.getObj();
+            }
+            if(segL!==0){
+                segL.getObj();
+            }
+            var geo=new THREE.SphereGeometry(0.05,32,32);
+            var mat=new THREE.MeshBasicMaterial({color:new THREE.Color("rgb(0,0,0)")});
+            var mesh=new THREE.Mesh(geo,mat);
+            mesh.position.x=a.x;
+            mesh.position.y=a.y;
+            scene.add(mesh);
+        }    
+    }
+    this.getIntxSeg=function(R,S){
+        var I;
+        var sum1=0;
+        for(var j=0; j<this.crvSegs.length; j++){
+            var P=this.crvSegs[j].p;
+            var Q=this.crvSegs[j].q;
+            I=nsIntx(P,Q,R,S);
+            if(I.x!==0 && I.y!==0){
+                sum1++;
+                break;
+            }
+        }            
+        if(sum1>0){
+            var s3=new nsSeg(R,I);
+            //s3.getObj();
+            return s3;
+        }else{
+            return 0;
+        }
+    } 
 }
 
 function nsBldg(type, area, cen, pts){
@@ -440,6 +594,22 @@ function nsDis(a,b){
     var dz=b.z-a.z;
     var norm=Math.sqrt(dx*dx + dy*dy + dz*dz);
     return norm;
+}
+
+function nsIntx(p,q,r,s){
+    var a1=q.y-p.y; var b1=p.x-q.x; var c1=(a1*q.x)+(b1*q.y);
+    var a2=s.y-r.y; var b2=r.x-s.x; var c2=(a2*s.x)+(b2*s.y);
+    var det=((a1*b2)-(a2*b1));
+    var x=((c1*b2)-(c2*b1))/det; var y=((c2*a1)-(c1*a2))/det;
+    var I=new nsPt(x,y,0); 
+    var ip=utilDi(p,I); var iq=utilDi(q,I); var pq=utilDi(p,q);
+    var ir=utilDi(r,I); var is=utilDi(s,I); var rs=utilDi(r,s);
+
+    if(Math.abs(ip+iq-pq)<.1 && Math.abs(ir+is-rs)<.1){
+        return I;
+    }else{
+        return new nsPt(0,0,0);
+    }
 }
 
 function setPath(quad, name, ht){

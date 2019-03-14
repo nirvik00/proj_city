@@ -1,13 +1,4 @@
-// GUI
 
-// res = GCN
-// comm = NCN
-// office= RCN
-
-
-//
-//  END OF GUI
-//
 
 function initGeometry(ALLJSONOBJS){
   //buildings
@@ -53,7 +44,7 @@ function initGeometry(ALLJSONOBJS){
       parkObjArr.push(parkObj);
     }
   }
-  
+
   //sites
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
@@ -68,13 +59,19 @@ function initGeometry(ALLJSONOBJS){
           x=p[0];
           y=p[1];
           z=0;
-          //console.log(x,y);
           ptArr.push(new THREE.Vector2(x,y));
       }
       var siteObj=new nsSite("site", area, cen, ptArr);
-      siteObj.display();
       siteObjArr.push(siteObj);
     }
+  }
+  var diagArr=[];
+  for(var i=0; i<siteObjArr.length; i++){
+      var dia=siteObjArr[i].getDiagonal();
+      diagArr.push(dia);
+      //console.log("\niter= "+i);
+      dia.getObj();
+      siteObjArr[i].setBays();
   }
   genBldgGeometry();
   genParkGeometry();
@@ -136,11 +133,7 @@ function genSiteGeometry() {
 }
 
 function utilDi(a, b) {
-  return Math.sqrt(
-    (a.x - b.x) * (a.x - b.x) +
-      (a.y - b.y) * (a.y - b.y) +
-      (a.z - b.z) * (a.z - b.z)
-  );
+  return Math.sqrt(((a.x-b.x)*(a.x-b.x))+((a.y-b.y)*(a.y-b.y))+((a.z-b.z)*(a.z-b.z)));
 }
 
 
