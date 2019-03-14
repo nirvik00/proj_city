@@ -65,17 +65,10 @@ function initGeometry(ALLJSONOBJS){
       siteObjArr.push(siteObj);
     }
   }
-  var diagArr=[];
-  for(var i=0; i<siteObjArr.length; i++){
-      var dia=siteObjArr[i].getDiagonal();
-      diagArr.push(dia);
-      //console.log("\niter= "+i);
-      dia.getObj();
-      siteObjArr[i].setBays();
-  }
   genBldgGeometry();
   genParkGeometry();
   genSiteGeometry();
+  genSiteSegments();
 }
 
 function genBldgGeometry() {
@@ -120,7 +113,6 @@ function genSiteGeometry() {
     siteArr[i].material.dispose();
     scene.remove(siteArr[i]);
   }
-
   siteArr=[];
   if(genGuiControls.show_Sites===true){
     for(var i=0; i<siteObjArr.length; i++) {
@@ -132,9 +124,38 @@ function genSiteGeometry() {
   }
 }
 
-function utilDi(a, b) {
-  return Math.sqrt(((a.x-b.x)*(a.x-b.x))+((a.y-b.y)*(a.y-b.y))+((a.z-b.z)*(a.z-b.z)));
+function genSiteSegments(){
+  for(var i=0; i<siteSegArr.length; i++){
+    siteSegArr[i].geometry.dispose();
+    siteSegArr[i].material.dispose();
+    scene.remove(siteSegArr[i]);
+  }
+  siteSegArr=[];
+
+  for(var i=0; i<siteQuadArr.length; i++){
+    siteQuadArr[i].geometry.dispose();
+    siteQuadArr[i].material.dispose();
+    scene.remove(siteQuadArr[i]);
+  }
+  siteQuadArr=[];
+
+  for(var i=0; i<siteObjArr.length; i++){
+    siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure
+    siteObjArr[i].setBays();
+    siteObjArr[i].processBayArr();
+  }
+  
+  if(genGuiControls.show_divisions===true){
+    for(var i=0; i<siteSegArr.length;i++){
+      scene.add(siteSegArr[i]);
+    }
+    for(var i=0; i<siteQuadArr.length;i++){
+      scene.add(siteQuadArr[i]);
+    }
+    //console.log(siteArr.length, siteObjArr.length, siteSegArr.length, siteQuadArr.length);
+  }
 }
+
 
 
 

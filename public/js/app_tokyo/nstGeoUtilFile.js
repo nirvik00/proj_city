@@ -1,0 +1,85 @@
+function utilDi(a, b) {
+       return Math.sqrt(((a.x-b.x)*(a.x-b.x))+((a.y-b.y)*(a.y-b.y))+((a.z-b.z)*(a.z-b.z)));
+}
+     
+function nsDis(a,b){
+       var dx=b.x-a.x;
+       var dy=b.y-a.y;
+       var dz=b.z-a.z;
+       var norm=Math.sqrt(dx*dx + dy*dy + dz*dz);
+       return norm;
+}
+
+function nsIntx(p,q,r,s){
+       var a1=q.y-p.y; var b1=p.x-q.x; var c1=(a1*q.x)+(b1*q.y);
+       var a2=s.y-r.y; var b2=r.x-s.x; var c2=(a2*s.x)+(b2*s.y);
+       var det=((a1*b2)-(a2*b1));
+       var x=((c1*b2)-(c2*b1))/det; var y=((c2*a1)-(c1*a2))/det;
+       var I=new nsPt(x,y,0); 
+       var ip=utilDi(p,I); var iq=utilDi(q,I); var pq=utilDi(p,q);
+       var ir=utilDi(r,I); var is=utilDi(s,I); var rs=utilDi(r,s);
+   
+       if(Math.abs(ip+iq-pq)<.1 && Math.abs(ir+is-rs)<.1){
+           return I;
+       }else{
+           return new nsPt(0,0,0);
+       }
+}
+   
+function nsUnitVec(a,b){
+       var dx=b.x-a.x;
+       var dy=b.y-a.y;
+       var dz=b.z-a.z;
+       var norm=nsDis(a,b);
+       var u=new nsPt(dx/norm, dy/norm, dz/norm);
+       return u;
+}
+   
+var debugSphere=function(p,r){
+       var geox = new THREE.SphereGeometry(r,10,10);
+       var matx = new THREE.MeshBasicMaterial ({
+         color: new THREE.Color("rgb(102,153,255)"),
+         wireframe: wireframeVal});
+       var mesh = new THREE.Mesh(geox, matx);
+       mesh.position.x = p.x;
+       mesh.position.y = p.y;
+       mesh.position.z = p.z; 
+       scene.add(mesh);
+}
+     
+var debugQuad=function(p,q,r,s,y){
+       var geox = new THREE.Geometry();
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+       geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+       geox.vertices.push(new THREE.Vector3(r.x,r.y,r.z));
+       geox.vertices.push(new THREE.Vector3(s.x,s.y,s.z));
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+       var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
+       var line = new THREE.Line( geox, matx);
+       scene.add(line);
+}
+   
+var debugQuadZ=function(p,q,r,s,z){
+       var geox = new THREE.Geometry();
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,z));
+       geox.vertices.push(new THREE.Vector3(q.x,q.y,z));
+       geox.vertices.push(new THREE.Vector3(r.x,r.y,z));
+       geox.vertices.push(new THREE.Vector3(s.x,s.y,z));
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,z));
+       var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
+       var quad = new THREE.Line(geox, matx);
+       return quad;
+}
+  
+
+var debugLine=function(p,q,y){
+       var geox = new THREE.Geometry();
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+       geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+       var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
+       var line = new THREE.Line( geox, matx);
+       scene.add(line);
+}
+   
+   
+ 

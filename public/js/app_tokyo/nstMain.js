@@ -3,6 +3,46 @@
 var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 
+//gui variables
+var showNodes=true; //global visibility of network nodes
+var showEdges=true; //global visibility of network edges
+var showParks=false; //global visibility of parks
+var showBldgs=false; //global visibility of buildings
+var showSites=false; //global visibility of sites
+
+var showDivisions=false; //superblock visibility of site divisions
+var bayDepth=1.0 // superblock site division bay depth
+
+// START OF GUI
+var datgui = new dat.GUI({ autoPlace: true });
+var superBlockControls=new function(){
+       this.bay_Depth=1.0;
+}
+var superBlockGui=datgui.addFolder("superBlockControls");
+bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.25,2.5);
+
+var genGuiControls = new function() {
+  this.show_Nodes = true;
+  this.show_Edges = true;
+  this.show_Parks = false;
+  this.show_Buildings = false;
+  this.show_Sites=false;
+  this.show_Axis = false;
+  this.show_divisions=false;
+}
+showNodes = datgui.add(genGuiControls, "show_Nodes");
+showEdges = datgui.add(genGuiControls, "show_Edges");
+showParks = datgui.add(genGuiControls, "show_Parks");
+showBldgs = datgui.add(genGuiControls, "show_Buildings");
+showSites = datgui.add(genGuiControls, "show_Sites");
+showDivisions=datgui.add(genGuiControls, "show_divisions");
+showAxes = datgui.add(genGuiControls, "show_Axis");
+var customContainer = document.getElementById("scene3d");
+customContainer.appendChild(datgui.domElement);
+datgui.close();
+// END OF GUI
+
+
 var wireframeVal=false;
 var ALLJSONOBJS=[];
 var networkEdgesArr=[];//object
@@ -17,33 +57,8 @@ var siteObjArr=[];//object
 var siteArr=[];//rendered object
 var sceneObjs=[];//raycaster intersection with object
 
-
-var showNodes=true; //global visibility of network nodes
-var showEdges=true; //global visibility of network edges
-var showParks=false; //global visibility of parks
-var showBldgs=false; //global visibility of buildings
-var showSites=false; //global visibility of sites
-
-
-var datgui = new dat.GUI({ autoPlace: true });
-var genGuiControls = new function() {
-  this.show_Nodes = true;
-  this.show_Edges = true;
-  this.show_Parks = false;
-  this.show_Buildings = false;
-  this.show_Sites=false;
-  this.show_Axis = false;
-}
-showNodes = datgui.add(genGuiControls, "show_Nodes");
-showEdges = datgui.add(genGuiControls, "show_Edges");
-showParks = datgui.add(genGuiControls, "show_Parks");
-showBldgs = datgui.add(genGuiControls, "show_Buildings");
-showSites = datgui.add(genGuiControls, "show_Sites");
-showAxes = datgui.add(genGuiControls, "show_Axis");
-var customContainer = document.getElementById("scene3d");
-customContainer.appendChild(datgui.domElement);
-datgui.close();
-
+var siteSegArr=[]; // segments from the diagonal to the site boundary
+var siteQuadArr=[]; // site split into divs and construct quad from successive seg= Arr
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
@@ -267,6 +282,26 @@ var mainLoop = function() {
               genSiteGeometry();
        });
 
+       bayDepth.onChange(function(){                          
+              genSiteSegments();
+              
+       });
+
+       if(genGuiControls.show_divisions===false){
+              for (var i=0; i<siteQuadArr.length; i++){
+                     scene.remove(siteQuadArr[i]);
+              }
+              for(var i=0; i<siteSegArr.length;i++){
+                     scene.remove(siteSegArr[i]);
+              }
+       }else{
+              for(var i=0; i<siteQuadArr.length;i++){
+                     scene.add(siteQuadArr[i]);
+              }
+              for(var i=0; i<siteSegArr.length;i++){
+                     scene.add(siteSegArr[i]);
+              }
+       }
        render();
 }
    
