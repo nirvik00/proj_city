@@ -18,11 +18,19 @@ var superBlockControls=new function(){
        this.bay_Depth=0.3;
        this.ext_off=0.1;
        this.int_off=0.1;
+       this.show_diags=false;
+       this.show_segs=false;
+       this.show_quads=false;
+       this.show_cells=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.15,1.0);
 var extOff=superBlockGui.add(superBlockControls,"ext_off",0.05,0.5);
 var intOff=superBlockGui.add(superBlockControls,"int_off",0.05,0.5);
+var showDiags=superBlockGui.add(superBlockControls, "show_diags");
+var showSegs=superBlockGui.add(superBlockControls, "show_segs");
+var showQuads=superBlockGui.add(superBlockControls, "show_quads");
+var showCells=superBlockGui.add(superBlockControls, "show_cells");
 
 
 var genGuiControls = new function() {
@@ -65,6 +73,7 @@ var sceneObjs=[];//raycaster intersection with object
 var siteSegArr=[]; // segments from the diagonal to the site boundary
 var siteQuadArr=[]; // site split into divs and construct quad from successive seg= Arr
 var cellArr=[]; // array of cells from the quad-> bays of the site
+var siteDiagArr=[]; //rendered diags of site obj
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
@@ -256,7 +265,6 @@ function onDocumentMouseMove( event ) {
        //infoPara.innerHTML = source;  
 }
 
-
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
        controls.update();
@@ -300,7 +308,13 @@ var mainLoop = function() {
               genSiteSegments();
        });
 
-       if(genGuiControls.show_divisions===false){
+       if(superBlockControls.show_quads===true){
+              for(var i=0; i<siteQuadArr.length;i++){
+                     scene.add(siteQuadArr[i][0]);
+                     scene.add(siteQuadArr[i][1]);
+                     scene.add(siteQuadArr[i][2]);  
+              }
+       }else{
               for (var i=0; i<siteQuadArr.length; i++){
                      siteQuadArr[i][0].geometry.dispose();
                      siteQuadArr[i][0].material.dispose();
@@ -314,7 +328,36 @@ var mainLoop = function() {
                      siteQuadArr[i][2].material.dispose();
                      scene.remove(siteQuadArr[i][2]);
               }
-              //siteQuadArr=[];
+       }
+
+       if(superBlockControls.show_segs===true){
+              for(var i=0; i<siteSegArr.length;i++){
+                     scene.add(siteSegArr[i]);
+              }
+       }else{
+              for(var i=0; i<siteSegArr.length;i++){
+                     scene.remove(siteSegArr[i]);
+              }
+       }
+
+       if(superBlockControls.show_diags===true){
+              for(var i=0; i<siteDiagArr.length;i++){
+                     scene.add(siteDiagArr[i]);
+              }
+       }else{
+              for(var i=0; i<siteDiagArr.length;i++){
+                     scene.remove(siteDiagArr[i]);
+              }
+       }
+
+
+       if(superBlockControls.show_cells===true){
+              for(var i=0; i<cellArr.length;i++){
+                     scene.add(cellArr[i][0]);
+                     scene.add(cellArr[i][1]);
+                     scene.add(cellArr[i][2]);  
+              } 
+       }else{
               for(var i=0; i<cellArr.length; i++){
                      var quad=cellArr[i][0];
                      var L1=cellArr[i][1];
@@ -328,27 +371,9 @@ var mainLoop = function() {
                      L2.geometry.dispose();
                      L2.material.dispose();
                      scene.remove(L2);
-                   }
-                   //cellArr=[];
-              for(var i=0; i<siteSegArr.length;i++){
-                     scene.remove(siteSegArr[i]);
               }
-              siteSegArr=[];
-       }else{
-              for(var i=0; i<siteQuadArr.length;i++){
-                     scene.add(siteQuadArr[i][0]);
-                     scene.add(siteQuadArr[i][1]);
-                     scene.add(siteQuadArr[i][2]);  
-              }
-              for(var i=0; i<siteSegArr.length;i++){
-                     //scene.add(siteSegArr[i]);
-              }
-              for(var i=0; i<cellArr.length;i++){
-                     scene.add(cellArr[i][0]);
-                     scene.add(cellArr[i][1]);
-                     scene.add(cellArr[i][2]);  
-              } 
        }
+
        render();
 }
    

@@ -132,6 +132,13 @@ function genSiteSegments(){
   }
   siteSegArr=[];
 
+  for(var i=0; i<siteDiagArr.length; i++){
+    siteDiagArr[i].geometry.dispose();
+    siteDiagArr[i].material.dispose();
+    scene.remove(siteDiagArr[i]);
+  }
+  siteDiagArr=[];
+
   for(var i=0; i<siteQuadArr.length; i++){
     siteQuadArr[i][0].geometry.dispose();
     siteQuadArr[i][0].material.dispose();
@@ -176,24 +183,7 @@ function genSiteSegments(){
       }
     //}
   }
-  
-  //console.log(cellArr.length);
-  if(genGuiControls.show_divisions===true){
-    for(var i=0; i<siteSegArr.length;i++){
-      //scene.add(siteSegArr[i]);// adds diagonals to global array from site obj internally in set bays function
-    }
-    for(var i=0; i<siteQuadArr.length;i++){
-      scene.add(siteQuadArr[i][0]);
-      scene.add(siteQuadArr[i][1]);
-      scene.add(siteQuadArr[i][2]);  
-    }        
-    for(var i=0; i<cellArr.length;i++){
-      scene.add(cellArr[i][0]);
-      scene.add(cellArr[i][1]);
-      scene.add(cellArr[i][2]);  
-    } 
-  }
-}
+ }
 
 
 

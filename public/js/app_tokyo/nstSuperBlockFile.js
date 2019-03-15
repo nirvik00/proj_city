@@ -108,6 +108,7 @@ function nsSite(type, area, cen, pts){
         var d=dia[2];
         var s=new nsSeg(p,q);
         this.diag=s;
+        siteDiagArr.push(this.diag.getObj());
         return this.diag;
     }
    
@@ -148,8 +149,8 @@ function nsSite(type, area, cen, pts){
                 if(check1===true && check2===true && utilDi(aR,iR)>baydepth/2){
                     var reqseg=new nsSeg(aR,iR);
                     this.topRiSegArr.push(reqseg);
-                    //var seg=reqseg.getObj();
-                    //siteSegArr.push(seg);//line added to global arr
+                    var seg=reqseg.getObj();
+                    siteSegArr.push(seg);//line added to global arr
                 }                
             }
 
@@ -165,8 +166,8 @@ function nsSite(type, area, cen, pts){
                 if(check1===true && check2===true && utilDi(aL,iL)>baydepth/2){
                     var reqseg=new nsSeg(aL,iL);
                     this.topLeSegArr.push(reqseg);
-                    //var seg=reqseg.getObj();
-                    //siteSegArr.push(seg);//line added to global arr
+                    var seg=reqseg.getObj();
+                    siteSegArr.push(seg);//line added to global arr
                 }                
             }                
         }
@@ -189,8 +190,8 @@ function nsSite(type, area, cen, pts){
                 if(check1===true && check2===true && utilDi(aR,iR)>baydepth/2){
                     var reqseg=new nsSeg(aR,iR);
                     this.bottomRiSegArr.push(reqseg);
-                    //var seg=reqseg.getObj();                    
-                    //siteSegArr.push(seg);//line added to global arr
+                    var seg=reqseg.getObj();                    
+                    siteSegArr.push(seg);//line added to global arr
                 }
                 
             }
@@ -206,8 +207,8 @@ function nsSite(type, area, cen, pts){
                 if(check1==true && check2===true && utilDi(aL,iL)>baydepth/2){
                     var reqseg=new nsSeg(aL,iL);
                     this.bottomLeSegArr.push(reqseg);
-                    //var seg=reqseg.getObj();
-                    //siteSegArr.push(seg);//line added to global arr
+                    var seg=reqseg.getObj();
+                    siteSegArr.push(seg);//line added to global arr
                 }                
             }
         }
