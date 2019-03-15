@@ -26,14 +26,15 @@ var intOff=superBlockGui.add(superBlockControls,"int_off",0.05,0.5);
 
 
 var genGuiControls = new function() {
-  this.show_Nodes = true;
-  this.show_Edges = true;
+  this.show_Nodes = false;
+  this.show_Edges = false;
   this.show_Parks = false;
   this.show_Buildings = false;
-  this.show_Sites=false;
+  this.show_Sites=true;
   this.show_Axis = false;
-  this.show_divisions=false;
+  this.show_divisions=true;
 }
+
 showNodes = datgui.add(genGuiControls, "show_Nodes");
 showEdges = datgui.add(genGuiControls, "show_Edges");
 showParks = datgui.add(genGuiControls, "show_Parks");
@@ -63,6 +64,7 @@ var sceneObjs=[];//raycaster intersection with object
 
 var siteSegArr=[]; // segments from the diagonal to the site boundary
 var siteQuadArr=[]; // site split into divs and construct quad from successive seg= Arr
+var cellArr=[]; // array of cells from the quad-> bays of the site
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
@@ -300,18 +302,52 @@ var mainLoop = function() {
 
        if(genGuiControls.show_divisions===false){
               for (var i=0; i<siteQuadArr.length; i++){
-                     scene.remove(siteQuadArr[i]);
+                     siteQuadArr[i][0].geometry.dispose();
+                     siteQuadArr[i][0].material.dispose();
+                     scene.remove(siteQuadArr[i][0]);
+                 
+                     siteQuadArr[i][1].geometry.dispose();
+                     siteQuadArr[i][1].material.dispose();
+                     scene.remove(siteQuadArr[i][1]);
+                 
+                     siteQuadArr[i][2].geometry.dispose();
+                     siteQuadArr[i][2].material.dispose();
+                     scene.remove(siteQuadArr[i][2]);
               }
+              siteQuadArr=[];
+              for(var i=0; i<cellArr.length; i++){
+                     var quad=cellArr[i][0];
+                     var L1=cellArr[i][1];
+                     var L2=cellArr[i][2];
+                     quad.geometry.dispose();
+                     quad.material.dispose();
+                     scene.remove(quad);
+                     L1.geometry.dispose();
+                     L1.material.dispose();
+                     scene.remove(L1);
+                     L2.geometry.dispose();
+                     L2.material.dispose();
+                     scene.remove(L2);
+                   }
+                   cellArr=[];
               for(var i=0; i<siteSegArr.length;i++){
                      scene.remove(siteSegArr[i]);
               }
+              siteSegArr=[];
        }else{
               for(var i=0; i<siteQuadArr.length;i++){
-                     scene.add(siteQuadArr[i]);
+                     scene.add(siteQuadArr[i][0]);
+                     scene.add(siteQuadArr[i][1]);
+                     scene.add(siteQuadArr[i][2]);  
               }
               for(var i=0; i<siteSegArr.length;i++){
-                     scene.add(siteSegArr[i]);
+                     //scene.add(siteSegArr[i]);
               }
+              for(var i=0; i<cellArr.length;i++){
+                     scene.add(cellArr[i][0]);
+                     scene.add(cellArr[i][1]);
+                     scene.add(cellArr[i][2]);  
+              } 
        }
        render();
 }

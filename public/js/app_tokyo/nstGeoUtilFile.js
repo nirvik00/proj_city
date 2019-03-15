@@ -66,9 +66,25 @@ var debugQuadZ=function(p,q,r,s,z){
        geox.vertices.push(new THREE.Vector3(r.x,r.y,z));
        geox.vertices.push(new THREE.Vector3(s.x,s.y,z));
        geox.vertices.push(new THREE.Vector3(p.x,p.y,z));
-       var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
+       var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(0,0,255)")});
        var quad = new THREE.Line(geox, matx);
-       return quad;
+       
+       var M=new THREE.Geometry();
+       M.vertices.push(new THREE.Vector3(p.x,p.y,z));
+       M.vertices.push(new THREE.Vector3(r.x,r.y,z));
+       var L1=new THREE.Line(M,matx);
+
+       var N=new THREE.Geometry();
+       N.vertices.push(new THREE.Vector3(q.x,q.y,z));
+       N.vertices.push(new THREE.Vector3(s.x,s.y,z));
+       var L2=new THREE.Line(N,matx);
+
+       var res=[quad, L1, L2];
+       //scene.add(quad);
+       //scene.add(L1);
+       //scene.add(L2);
+
+       return res;
 }
   
 

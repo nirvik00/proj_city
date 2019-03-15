@@ -133,29 +133,63 @@ function genSiteSegments(){
   siteSegArr=[];
 
   for(var i=0; i<siteQuadArr.length; i++){
-    siteQuadArr[i].geometry.dispose();
-    siteQuadArr[i].material.dispose();
-    scene.remove(siteQuadArr[i]);
+    siteQuadArr[i][0].geometry.dispose();
+    siteQuadArr[i][0].material.dispose();
+    scene.remove(siteQuadArr[i][0]);
+
+    siteQuadArr[i][1].geometry.dispose();
+    siteQuadArr[i][1].material.dispose();
+    scene.remove(siteQuadArr[i][1]);
+
+    siteQuadArr[i][2].geometry.dispose();
+    siteQuadArr[i][2].material.dispose();
+    scene.remove(siteQuadArr[i][2]);
   }
   siteQuadArr=[];
 
+  for(var i=0; i<cellArr.length; i++){
+    var quad=cellArr[i][0];
+    var L1=cellArr[i][1];
+    var L2=cellArr[i][2];
+    quad.geometry.dispose();
+    quad.material.dispose();
+    scene.remove(quad);
+    L1.geometry.dispose();
+    L1.material.dispose();
+    scene.remove(L1);
+    L2.geometry.dispose();
+    L2.material.dispose();
+    scene.remove(L2);
+  }
+  cellArr=[];
+
   for(var i=0; i<siteObjArr.length; i++){
-    //if(i<1){
-      siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure
-      siteObjArr[i].setBays();
-      siteObjArr[i].processBayArr();
-      //console.log(siteObjArr[i].area);
-    //}    
+    //if(i===0){
+      siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
+      siteObjArr[i].setBays(); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
+      siteObjArr[i].processBayArr(); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
+      var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
+      for(var j=0; j<quads.length; j++){
+        quads[j].genCells(); // internal to nsQuad object
+      }
+    //}
   }
   
+  console.log(cellArr.length);
   if(genGuiControls.show_divisions===true){
     for(var i=0; i<siteSegArr.length;i++){
-      scene.add(siteSegArr[i]);
+      //scene.add(siteSegArr[i]);// adds diagonals to global array from site obj internally in set bays function
     }
     for(var i=0; i<siteQuadArr.length;i++){
-      scene.add(siteQuadArr[i]);
-    }
-    //console.log(siteArr.length, siteObjArr.length, siteSegArr.length, siteQuadArr.length);
+      scene.add(siteQuadArr[i][0]);
+      scene.add(siteQuadArr[i][1]);
+      scene.add(siteQuadArr[i][2]);  
+    }        
+    for(var i=0; i<cellArr.length;i++){
+      scene.add(cellArr[i][0]);
+      scene.add(cellArr[i][1]);
+      scene.add(cellArr[i][2]);  
+    } 
   }
 }
 

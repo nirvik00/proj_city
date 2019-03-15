@@ -10,6 +10,26 @@ function nsEdge(a,b){
     this.q=b;
 }
 
+function nsSeg(a,b){
+    this.p=new nsPt(parseFloat(a.x), parseFloat(a.y), 0);
+    this.q=new nsPt(parseFloat(b.x), parseFloat(b.y), 0);
+    this.le=utilDi(this.p, this.q);
+    this.mp=new nsPt((this.p.x+this.q.x)/2, (this.p.y+this.q.y)/2, 0);
+    this.renderedObject;
+    this.getObj=function(){
+        var path= new THREE.Geometry();
+        path.vertices.push(new THREE.Vector3(this.p.x, this.p.y, 0));
+        path.vertices.push(new THREE.Vector3(this.q.x, this.q.y, 0));
+        var material = getPathMaterialFromType({color:new THREE.Color("rgb(0,0,255)")});
+        this.renderedObject = new THREE.Line(path, material);
+        return this.renderedObject;
+    }
+    this.display=function(){
+        console.log("\nsegment: ")
+        console.log(this.p,this.q);
+    }
+}
+
 function nsNetworkNode(a,b,c, nodeId){
     this.x=a;
     this.y=b;
@@ -279,99 +299,87 @@ function nsQuad(a,b,c,d,i){
     this.r=c;
     this.s=d;
     this.type;
-    
     this.subCellQuads=[];
-
     this.cellId=i;
-    
     this.gcnRat=0.0;
     this.ncnRat=0.0;
     this.rcnRat=0.0;
-
     this.gcnArea=0.0;
     this.ncnArea=0.0;
     this.rcnArea=0.0;
     this.cellArea=0.0;
-
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
     }
+
     this.setType=function(t){
         this.type=t;
     }
+
     this.display=function(){
         //console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
     }
-    this.genCube=function(){
-        //console.log("\n\n\n GEN CUBE FUNCTION");
-        var ht=bldgGuiControls.Bldg_HT;
-        var htCounter=ht;
-        var areas=[];
-        var arTypes=[];
-        if(this.type==="GCN"){
-            areas=[this.gcnArea, this.ncnArea, this.rcnArea];
-            var t=Math.random();
-            if(t>0.5){
-                arTypes=["GCN", "NCN", "RCN"];
-            }else{
-                arTypes=["GCN", "RCN", "NCN"];
-            }            
-        }
-        if(this.type==="NCN"){
-            areas=[this.ncnArea, this.gcnArea, this.rcnArea];
-            var t=Math.random();
-            if(t>0.5){
-                arTypes=["NCN", "GCN", "RCN"];
-            }else{
-                arTypes=["NCN", "RCN", "GCN"];
-            }            
-        }
-        if(this.type==="RCN"){
-            areas=[this.rcnArea, this.gcnArea, this.ncnArea];
-            var t=Math.random();
-            if(t>0.5){
-                arTypes=["RCN", "GCN", "NCN"];
-            }else{
-                arTypes=["RCN", "NCN", "GCN"];
-            }  
-        }
-        for(var i=0; i<areas.length; i++){
-            var numx=Math.ceil((areas[i]/this.cellArea)+Math.random()*ht);
-            for(var j=0; j<numx; j++){
-                var reqLe=utilDi(this.p,this.q);
-                var reqHt=0.0;
-                var reqDe=utilDi(this.q,this.r);
 
-                var geox = new THREE.BoxGeometry(reqLe, ht, reqDe);
-                var matx=getBuildingMaterialFromType(arTypes[i]);
-                var mesh = new THREE.Mesh(geox, matx);
-                mesh.position.x = this.p.x+reqLe/2;
-                mesh.position.y = htCounter- ht/2;
-                mesh.position.z = this.p.z+reqDe/2;    
-                
-                var geox2 = new THREE.BoxGeometry(reqLe, ht, reqDe);
-                var matx2=new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(0,0,0)"), wireframe:true});
-                var mesh2 = new THREE.Mesh(geox2, matx2);
-                mesh2.position.x = this.p.x+reqLe/2;
-                mesh2.position.y = htCounter- ht/2;
-                mesh2.position.z = this.p.z+reqDe/2;          
+    this.genQuad=function(t){
+        var geox = new THREE.Geometry();
+        geox.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
+        geox.vertices.push(new THREE.Vector3(this.q.x,this.q.y,t));
+        geox.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
+        geox.vertices.push(new THREE.Vector3(this.s.x,this.s.y,t));
+        geox.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
+        var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
+        var Q = new THREE.Line(geox, matx);
 
-                if(arTypes[i]==="GCN"){
-                    GCNCubeArr.push(mesh);
-                    GCNCubeArr.push(mesh2);
-                }else if(arTypes[i]==="NCN"){
-                    NCNCubeArr.push(mesh);
-                    NCNCubeArr.push(mesh2);
-                }else if(arTypes[i]==="RCN"){
-                    RCNCubeArr.push(mesh);
-                    RCNCubeArr.push(mesh2);
-                }else{ //evacuation
-                    evacArr.push(mesh);    
-                    evacArr.push(mesh2);
-                }
-                htCounter+=(ht);
-            }
+        var M=new THREE.Geometry();
+        M.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
+        M.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
+        var L1=new THREE.Line(M,matx);
+ 
+        var N=new THREE.Geometry();
+        N.vertices.push(new THREE.Vector3(this.q.x,this.q.y,t));
+        N.vertices.push(new THREE.Vector3(this.s.x,this.s.y,t));
+        var L2=new THREE.Line(N,matx);
+
+        var res=[];
+        res.push(Q);
+        res.push(L1);
+        res.push(L2);
+
+        return res;
+    } 
+
+    this.genCells=function(){
+        this.subCellQuads=[];
+        var baydepth=superBlockControls.bay_Depth;
+        var p=this.p; // 0  ordered in previous function
+        var q=this.q; // 1  ordered in previous function
+        var r=this.r; // 2  ordered in previous function
+        var s=this.s; // 3  ordered in previous function
+        var u=new nsPt((q.x-p.x)/utilDi(p,q), (q.y-p.y)/utilDi(p,q), 0);
+        var v=new nsPt((r.x-s.x)/utilDi(s,r), (r.y-s.y)/utilDi(r,s), 0);
+        var nPQ=Math.floor(utilDi(p,q)/baydepth);
+        var nRS=Math.floor(utilDi(s,r)/baydepth);
+        var n=10;
+        if(nPQ<nRS) { n=nPQ; }
+        else { n=nRS; }
+        var segArr=[];
+        for(var i=0; i<n; i++){
+            var a=new nsPt(p.x+(u.x)*i*baydepth, p.y+(u.y)*i*baydepth, 0);
+            var b=new nsPt(s.x+(v.x)*i*baydepth, s.y+(v.y)*i*baydepth, 0);
+            //debugSphere(a,0.1);
+            segArr.push(new nsSeg(a,b));
+        }
+        segArr.push(new nsSeg(q,r));
+        for(var i=0; i<segArr.length-1; i++){
+            var a=segArr[i].p;
+            var b=segArr[i].q;
+            var c=segArr[i+1].q; // change order for elegance
+            var d=segArr[i+1].p; // change order for elegance
+            var quad=new nsQuad(a,b,c,d);            
+            this.subCellQuads.push(quad);
+            var res=debugQuadZ(a,b,c,d,0);
+            cellArr.push(res);
         }
     }
 }
