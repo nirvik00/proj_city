@@ -11,15 +11,19 @@ var showBldgs=false; //global visibility of buildings
 var showSites=false; //global visibility of sites
 
 var showDivisions=false; //superblock visibility of site divisions
-var bayDepth=1.0 // superblock site division bay depth
 
 // START OF GUI
 var datgui = new dat.GUI({ autoPlace: true });
 var superBlockControls=new function(){
-       this.bay_Depth=1.0;
+       this.bay_Depth=0.3;
+       this.ext_off=0.1;
+       this.int_off=0.1;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
-bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.25,2.5);
+var bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.15,1.0);
+var extOff=superBlockGui.add(superBlockControls,"ext_off",0.05,0.5);
+var intOff=superBlockGui.add(superBlockControls,"int_off",0.05,0.5);
+
 
 var genGuiControls = new function() {
   this.show_Nodes = true;
@@ -284,7 +288,14 @@ var mainLoop = function() {
 
        bayDepth.onChange(function(){                          
               genSiteSegments();
-              
+       });
+
+       intOff.onChange(function(){                          
+              genSiteSegments();
+       });
+
+       extOff.onChange(function(){                          
+              genSiteSegments();
        });
 
        if(genGuiControls.show_divisions===false){

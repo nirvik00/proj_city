@@ -82,4 +82,13 @@ var debugLine=function(p,q,y){
 }
    
    
- 
+ var ptInSeg=function(p,q,r){
+       //pt q is in between segment(p,r)
+       var dpr=utilDi(p,r);//full length - p r
+       var dpq=utilDi(p,q);//half length - p q
+       var dqr=utilDi(q,r);//half length - q r
+       if(Math.abs(dpr-dpq-dqr)<0.01){
+              return true;
+       }
+       return false;
+ }

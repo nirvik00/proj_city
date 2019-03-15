@@ -49,7 +49,7 @@ function initGeometry(ALLJSONOBJS){
   for (var i = 0; i < ALLJSONOBJS.length; i++) {
     obj = ALLJSONOBJS[i];
     if (obj.element_type === "site") {
-      var area=obj.area;
+      var area=parseFloat(obj.area);
       var cen=obj.cen;
       var coords=obj.pts;
       var ptArr=[];
@@ -140,9 +140,12 @@ function genSiteSegments(){
   siteQuadArr=[];
 
   for(var i=0; i<siteObjArr.length; i++){
-    siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure
-    siteObjArr[i].setBays();
-    siteObjArr[i].processBayArr();
+    //if(i<1){
+      siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure
+      siteObjArr[i].setBays();
+      siteObjArr[i].processBayArr();
+      //console.log(siteObjArr[i].area);
+    //}    
   }
   
   if(genGuiControls.show_divisions===true){
