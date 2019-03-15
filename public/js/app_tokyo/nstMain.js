@@ -18,8 +18,8 @@ var superBlockControls=new function(){
        this.bay_Depth=0.3;
        this.ext_off=0.1;
        this.int_off=0.1;
-       this.show_diags=false;
-       this.show_segs=false;
+       this.show_diags=true;
+       this.show_segs=true;
        this.show_quads=false;
        this.show_cells=false;
 }
@@ -40,7 +40,7 @@ var genGuiControls = new function() {
   this.show_Buildings = false;
   this.show_Sites=true;
   this.show_Axis = false;
-  this.show_divisions=true;
+  //this.show_divisions=true;
 }
 
 showNodes = datgui.add(genGuiControls, "show_Nodes");
@@ -48,7 +48,7 @@ showEdges = datgui.add(genGuiControls, "show_Edges");
 showParks = datgui.add(genGuiControls, "show_Parks");
 showBldgs = datgui.add(genGuiControls, "show_Buildings");
 showSites = datgui.add(genGuiControls, "show_Sites");
-showDivisions=datgui.add(genGuiControls, "show_divisions");
+//showDivisions=datgui.add(genGuiControls, "show_divisions");
 showAxes = datgui.add(genGuiControls, "show_Axis");
 var customContainer = document.getElementById("scene3d");
 customContainer.appendChild(datgui.domElement);
