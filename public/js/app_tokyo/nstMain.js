@@ -314,7 +314,7 @@ var mainLoop = function() {
                      siteQuadArr[i][2].material.dispose();
                      scene.remove(siteQuadArr[i][2]);
               }
-              siteQuadArr=[];
+              //siteQuadArr=[];
               for(var i=0; i<cellArr.length; i++){
                      var quad=cellArr[i][0];
                      var L1=cellArr[i][1];
@@ -329,7 +329,7 @@ var mainLoop = function() {
                      L2.material.dispose();
                      scene.remove(L2);
                    }
-                   cellArr=[];
+                   //cellArr=[];
               for(var i=0; i<siteSegArr.length;i++){
                      scene.remove(siteSegArr[i]);
               }

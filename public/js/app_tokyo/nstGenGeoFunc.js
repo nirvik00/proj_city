@@ -162,12 +162,14 @@ function genSiteSegments(){
     scene.remove(L2);
   }
   cellArr=[];
-
+  var baydepth=superBlockControls.bay_Depth;
+  var intoff=superBlockControls.int_off;
+  var extoff=superBlockControls.ext_off;
   for(var i=0; i<siteObjArr.length; i++){
     //if(i===0){
       siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
-      siteObjArr[i].setBays(); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
-      siteObjArr[i].processBayArr(); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
+      siteObjArr[i].setBays(baydepth,intoff,extoff); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
+      siteObjArr[i].processBayArr(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
       var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
       for(var j=0; j<quads.length; j++){
         quads[j].genCells(); // internal to nsQuad object
@@ -175,7 +177,7 @@ function genSiteSegments(){
     //}
   }
   
-  console.log(cellArr.length);
+  //console.log(cellArr.length);
   if(genGuiControls.show_divisions===true){
     for(var i=0; i<siteSegArr.length;i++){
       //scene.add(siteSegArr[i]);// adds diagonals to global array from site obj internally in set bays function

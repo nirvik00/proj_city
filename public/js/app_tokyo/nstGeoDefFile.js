@@ -341,10 +341,7 @@ function nsQuad(a,b,c,d,i){
         N.vertices.push(new THREE.Vector3(this.s.x,this.s.y,t));
         var L2=new THREE.Line(N,matx);
 
-        var res=[];
-        res.push(Q);
-        res.push(L1);
-        res.push(L2);
+        var res=[Q,L1,L2];
 
         return res;
     } 
@@ -378,8 +375,8 @@ function nsQuad(a,b,c,d,i){
             var d=segArr[i+1].p; // change order for elegance
             var quad=new nsQuad(a,b,c,d);            
             this.subCellQuads.push(quad);
-            var res=debugQuadZ(a,b,c,d,0);
-            cellArr.push(res);
+            var res=debugQuadZ(a,b,c,d,0);//generate the cells with diags
+            cellArr.push(res);//pushed to global array for rendering
         }
     }
 }

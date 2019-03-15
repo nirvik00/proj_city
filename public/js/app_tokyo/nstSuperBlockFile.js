@@ -111,7 +111,7 @@ function nsSite(type, area, cen, pts){
         return this.diag;
     }
    
-    this.setBays=function(){
+    this.setBays=function(baydepth,intoff,extoff){
         this.quadArr=[];
         this.subCellQuadArr=[];
         this.topLeSegArr=[];// be careful of arrays in the class
@@ -125,14 +125,14 @@ function nsSite(type, area, cen, pts){
         var u=new nsPt((q.x-p.x)/norm, (q.y-p.y)/norm, 0);
         var nR=new nsPt(-u.y, u.x, 0);
         var nL=new nsPt(u.y, -u.x, 0);
-        var baydepth=superBlockControls.bay_Depth;
+        //var baydepth=superBlockControls.bay_Depth;
         var intxDepth=100;
         var n=Math.floor(utilDi(p,r)/baydepth);
 
         // top bays
         for(var i=0; i<n; i++){
-            var intoff=superBlockControls.int_off;
-            var extoff=superBlockControls.ext_off;
+            //var intoff=superBlockControls.int_off;
+            //var extoff=superBlockControls.ext_off;
             var s=i*baydepth;
             var a=new nsPt(r.x+u.x*s, r.y+u.y*s, 0);
 
@@ -173,8 +173,8 @@ function nsSite(type, area, cen, pts){
             
         // bottom bays
         for(var i=0; i<n; i++){
-            var intoff=superBlockControls.int_off;
-            var extoff=superBlockControls.ext_off;
+            //var intoff=superBlockControls.int_off;
+            //var extoff=superBlockControls.ext_off;
             var s=i*baydepth;
             var a=new nsPt(r.x-u.x*s, r.y-u.y*s, 0);
             var b=new nsPt(a.x+nR.x*intxDepth, a.y+nR.y*intxDepth,0);
@@ -233,24 +233,26 @@ function nsSite(type, area, cen, pts){
             }
     }
 
-    this.processBayArr=function(){
-        this.processBays(this.topLeSegArr);  
-        this.processBays(this.topRiSegArr);
-        this.processBays(this.bottomLeSegArr); 
-        this.processBays(this.bottomRiSegArr);
+    this.processBayArr=function(baydepth){
+        this.processBays(this.topLeSegArr,baydepth);  
+        this.processBays(this.topRiSegArr,baydepth);
+        this.processBays(this.bottomLeSegArr,baydepth); 
+        this.processBays(this.bottomRiSegArr,baydepth);
     }
 
-    this.processBays=function(segs){
+    this.processBays=function(segs, baydepth){
         for(var i=0; i<segs.length-1; i++){
             var p=segs[i].p;
             var q=segs[i].q;
             var r=segs[i+1].q;
             var s=segs[i+1].p;
             var t=0;
-            var quad=new nsQuad(p,q,r,s,i);
-            this.quadArr.push(quad);//not for rendering
-            var Q=quad.genQuad(1); //generates geometry for rendering
-            siteQuadArr.push(Q);//global array for rendering
+            if(utilDi(p,s)<2*baydepth && utilDi(q,r)<2*baydepth){
+                var quad=new nsQuad(p,q,r,s,i);
+                this.quadArr.push(quad);//not for rendering
+                var Q=quad.genQuad(1); //generates geometry for rendering
+                siteQuadArr.push(Q);//global array for rendering
+            }            
         }
     }
 }
