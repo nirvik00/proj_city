@@ -70,25 +70,19 @@ function genNetworkGeometry() {
   }
 
   nodeArr = Array();
-  if(genGuiControls.show_Nodes===true){
+  //if(genGuiControls.show_Nodes===true){
     for (var i = 0; i < networkNodesArr.length; i++) {
-      networkNodesArr[i].getObj();
+      networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
     }
-    for (var i = 0; i < nodeArr.length; i++) {
-      scene.add(nodeArr[i]);
-    }
-  }
+  //}
 
   edgeArr = Array();
-  if(genGuiControls.show_Edges===true){
+  //if(genGuiControls.show_Edges===true){
     for (var i = 0; i < networkEdgesArr.length; i++) {
-      networkEdgesArr[i].getObj();
+      networkEdgesArr[i].getObj();// adds netwrok nodes directly to global array
     }
-    for (var i = 0; i < edgeArr.length; i++) {
-      scene.add(edgeArr[i]);
-    }
-  }
-  console.log("INIT COMPLETE...scene rendered");
+  //}
+  console.log("INIT COMPLETE...scene rendered" + nodeArr.length + ", " +edgeArr.length);
 }
 
 //check if the network edge already exists in networkEdgesArr

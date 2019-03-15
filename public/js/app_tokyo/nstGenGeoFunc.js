@@ -77,16 +77,10 @@ function genBldgGeometry() {
     bldgArr[i].material.dispose();
     scene.remove(bldgArr[i]);
   }
-
   bldgArr=[];
-  if(genGuiControls.show_Buildings===true){
     for(var i=0; i<bldgObjArr.length; i++){
       bldgObjArr[i].genGeo();
     }
-    for(var i=0; i<bldgArr.length; i++){
-      scene.add(bldgArr[i]);
-    }
-  }  
 }
 
 function genParkGeometry() {
@@ -97,14 +91,9 @@ function genParkGeometry() {
   }
 
   parkArr=[];
-  if(genGuiControls.show_Parks===true){
-    for(var i=0; i<parkObjArr.length; i++) {
-      parkObjArr[i].genGeo();
-    }
-    for(var i=0; i<parkArr.length; i++){
-      scene.add(parkArr[i]);
-    }
-  }
+  for(var i=0; i<parkObjArr.length; i++) {
+    parkObjArr[i].genGeo();
+  }    
 }
 
 function genSiteGeometry() {

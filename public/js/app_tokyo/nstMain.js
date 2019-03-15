@@ -276,21 +276,45 @@ var mainLoop = function() {
               scene.remove(axes); 
        }
 
-       showNodes.onChange(function(){ 
-              genNetworkGeometry(); 
-       });
+       if(genGuiControls.show_Nodes===true){
+              for (var i = 0; i < nodeArr.length; i++) {
+                     scene.add(nodeArr[i]);
+              }
+       }else{
+              for (var i = 0; i < nodeArr.length; i++) {
+                     scene.remove(nodeArr[i]);
+              }   
+       }
 
-       showEdges.onChange(function(){
-              genNetworkGeometry();
-       });
+       if(genGuiControls.show_Edges===true){
+              for (var i = 0; i < edgeArr.length; i++) {
+                     scene.add(edgeArr[i]);
+              }
+       }else{
+              for (var i = 0; i < edgeArr.length; i++) {
+                     scene.remove(edgeArr[i]);
+              }   
+       }
 
-       showParks.onChange(function(){
-              genParkGeometry();
-       });
+       if(genGuiControls.show_Parks===true){
+              for(var i=0; i<parkArr.length; i++){
+                     scene.add(parkArr[i]);
+              }
+       }else{
+              for(var i=0; i<parkArr.length; i++){
+                     scene.remove(parkArr[i]);
+              }
+       }
        
-       showBldgs.onChange(function(){
-              genBldgGeometry();
-       });
+       if(genGuiControls.show_Buildings===true){
+              for(var i=0; i<bldgArr.length; i++){
+                     scene.add(bldgArr[i]);
+              }
+       }else{
+              for(var i=0; i<bldgArr.length; i++){
+                     scene.remove(bldgArr[i]);
+              }
+       }
 
        showSites.onChange(function(){
               genSiteGeometry();
@@ -349,7 +373,6 @@ var mainLoop = function() {
                      scene.remove(siteDiagArr[i]);
               }
        }
-
 
        if(superBlockControls.show_cells===true){
               for(var i=0; i<cellArr.length;i++){
