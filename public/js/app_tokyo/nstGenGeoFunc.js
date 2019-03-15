@@ -162,17 +162,15 @@ function genSiteSegments(){
   var intoff=superBlockControls.int_off;
   var extoff=superBlockControls.ext_off;
   for(var i=0; i<siteObjArr.length; i++){
-    //if(i===0){
-      siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
-      siteObjArr[i].setBays(baydepth,intoff,extoff); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
-      siteObjArr[i].processBayArr(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
-      var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
-      for(var j=0; j<quads.length; j++){
-        quads[j].genCells(); // internal to nsQuad object
-      }
-    //}
+    siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
+    siteObjArr[i].setBays(baydepth,intoff,extoff); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
+    siteObjArr[i].processBayArr(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
+    var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
+    for(var j=0; j<quads.length; j++){
+      quads[j].genCells(); // cells from internal to nsQuad object
+    }
   }
- }
+}
 
 
 

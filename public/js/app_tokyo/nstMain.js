@@ -15,8 +15,8 @@ var showDivisions=false; //superblock visibility of site divisions
 // START OF GUI
 var datgui = new dat.GUI({ autoPlace: true });
 var superBlockControls=new function(){
-       this.bay_Depth=0.3;
-       this.ext_off=0.1;
+       this.bay_Depth=0.5;
+       this.ext_off=0.2;
        this.int_off=0.1;
        this.show_diags=true;
        this.show_segs=true;
