@@ -248,12 +248,10 @@ function nsSite(type, area, cen, pts){
             var r=segs[i+1].q;
             var s=segs[i+1].p;
             var t=0;
-            if(utilDi(p,s)<2*baydepth && utilDi(q,r)<2*baydepth){
-                var quad=new nsQuad(p,q,r,s,i);
-                this.quadArr.push(quad);//not for rendering
-                var Q=quad.genQuad(1); //generates geometry for rendering
-                siteQuadArr.push(Q);//global array for rendering
-            }            
+            var quad=new nsQuad(p,q,r,s,i);
+            this.quadArr.push(quad);//not for rendering
+            var Q=quad.genQuad(0.25); //generates geometry for rendering
+            siteQuadArr.push(Q);//global array for rendering
         }
     }
 }
