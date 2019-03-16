@@ -21,7 +21,7 @@ var superBlockControls=new function(){
        this.show_diags=false;
        this.show_segs=false;
        this.show_quads=false;
-       this.show_cells=true;
+       this.show_cells=false;
        this.show_forms=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
@@ -36,16 +36,16 @@ var showForms=superBlockGui.add(superBlockControls, "show_forms");
 var genGuiControls = new function() {
   this.show_Nodes = false;
   this.road_depth=0.1;
-  this.show_Edges = false;
+  this.show_Edges = true;
   this.show_Parks = false;
   this.show_Buildings = false;
   this.show_Sites=false;
-  this.show_Axis = false;
+  this.show_Axis = true;
 }
 
 showNodes = datgui.add(genGuiControls, "show_Nodes");
 showEdges = datgui.add(genGuiControls, "show_Edges");
-var roadDepth=datgui.add(genGuiControls,"road_depth",0.05,0.15);
+var roadDepth=datgui.add(genGuiControls,"road_depth",0.05,0.35);
 showParks = datgui.add(genGuiControls, "show_Parks");
 showBldgs = datgui.add(genGuiControls, "show_Buildings");
 showSites = datgui.add(genGuiControls, "show_Sites");
