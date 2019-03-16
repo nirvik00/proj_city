@@ -14,7 +14,7 @@ var showDivisions=false; //superblock visibility of site divisions
 
 
 // START OF GUI
-var datgui = new dat.GUI({ autoPlace: true });
+var datgui = new dat.GUI({ autoPlace: false });
 var superBlockControls=new function(){
        this.bay_depth=0.5;
        this.ext_depth=0.2;       
@@ -41,6 +41,7 @@ var genGuiControls = new function() {
   this.show_Buildings = false;
   this.show_Sites=false;
   this.show_Axis = true;
+  this.show_Information = false;
 }
 
 showNodes = datgui.add(genGuiControls, "show_Nodes");
@@ -50,7 +51,9 @@ showParks = datgui.add(genGuiControls, "show_Parks");
 showBldgs = datgui.add(genGuiControls, "show_Buildings");
 showSites = datgui.add(genGuiControls, "show_Sites");
 showAxes = datgui.add(genGuiControls, "show_Axis");
-var customContainer = document.getElementById("scene3d");
+datgui.add(genGuiControls, "show_Information");
+
+var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
 datgui.close();
 // END OF GUI
@@ -101,8 +104,8 @@ var init = function() {
        renderer.setPixelRatio(window.devicePixelRatio);
        renderer.setSize(window.innerWidth, window.innerHeight);
        scene3d.appendChild(renderer.domElement);
-       stats = new Stats();
-       scene3d.appendChild(stats.dom);
+       //stats = new Stats();
+      // scene3d.appendChild(stats.dom);
        axes = new THREE.AxesHelper(5);
        //scene.add(axes);
        controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -269,13 +272,18 @@ function onDocumentMouseMove( event ) {
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
        controls.update();
-       stats.update();
+       //stats.update();
        guiUpdates();
        render();
 }
 
 function guiUpdates(){
-       
+       if (genGuiControls.show_Information == false) {
+              infoPara.hidden = true;
+            } else {
+              infoPara.hidden = false;
+       }
+
        // gen gui controls
        if(genGuiControls.show_Axis===true){ 
               scene.add(axes); 
