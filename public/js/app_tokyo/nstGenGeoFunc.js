@@ -167,7 +167,11 @@ function genSiteSegments(){
     siteObjArr[i].processBayArr(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
     var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
     for(var j=0; j<quads.length; j++){
-      quads[j].genCells(); // cells from internal to nsQuad object
+      quads[j].genCells(); // cell quad in each nsQuad object of each site saved in subCellQuad array
+      var cells=quads[j].subCellQuads;
+      for(var k=0; k<cells.length; k++){
+        cellArr.push(cells[k].genQuad(i/10));
+      }
     }
   }
 }

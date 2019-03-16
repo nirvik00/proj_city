@@ -375,8 +375,6 @@ function nsQuad(a,b,c,d,i){
             var d=segArr[i+1].p; // change order for elegance
             var quad=new nsQuad(a,b,c,d);            
             this.subCellQuads.push(quad);
-            var res=debugQuadZ(a,b,c,d,0); // generate the cells with diags
-            cellArr.push(res); // pushed to global array for rendering
         }
     }
 }

@@ -8,10 +8,7 @@ function nsSite(type, area, cen, pts){
     this.cen=cen;
     this.diag;   
     this.renderedObject;
-    this.topLeSegArr=[];
-    this.topRiSegArr=[];
-    this.bottomLeSegArr=[];
-    this.bottomRiSegArr=[];
+    this.segArr=[];
     this.quadArr=[];
     this.subCellQuadArr=[];
 
@@ -111,105 +108,41 @@ function nsSite(type, area, cen, pts){
         siteDiagArr.push(this.diag.getObj());
         return this.diag;
     }
-   
+    
     this.setBays=function(baydepth,intoff,extoff){
         this.quadArr=[];
         this.subCellQuadArr=[];
-        this.topLeSegArr=[];// be careful of arrays in the class
-        this.topRiSegArr=[];
-        this.bottomLeSegArr=[];
-        this.bottomRiSegArr=[];
-        var p=this.diag.p;
-        var q=this.diag.q;
-        var r=this.diag.mp; 
+        this.segArr=[];
+        var p=this.diag.p; // point 1 on diag
+        var q=this.diag.q; // point 2 on diag
         var norm=utilDi(p,q);
-        var u=new nsPt((q.x-p.x)/norm, (q.y-p.y)/norm, 0);
-        var nR=new nsPt(-u.y, u.x, 0);
-        var nL=new nsPt(u.y, -u.x, 0);
-        //var baydepth=superBlockControls.bay_Depth;
-        var intxDepth=100;
-        var n=Math.floor(utilDi(p,r)/baydepth);
-
-        // top bays
-        for(var i=0; i<n; i++){
-            //var intoff=superBlockControls.int_off;
-            //var extoff=superBlockControls.ext_off;
-            var s=i*baydepth;
-            var a=new nsPt(r.x+u.x*s, r.y+u.y*s, 0);
-
-            // right side of top            
-            var b=new nsPt(a.x+nR.x*intxDepth, a.y+nR.y*intxDepth,0);
-            var segR=this.getIntxSeg(a,b);
-            if(segR!==0 && segR.le>baydepth/2){
-                var I=segR.q;
-                var aR=new nsPt(a.x+(I.x-a.x)*intoff/segR.le, a.y+(I.y-a.y)*intoff/segR.le, 0);
-                var iR=new nsPt(I.x+(a.x-I.x)*extoff/segR.le, I.y+(a.y-I.y)*extoff/segR.le, 0);
-                var check1=ptInSeg(a,aR,I);
-                var check2=ptInSeg(aR,iR,I);
-                if(check1===true && check2===true && utilDi(aR,iR)>baydepth/2){
-                    var reqseg=new nsSeg(aR,iR);
-                    this.topRiSegArr.push(reqseg);
+        var u=new nsPt((q.x-p.x)/norm, (q.y-p.y)/norm, 0); //unit vector pq
+        var nR=new nsPt(-u.y, u.x, 0); // normal 1 to pq
+        var nL=new nsPt(u.y, -u.x, 0); // normal 2 to pq
+        var intxDepth=100 // some constant large enough to intersect with site
+        var n=Math.floor(utilDi(p,q)/baydepth); //number of iterations from p to q at bay depth
+        for (var i=1; i<n; i++){
+            var a=new nsPt(p.x+ u.x*i, p.y+u.y*i, 0); // next point on diag pq
+            var check0=ptInSeg(p,a,q);//check if a is in between pq else break
+            if(check0===false){ break; }
+            var b=new nsPt(a.x + nR.x*intxDepth, a.y + nR.y*intxDepth, 0); // right normal point 
+            var c=new nsPt(a.x + nL.x*intxDepth, a.y + nL.y*intxDepth, 0); // left normal point
+            var segI=this.getIntxSeg(a,b); // right intersection
+            var segJ=this.getIntxSeg(a,c); // left intersection
+            var I=segI.q;
+            var J=segJ.q;
+            if(I!==0 && J!==0){
+                var seg=new nsSeg(I,J);
+                var eI=new nsPt(I.x+(c.x-b.x)*extoff/utilDi(b,c), I.y+(c.y-b.y)*extoff/utilDi(b,c), 0);
+                var eJ=new nsPt(J.x+(b.x-c.x)*extoff/utilDi(b,c), J.y+(b.y-c.y)*extoff/utilDi(b,c), 0);
+                var check1=ptInSeg(b,eI,c);
+                var check2=ptInSeg(b,eJ,c);
+                if(check1===true && check2===true && utilDi(eI,eJ)>baydepth/2){
+                    var reqseg=new nsSeg(eI,eJ);
+                    this.segArr.push(reqseg);
                     var seg=reqseg.getObj();
                     siteSegArr.push(seg);//line added to global arr
-                }                
-            }
-
-            // left side of top           
-            var c=new nsPt(a.x+nL.x*intxDepth, a.y+nL.y*intxDepth,0);
-            var segL=this.getIntxSeg(a,c);
-            if(segL!==0){
-                var I=segL.q;
-                var aL=new nsPt(a.x+(I.x-a.x)*intoff/segL.le, a.y+(I.y-a.y)*intoff/segL.le, 0);
-                var iL=new nsPt(I.x+(a.x-I.x)*extoff/segL.le, I.y+(a.y-I.y)*extoff/segL.le, 0);
-                var check1=ptInSeg(a,aL,I);
-                var check2=ptInSeg(aL,iL,I);
-                if(check1===true && check2===true && utilDi(aL,iL)>baydepth/2){
-                    var reqseg=new nsSeg(aL,iL);
-                    this.topLeSegArr.push(reqseg);
-                    var seg=reqseg.getObj();
-                    siteSegArr.push(seg);//line added to global arr
-                }                
-            }                
-        }
-            
-        // bottom bays
-        for(var i=0; i<n; i++){
-            //var intoff=superBlockControls.int_off;
-            //var extoff=superBlockControls.ext_off;
-            var s=i*baydepth;
-            var a=new nsPt(r.x-u.x*s, r.y-u.y*s, 0);
-            var b=new nsPt(a.x+nR.x*intxDepth, a.y+nR.y*intxDepth,0);
-            //right            
-            var segR=this.getIntxSeg(a,b);
-            if(segR!==0){
-                var I=segR.q;
-                var aR=new nsPt(a.x+(I.x-a.x)*intoff/segR.le, a.y+(I.y-a.y)*intoff/segR.le, 0);
-                var iR=new nsPt(I.x+(a.x-I.x)*extoff/segR.le, I.y+(a.y-I.y)*extoff/segR.le, 0);
-                var check1=ptInSeg(a,aR,I);
-                var check2=ptInSeg(aR,iR,I);
-                if(check1===true && check2===true && utilDi(aR,iR)>baydepth/2){
-                    var reqseg=new nsSeg(aR,iR);
-                    this.bottomRiSegArr.push(reqseg);
-                    var seg=reqseg.getObj();                    
-                    siteSegArr.push(seg);//line added to global arr
-                }
-                
-            }
-            //left
-            var c=new nsPt(a.x+nL.x*intxDepth, a.y+nL.y*intxDepth,0);
-            var segL=this.getIntxSeg(a,c);
-            if(segL!==0){
-                var I=segL.q;
-                var aL=new nsPt(a.x+(I.x-a.x)*intoff/segL.le, a.y+(I.y-a.y)*intoff/segL.le, 0);
-                var iL=new nsPt(I.x+(a.x-I.x)*extoff/segL.le, I.y+(a.y-I.y)*extoff/segL.le, 0);
-                var check1=ptInSeg(a,aL,I);
-                var check2=ptInSeg(aL,iL,I);
-                if(check1==true && check2===true && utilDi(aL,iL)>baydepth/2){
-                    var reqseg=new nsSeg(aL,iL);
-                    this.bottomLeSegArr.push(reqseg);
-                    var seg=reqseg.getObj();
-                    siteSegArr.push(seg);//line added to global arr
-                }                
+                }   
             }
         }
     }
@@ -235,6 +168,7 @@ function nsSite(type, area, cen, pts){
     }
 
     this.processBayArr=function(baydepth){
+        this.processBays(this.segArr);
         this.processBays(this.topLeSegArr,baydepth);  
         this.processBays(this.topRiSegArr,baydepth);
         this.processBays(this.bottomLeSegArr,baydepth); 
@@ -255,8 +189,6 @@ function nsSite(type, area, cen, pts){
         }
     }
 }
-
-
 
 
 

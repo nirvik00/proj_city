@@ -96,7 +96,17 @@ var debugLine=function(p,q,y){
        var line = new THREE.Line( geox, matx);
        scene.add(line);
 }
-   
+
+var debugSeg=function(seg){
+       var p=seg.p;
+       var q=seg.q;
+       var geox = new THREE.Geometry();
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+       geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+       var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
+       var line = new THREE.Line( geox, matx);
+       scene.add(line);  
+}
    
  var ptInSeg=function(p,q,r){
        //pt q is in between segment(p,r)
