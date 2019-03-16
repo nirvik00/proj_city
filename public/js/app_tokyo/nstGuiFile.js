@@ -12,6 +12,7 @@ var showDivisions=false; //superblock visibility of site divisions
 
 // START OF GUI
 var datgui = new dat.GUI({ autoPlace: false });
+
 var superBlockControls=new function(){
        this.bay_depth=0.5;
        this.ext_depth=0.2;       
@@ -40,15 +41,15 @@ var genGuiControls = new function() {
   this.show_Axis = true;
   this.show_Information = false;
 }
-
-showNodes = datgui.add(genGuiControls, "show_Nodes");
-showEdges = datgui.add(genGuiControls, "show_Edges");
-var roadDepth=datgui.add(genGuiControls,"road_depth",0.05,0.35);
-showParks = datgui.add(genGuiControls, "show_Parks");
-showBldgs = datgui.add(genGuiControls, "show_Buildings");
-showSites = datgui.add(genGuiControls, "show_Sites");
-showAxes = datgui.add(genGuiControls, "show_Axis");
-datgui.add(genGuiControls, "show_Information");
+var dbGuiControls=datgui.addFolder("genGuiControls");
+showNodes = dbGuiControls.add(genGuiControls, "show_Nodes");
+showEdges = dbGuiControls.add(genGuiControls, "show_Edges");
+var roadDepth=dbGuiControls.add(genGuiControls,"road_depth",0.05,0.35);
+showParks = dbGuiControls.add(genGuiControls, "show_Parks");
+showBldgs = dbGuiControls.add(genGuiControls, "show_Buildings");
+showSites = dbGuiControls.add(genGuiControls, "show_Sites");
+showAxes = dbGuiControls.add(genGuiControls, "show_Axis");
+dbGuiControls.add(genGuiControls, "show_Information");
 
 var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
