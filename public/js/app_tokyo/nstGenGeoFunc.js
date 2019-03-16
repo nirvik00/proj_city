@@ -164,13 +164,13 @@ function genSiteSegments(){
   for(var i=0; i<siteObjArr.length; i++){
     siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
     siteObjArr[i].setBays(baydepth,intoff,extoff); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
-    siteObjArr[i].processBayArr(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
+    siteObjArr[i].processBays(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
     var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
-    for(var j=0; j<quads.length; j++){
-      quads[j].genCells(); // cell quad in each nsQuad object of each site saved in subCellQuad array
+    for(var j=1; j<quads.length; j++){
+      quads[j].genCells(baydepth); // cell quad in each nsQuad object of each site saved in subCellQuad array
       var cells=quads[j].subCellQuads;
       for(var k=0; k<cells.length; k++){
-        cellArr.push(cells[k].genQuad(i/10));
+        cellArr.push(cells[k].genQuad(0));
       }
     }
   }

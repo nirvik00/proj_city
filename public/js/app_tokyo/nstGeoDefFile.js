@@ -349,31 +349,42 @@ function nsQuad(a,b,c,d,i){
     this.genCells=function(){
         this.subCellQuads=[];
         var baydepth=superBlockControls.bay_Depth;
-        var p=this.p; // 0  ordered in previous function
-        var q=this.q; // 1  ordered in previous function
-        var r=this.r; // 2  ordered in previous function
-        var s=this.s; // 3  ordered in previous function
-        var u=new nsPt((q.x-p.x)/utilDi(p,q), (q.y-p.y)/utilDi(p,q), 0);
-        var v=new nsPt((r.x-s.x)/utilDi(s,r), (r.y-s.y)/utilDi(r,s), 0);
-        var nPQ=Math.floor(utilDi(p,q)/baydepth);
-        var nRS=Math.floor(utilDi(s,r)/baydepth);
-        var n=10;
-        if(nPQ<nRS) { n=nPQ; }
-        else { n=nRS; }
+        var p=this.p; // 0  ordered in previous function p-q
+        var q=this.q; // 1  ordered in previous function q-r
+        var r=this.r; // 2  ordered in previous function r-s
+        var s=this.s; // 3  ordered in previous function s-p
+        var u=new nsPt((q.x-p.x)/utilDi(p,q), (q.y-p.y)/utilDi(p,q), 0); // unit vector
+        var norm=utilDi(p,q); // norm of pq
+        var R=new nsPt(-u.y,u.x,0); // normal 1 to pq
+        //debugSphere(p,0.1);
+        var num=100;//max number of iterations on pq
         var segArr=[];
-        for(var i=0; i<n; i++){
-            var a=new nsPt(p.x+(u.x)*i*baydepth, p.y+(u.y)*i*baydepth, 0);
-            var b=new nsPt(s.x+(v.x)*i*baydepth, s.y+(v.y)*i*baydepth, 0);
-            //debugSphere(a,0.1);
-            segArr.push(new nsSeg(a,b));
+        segArr.push(new nsSeg(p,s));
+        for(var i=0; i<num; i++){
+            var a=new nsPt(p.x+u.x*baydepth*i, p.y+u.y*i*baydepth,0);
+            if(ptInSeg(p,a,q)===false) { break; }//if a is outside pq
+            if((utilDi(a,q)<baydepth/2)){break;}//dont take if very close to q
+            if(utilDi(p,a)<0.01) {continue;}//dont take if very close to p
+            var b=new nsPt(a.x+(R.x*baydepth*1.5),a.y+(R.y*baydepth*1.5),0);
+            var I=nsIntx(a,b,r,s);
+            if(I.x!==0 && I.y!==0){
+                if(utilDi(a,I)>baydepth*1.5){
+                    break;
+                }else{
+                    //debugLine(a,I,1);
+                    segArr.push(new nsSeg(a,I));
+                }
+            }
         }
         segArr.push(new nsSeg(q,r));
         for(var i=0; i<segArr.length-1; i++){
-            var a=segArr[i].p;
-            var b=segArr[i].q;
-            var c=segArr[i+1].q; // change order for elegance
-            var d=segArr[i+1].p; // change order for elegance
-            var quad=new nsQuad(a,b,c,d);            
+            var p=segArr[i].p;
+            var q=segArr[i].q;
+            var r=segArr[i+1].q;
+            var s=segArr[i+1].p;
+            if(utilDi(p,q)>baydepth*2 || utilDi(r,s)>baydepth*2){continue;}
+            var quad=new nsQuad(p,q,s,r);
+            //debugQuadZ(p,q,r,s);
             this.subCellQuads.push(quad);
         }
     }

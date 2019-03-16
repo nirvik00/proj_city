@@ -25,7 +25,18 @@ function nsIntx(p,q,r,s){
            return new nsPt(0,0,0);
        }
 }
-   
+
+var ptInSeg=function(p,q,r){
+       //pt q is in between segment(p,r)
+       var dpr=utilDi(p,r);//full length - p r
+       var dpq=utilDi(p,q);//half length - p q
+       var dqr=utilDi(q,r);//half length - q r
+       if(Math.abs(dpr-dpq-dqr)<0.01){
+              return true;
+       }
+       return false;
+ }
+
 function nsUnitVec(a,b){
        var dx=b.x-a.x;
        var dy=b.y-a.y;
@@ -80,11 +91,11 @@ var debugQuadZ=function(p,q,r,s,z){
        var L2=new THREE.Line(N,matx);
 
        var res=[quad, L1, L2];
-       //scene.add(quad);
-       //scene.add(L1);
-       //scene.add(L2);
+       scene.add(quad);
+       scene.add(L1);
+       scene.add(L2);
 
-       return res;
+       //return res;
 }
   
 
@@ -108,13 +119,3 @@ var debugSeg=function(seg){
        scene.add(line);  
 }
    
- var ptInSeg=function(p,q,r){
-       //pt q is in between segment(p,r)
-       var dpr=utilDi(p,r);//full length - p r
-       var dpq=utilDi(p,q);//half length - p q
-       var dqr=utilDi(q,r);//half length - q r
-       if(Math.abs(dpr-dpq-dqr)<0.01){
-              return true;
-       }
-       return false;
- }

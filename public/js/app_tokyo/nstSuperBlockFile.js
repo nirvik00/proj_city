@@ -120,9 +120,9 @@ function nsSite(type, area, cen, pts){
         var nR=new nsPt(-u.y, u.x, 0); // normal 1 to pq
         var nL=new nsPt(u.y, -u.x, 0); // normal 2 to pq
         var intxDepth=100 // some constant large enough to intersect with site
-        var n=Math.floor(utilDi(p,q)/baydepth); //number of iterations from p to q at bay depth
-        for (var i=1; i<n; i++){
-            var a=new nsPt(p.x+ u.x*i, p.y+u.y*i, 0); // next point on diag pq
+        var num=100; //number of iterations from p to q at bay depth
+        for (var i=0; i<num; i++){
+            var a=new nsPt(p.x+(u.x*i*baydepth), p.y+(u.y*i*baydepth), 0); // next point on diag pq
             var check0=ptInSeg(p,a,q);//check if a is in between pq else break
             if(check0===false){ break; }
             var b=new nsPt(a.x + nR.x*intxDepth, a.y + nR.y*intxDepth, 0); // right normal point 
@@ -167,15 +167,8 @@ function nsSite(type, area, cen, pts){
             }
     }
 
-    this.processBayArr=function(baydepth){
-        this.processBays(this.segArr);
-        this.processBays(this.topLeSegArr,baydepth);  
-        this.processBays(this.topRiSegArr,baydepth);
-        this.processBays(this.bottomLeSegArr,baydepth); 
-        this.processBays(this.bottomRiSegArr,baydepth);
-    }
-
-    this.processBays=function(segs, baydepth){
+    this.processBays=function(baydepth){
+        var segs=this.segArr;
         for(var i=0; i<segs.length-1; i++){
             var p=segs[i].p;
             var q=segs[i].q;
