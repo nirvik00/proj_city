@@ -148,7 +148,7 @@ function nsNetworkEdge(a,b){
     this.getType=function(){
         return this.type;
     }
-    this.getObj=function(t){
+    this.getLineObj=function(t){ //line 
         var path = new THREE.Geometry();
         if(this.getType() === "MST"){
             path.vertices.push(new THREE.Vector3( this.p.x, this.p.y, this.p.z ));
@@ -165,6 +165,52 @@ function nsNetworkEdge(a,b){
         edgeArr.push(this.renderedObject);
         //return line;
     }
+    this.getMeshObj=function(e){ //mesh->input=offset
+        var p=new nsPt(parseFloat(this.p.x),parseFloat(this.p.y),0); 
+        var q=new nsPt(parseFloat(this.q.x),parseFloat(this.q.y),0); 
+        var u=new nsPt((q.x-p.x)/utilDi(p,q),(q.y-p.y)/utilDi(p,q),0);
+        var R=new nsPt(-u.y,u.x,0);
+        var L=new nsPt(u.y,-u.x,0);
+        
+        var pL=new nsPt(p.x+R.x*e,p.y+R.y*e,0); // [0]
+        var pR=new nsPt(p.x+L.x*e,p.y+L.y*e,0); // [1]
+        var qR=new nsPt(q.x+L.x*e,q.y+L.y*e,0); // [2]
+        var qL=new nsPt(q.x+R.x*e,q.y+R.y*e,0); // [3]
+
+        var geox=new THREE.Shape();
+        geox.moveTo(0,0);
+        geox.lineTo(pR.x-pL.x, pR.y-pL.y);
+        geox.lineTo(qR.x-pL.x, qR.y-pL.y);
+        geox.lineTo(qL.x-pL.x, qL.y-pL.y);
+        geox.autoClose=true;
+        var extSettings={
+            setps:1,
+            amount:0.1,
+            bevelEnabled:false
+        }
+        var geometry=new THREE.ExtrudeBufferGeometry(geox,extSettings);
+        if(this.type==="road"){
+            var material=new THREE.MeshPhongMaterial({
+                color:new THREE.Color("rgb(100,100,100)"),
+                specular: 0x000000,
+                shininess: 10,
+                flatShading: true
+            });
+        }else{
+            var material=new THREE.MeshPhongMaterial({
+                color:new THREE.Color("rgb(0,255,50)"),
+                specular: 0x000000,
+                shininess: 10,
+                flatShading: true
+            });
+        }
+        
+        var mesh=new THREE.Mesh(geometry,material);
+        mesh.position.x=pL.x;
+        mesh.position.y=pL.y;
+        edgeMeshArr.push(mesh);
+    }
+    
     this.display=function(){
         var s= "EDGE id= "+this.id+", node0 type= "+this.node0.getType() +", node0 id= "+this.node0.id + ", node1 type= "+this.node1.getType() +", node1 id= "+this.node0.id + ", edge type= "+this.getType() +", cost= "+this.cost;
         console.log(s);
@@ -175,6 +221,7 @@ function nsNetworkEdge(a,b){
     }
 }
 
+//from db
 function nsPark(type, area, cen, pts){
     this.type=type;
     this.area=area;
@@ -223,6 +270,7 @@ function nsPark(type, area, cen, pts){
     }
 }
 
+//from db
 function nsBldg(type, area, cen, pts){
     this.type=type;
     this.area=area;
@@ -280,17 +328,6 @@ function nsBldg(type, area, cen, pts){
         var s="Building area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
         return s;
     }
-}
-
-function nsTile(a,b,c,d){
-    this.p=a;
-    this.q=b;
-    this.r=c;
-    this.s=d;
-    this.GCN=0.25;
-    this.NCN=0.25;
-    this.RCN=0.25;
-    this.neutral=0.25;   
 }
 
 function nsQuad(a,b,c,d,i){
@@ -388,7 +425,6 @@ function nsQuad(a,b,c,d,i){
         }
     }
 }
-
 
 function setPath(quad, name, ht){
     this.quad=quad;

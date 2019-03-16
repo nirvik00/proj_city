@@ -64,7 +64,8 @@ function genBldgFromQuad(quad){
        }
        var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
        var material = new THREE.MeshPhongMaterial({
-              color: 0xdddddd, specular: 0x000000, 
+              color: 0xdddddd, 
+              specular: 0x000000, 
               shininess: 10, 
               flatShading: true
        });

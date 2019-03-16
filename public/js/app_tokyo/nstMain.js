@@ -17,18 +17,16 @@ var showDivisions=false; //superblock visibility of site divisions
 var datgui = new dat.GUI({ autoPlace: true });
 var superBlockControls=new function(){
        this.bay_Depth=0.5;
-       this.ext_off=0.2;
-       this.int_off=0.1;
-       this.show_diags=true;
-       this.show_segs=true;
+       this.ext_depth=0.2;       
+       this.show_diags=false;
+       this.show_segs=false;
        this.show_quads=false;
        this.show_cells=false;
        this.show_forms=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.15,1.0);
-var extOff=superBlockGui.add(superBlockControls,"ext_off",0.05,0.5);
-var intOff=superBlockGui.add(superBlockControls,"int_off",0.05,0.5);
+var extDepth=superBlockGui.add(superBlockControls,"ext_depth",0.05,0.5);
 var showDiags=superBlockGui.add(superBlockControls, "show_diags");
 var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
@@ -37,50 +35,50 @@ var showForms=superBlockGui.add(superBlockControls, "show_forms");
 
 var genGuiControls = new function() {
   this.show_Nodes = false;
-  this.show_Edges = false;
+  this.road_depth=0.1;
+  this.show_Edges = true;
   this.show_Parks = false;
   this.show_Buildings = false;
   this.show_Sites=true;
   this.show_Axis = false;
-  //this.show_divisions=true;
 }
 
 showNodes = datgui.add(genGuiControls, "show_Nodes");
 showEdges = datgui.add(genGuiControls, "show_Edges");
+var roadDepth=datgui.add(genGuiControls,"road_depth",0.05,0.15);
 showParks = datgui.add(genGuiControls, "show_Parks");
 showBldgs = datgui.add(genGuiControls, "show_Buildings");
 showSites = datgui.add(genGuiControls, "show_Sites");
-//showDivisions=datgui.add(genGuiControls, "show_divisions");
 showAxes = datgui.add(genGuiControls, "show_Axis");
 var customContainer = document.getElementById("scene3d");
 customContainer.appendChild(datgui.domElement);
 datgui.close();
 // END OF GUI
 
-
 var wireframeVal=false;
 var ALLJSONOBJS=[];
-var networkEdgesArr=[];//object
-var networkNodesArr=[];//object
-var nodeArr=[];//render object
-var edgeArr=[];//render object
-var parkObjArr=[];//object
-var parkArr=[];//render object
-var bldgObjArr=[];//object
-var bldgArr=[];//rendered object
-var siteObjArr=[];//object
-var siteArr=[];//rendered object
-var sceneObjs=[];//raycaster intersection with object
+var networkEdgesArr=[]; // network edges object from db
+var networkNodesArr=[]; // network nodes object from db
+var nodeArr=[]; // network node render object from db
+var edgeArr=[]; // network edge Line render object from db
+var edgeMeshArr=[]; // network edge Mesh render object from db
+var parkObjArr=[]; // park object from db
+var parkArr=[]; // park render object from db
+var bldgObjArr=[]; // bldg object from db
+var bldgArr=[]; // bldg rendered object from db
+var siteObjArr=[]; // site object from db
+var siteArr=[]; // rendered site object from db
 
-var siteSegArr=[]; // segments from the diagonal to the site boundary
-var siteQuadArr=[]; // site split into divs and construct quad from successive seg= Arr
-var cellArr=[]; // array of cells from the quad-> bays of the site
-var siteDiagArr=[]; //rendered diags of site obj
-var superBlockForms=[];//rendered mesh for superblocks
+var siteSegArr=[]; // dynamic ->  segments from the diagonal to the site boundary
+var siteQuadArr=[]; // dynamic -> site split into divs and construct quad from successive seg= Arr
+var cellArr=[]; //dynamic ->  array of cells from the quad-> bays of the site
+var siteDiagArr=[]; // dynamic -> rendered diags of site obj
+var superBlockForms=[]; // dynamic -> rendered mesh for superblocks
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
 
+var sceneObjs=[]; // raycaster intersection with object
 var raycaster,INTERSECTED;
 var raycasterLine;
 var intersects;
@@ -270,9 +268,12 @@ function onDocumentMouseMove( event ) {
 
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
+       guiUpdates();
        controls.update();
        stats.update();
-
+       render();
+}
+ function guiUpdates(){
        if(genGuiControls.show_Axis===true){ 
               scene.add(axes); 
        }else{
@@ -293,10 +294,16 @@ var mainLoop = function() {
               for (var i = 0; i < edgeArr.length; i++) {
                      scene.add(edgeArr[i]);
               }
+              for (var i=0; i<edgeMeshArr.length ; i++){
+                     scene.add(edgeMeshArr[i]);
+              }
        }else{
               for (var i = 0; i < edgeArr.length; i++) {
                      scene.remove(edgeArr[i]);
               }   
+              for(var i=0; i<edgeMeshArr.length; i++){
+                     scene.remove(edgeMeshArr[i]);
+              }
        }
 
        if(genGuiControls.show_Parks===true){
@@ -327,11 +334,23 @@ var mainLoop = function() {
               genSiteSegments();
        });
 
-       intOff.onChange(function(){                          
-              genSiteSegments();
+       roadDepth.onChange(function(value){
+              for (var i = 0; i < edgeMeshArr.length; i++) {
+                     edgeMeshArr[i].geometry.dispose();
+                     edgeMeshArr[i].material.dispose();
+                     scene.remove(edgeMeshArr[i]);
+              }
+              edgeMeshArr = Array();  
+              console.log(networkEdgesArr.length);
+              for(var i=0; i<networkEdgesArr.length; i++){
+                     networkEdgesArr[i].getMeshObj(value);
+              }
+              for (var i=0; i<edgeMeshArr.length ; i++){
+                     scene.add(edgeMeshArr[i]);
+              }
        });
 
-       extOff.onChange(function(){                          
+       extDepth.onChange(function(){                          
               genSiteSegments();
        });
 
@@ -409,8 +428,8 @@ var mainLoop = function() {
                      scene.add(superBlockForms[i]);
               }
        }
+
        
-       render();
 }
    
 var render = function() {

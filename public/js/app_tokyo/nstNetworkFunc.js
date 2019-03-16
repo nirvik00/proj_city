@@ -63,25 +63,32 @@ function genNetworkGeometry() {
     nodeArr[i].material.dispose();
     scene.remove(nodeArr[i]);
   }
+  nodeArr = Array();
+
   for (var i = 0; i < edgeArr.length; i++) {
     edgeArr[i].geometry.dispose();
     edgeArr[i].material.dispose();
     scene.remove(edgeArr[i]);
   }
-
-  nodeArr = Array();
-  //if(genGuiControls.show_Nodes===true){
-    for (var i = 0; i < networkNodesArr.length; i++) {
-      networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
-    }
-  //}
-
   edgeArr = Array();
-  //if(genGuiControls.show_Edges===true){
-    for (var i = 0; i < networkEdgesArr.length; i++) {
-      networkEdgesArr[i].getObj();// adds netwrok nodes directly to global array
-    }
-  //}
+
+  for (var i = 0; i < edgeMeshArr.length; i++) {
+    edgeMeshArr[i].geometry.dispose();
+    edgeMeshArr[i].material.dispose();
+    scene.remove(edgeMeshArr[i]);
+  }
+  edgeMeshArr=[];
+
+  for (var i = 0; i < networkNodesArr.length; i++) {
+    networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
+  }
+  
+  var roaddepth=genGuiControls.road_depth;
+
+  for (var i = 0; i < networkEdgesArr.length; i++) {
+    networkEdgesArr[i].getLineObj();// adds network edges Line directly to global array
+    networkEdgesArr[i].getMeshObj(roaddepth);// adds network edges Mesh directly to global array
+  }
   console.log("INIT COMPLETE...scene rendered" + nodeArr.length + ", " +edgeArr.length);
 }
 

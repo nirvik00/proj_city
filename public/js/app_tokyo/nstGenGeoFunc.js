@@ -166,22 +166,23 @@ function genSiteSegments(){
     scene.remove(L2);
   }
   cellArr=[];
-  var baydepth=superBlockControls.bay_Depth;
-  var intoff=superBlockControls.int_off;
-  var extoff=superBlockControls.ext_off;
+  
+  var baydepth=superBlockControls.bay_depth; // from main GUI control
+  var extDepth=superBlockControls.ext_depth; // from main GUI controls
   for(var i=0; i<siteObjArr.length; i++){
     siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
-    siteObjArr[i].setBays(baydepth,intoff,extoff); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
+    siteObjArr[i].setBays(baydepth,extDepth); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
     siteObjArr[i].processBays(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
     var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
     for(var j=1; j<quads.length; j++){
       quads[j].genCells(baydepth); // cell quad in each nsQuad object of each site saved in subCellQuad array
-      var cells=quads[j].subCellQuads;
+      var cells=quads[j].subCellQuads; // cells inside the quad of the site
       for(var k=0; k<cells.length; k++){
-        cellArr.push(cells[k].genQuad(0));
+        cellArr.push(cells[k].genQuad(0)); // generate the quad rendered object 
       }
     }
   }
+
   genCellBldgs(); // dynamically generates buildings from cells
 }
 
