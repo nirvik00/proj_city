@@ -12,6 +12,7 @@ var showSites=false; //global visibility of sites
 
 var showDivisions=false; //superblock visibility of site divisions
 
+
 // START OF GUI
 var datgui = new dat.GUI({ autoPlace: true });
 var superBlockControls=new function(){
@@ -22,6 +23,7 @@ var superBlockControls=new function(){
        this.show_segs=true;
        this.show_quads=false;
        this.show_cells=false;
+       this.show_forms=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.15,1.0);
@@ -31,7 +33,7 @@ var showDiags=superBlockGui.add(superBlockControls, "show_diags");
 var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
 var showCells=superBlockGui.add(superBlockControls, "show_cells");
-
+var showForms=superBlockGui.add(superBlockControls, "show_forms");
 
 var genGuiControls = new function() {
   this.show_Nodes = false;
@@ -74,6 +76,7 @@ var siteSegArr=[]; // segments from the diagonal to the site boundary
 var siteQuadArr=[]; // site split into divs and construct quad from successive seg= Arr
 var cellArr=[]; // array of cells from the quad-> bays of the site
 var siteDiagArr=[]; //rendered diags of site obj
+var superBlockForms=[];//rendered mesh for superblocks
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
@@ -397,6 +400,16 @@ var mainLoop = function() {
               }
        }
 
+       if(superBlockControls.show_forms===false){
+              for(var i=0; i<superBlockForms.length; i++){
+                     scene.remove(superBlockForms[i]);
+              }
+       }else{
+              for(var i=0; i<superBlockForms.length; i++){
+                     scene.add(superBlockForms[i]);
+              }
+       }
+       
        render();
 }
    

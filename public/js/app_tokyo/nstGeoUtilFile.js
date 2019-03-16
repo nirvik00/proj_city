@@ -45,12 +45,42 @@ function nsUnitVec(a,b){
        var u=new nsPt(dx/norm, dy/norm, dz/norm);
        return u;
 }
+
+function genBldgFromQuad(quad){
+       var p=quad.p; 
+       var q=quad.q;
+       var r=quad.r; //not in order: interchange r&s
+       var s=quad.s; //not in order: interchange r&s
+       var geox=new THREE.Shape();
+       geox.moveTo(0,0);
+       geox.lineTo(q.x-p.x, q.y-p.y);
+       geox.lineTo(s.x-p.x, s.y-p.y);
+       geox.lineTo(r.x-p.x, r.y-p.y);
+       geox.autoClose=true;
+       var extsettings={
+              steps: 1,
+              amount: Math.random()+0.1,
+              bevelEnabled: false
+       }
+       var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
+       var material = new THREE.MeshPhongMaterial({
+              color: 0xdddddd, specular: 0x000000, 
+              shininess: 10, 
+              flatShading: true
+       });
+       var mesh=new THREE.Mesh(geometry, material);
+       mesh.position.x=p.x;
+       mesh.position.y=p.y;
+       //scene.add(mesh);
+       return mesh;
+}
    
 var debugSphere=function(p,r){
        var geox = new THREE.SphereGeometry(r,10,10);
        var matx = new THREE.MeshBasicMaterial ({
          color: new THREE.Color("rgb(102,153,255)"),
-         wireframe: wireframeVal});
+         wireframe: wireframeVal
+       });
        var mesh = new THREE.Mesh(geox, matx);
        mesh.position.x = p.x;
        mesh.position.y = p.y;
@@ -77,7 +107,9 @@ var debugQuadZ=function(p,q,r,s,z){
        geox.vertices.push(new THREE.Vector3(r.x,r.y,z));
        geox.vertices.push(new THREE.Vector3(s.x,s.y,z));
        geox.vertices.push(new THREE.Vector3(p.x,p.y,z));
-       var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(0,0,255)")});
+       var matx=new THREE.LineBasicMaterial({
+              color: new THREE.Color("rgb(0,0,255)")
+       });
        var quad = new THREE.Line(geox, matx);
        
        var M=new THREE.Geometry();
@@ -94,16 +126,16 @@ var debugQuadZ=function(p,q,r,s,z){
        scene.add(quad);
        scene.add(L1);
        scene.add(L2);
-
        //return res;
 }
-  
 
 var debugLine=function(p,q,y){
        var geox = new THREE.Geometry();
        geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
        geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
-       var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
+       var matx=new THREE.LineBasicMaterial({ 
+              color: new THREE.Color("rgb(255,0,0)") 
+       });
        var line = new THREE.Line( geox, matx);
        scene.add(line);
 }
@@ -114,8 +146,10 @@ var debugSeg=function(seg){
        var geox = new THREE.Geometry();
        geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
        geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
-       var matx=new THREE.LineBasicMaterial( { color: new THREE.Color("rgb(255,0,0)") } );
-       var line = new THREE.Line( geox, matx);
+       var matx=new THREE.LineBasicMaterial({ 
+              color: new THREE.Color("rgb(255,0,0)") 
+       });
+       var line = new THREE.Line(geox, matx);
        scene.add(line);  
 }
    

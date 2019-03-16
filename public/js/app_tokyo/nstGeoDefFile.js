@@ -384,7 +384,6 @@ function nsQuad(a,b,c,d,i){
             var s=segArr[i+1].p;
             if(utilDi(p,q)>baydepth*2 || utilDi(r,s)>baydepth*2){continue;}
             var quad=new nsQuad(p,q,s,r);
-            //debugQuadZ(p,q,r,s);
             this.subCellQuads.push(quad);
         }
     }

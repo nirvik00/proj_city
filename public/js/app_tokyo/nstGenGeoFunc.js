@@ -65,10 +65,11 @@ function initGeometry(ALLJSONOBJS){
       siteObjArr.push(siteObj);
     }
   }
-  genBldgGeometry();
-  genParkGeometry();
-  genSiteGeometry();
-  genSiteSegments();
+  genBldgGeometry(); // loaded from DB
+  genParkGeometry(); // loaded from DB
+  genSiteGeometry(); // loaded from DB
+  genSiteSegments(); // generated - dynamic
+  genCellBldgs(); // generated - dynamic from cells 
 }
 
 function genBldgGeometry() {
@@ -120,6 +121,13 @@ function genSiteSegments(){
     scene.remove(siteSegArr[i]);
   }
   siteSegArr=[];
+
+  for(var i=0; i<superBlockForms.length; i++){
+    superBlockForms[i].geometry.dispose();
+    superBlockForms[i].material.dispose();
+    scene.remove(superBlockForms[i]);
+  }
+  superBlockForms=[];
 
   for(var i=0; i<siteDiagArr.length; i++){
     siteDiagArr[i].geometry.dispose();
@@ -174,7 +182,27 @@ function genSiteSegments(){
       }
     }
   }
+  genCellBldgs(); // dynamically generates buildings from cells
 }
+
+function genCellBldgs(){
+  for( var i=0; i<siteObjArr.length; i++){
+    var quads=siteObjArr[i].quadArr;
+    for(var j=0; j<quads.length; j++){
+      var cells=quads[j].subCellQuads;
+      for(var k=0; k<cells.length; k++){
+        var cell=cells[k];
+        var mesh=genBldgFromQuad(cell);
+        superBlockForms.push(mesh);
+      }
+    }
+  }
+}
+
+
+
+
+
 
 
 
