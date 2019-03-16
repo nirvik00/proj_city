@@ -1,6 +1,6 @@
 
 //previously used as setBays function in nstSuperBlockFile.js
-this.setBaysDup=function(baydepth,intoff,extoff){
+var setBaysDup=function(baydepth,intoff,extoff){
     this.quadArr=[];
     this.subCellQuadArr=[];
     this.topLeSegArr=[]; // be careful of arrays in the class
@@ -135,4 +135,49 @@ var genCells=function(){
         var quad=new nsQuad(a,b,c,d);            
         this.subCellQuads.push(quad);
     }
+}
+
+function getBuildingMaterialFromType(type){
+    this.mat = new THREE.MeshBasicMaterial ({color: new THREE.Color("rgb(255,255,255)"),
+        wireframe:wireframeVal});
+    if(type=="GCN"){
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(0,255,0)"),
+                wireframe: wireframeVal});        
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(0,255,150)"),
+                wireframe: wireframeVal});        
+        }
+    }else if(type=="NCN"){
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(255,102,0)"),
+                wireframe: wireframeVal});        
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(225,125,0)"),
+                wireframe: wireframeVal});        
+        }
+        
+    }else if(type=="RCN"){
+        var t=Math.random();
+        if(t<0.5){
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(150,150,150)"),
+                wireframe:wireframeVal});
+        }else{
+            this.mat = new THREE.MeshBasicMaterial ({
+                color: new THREE.Color("rgb(200,200,200)"),
+                wireframe:wireframeVal});
+        }
+    }else{//evac
+        this.mat = new THREE.MeshBasicMaterial ({
+        color: new THREE.Color("rgb(255,0,0)"),
+        wireframe:wireframeVal});
+    }
+    return this.mat
 }
