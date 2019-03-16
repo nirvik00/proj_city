@@ -30,7 +30,6 @@ function nsSeg(a,b){
     }
 }
 
-
 //from db
 function nsPark(type, area, cen, pts){
     this.type=type;
@@ -140,6 +139,7 @@ function nsBldg(type, area, cen, pts){
     }
 }
 
+//quad object
 function nsQuad(a,b,c,d,i){
     this.p=a;
     this.q=b;
@@ -155,6 +155,8 @@ function nsQuad(a,b,c,d,i){
     this.ncnArea=0.0;
     this.rcnArea=0.0;
     this.cellArea=0.0;
+    this.periphery=false;
+
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
@@ -175,9 +177,15 @@ function nsQuad(a,b,c,d,i){
         geox.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
         geox.vertices.push(new THREE.Vector3(this.s.x,this.s.y,t));
         geox.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
-        var matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
+        
+        var matx;
+        if(this.periphery===true){
+            matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(75,255,0)")});
+        }else{
+            matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
+        }        
         var Q = new THREE.Line(geox, matx);
-
+        
         var M=new THREE.Geometry();
         M.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
         M.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
@@ -226,9 +234,14 @@ function nsQuad(a,b,c,d,i){
             var b=segArr[i].q;
             var c=segArr[i+1].p;
             var d=segArr[i+1].q;            
-            //if(utilDi(p,q)>baydepth*2 || utilDi(r,s)>baydepth*2){continue;}
-            var quad=new nsQuad(a,b,c,d);
-            this.subCellQuads.push(quad);
+            if(utilDi(a,b)>baydepth*2 || utilDi(c,d)>baydepth*2){
+            }else{
+                var quad=new nsQuad(a,b,c,d);
+                if(i==0 || i>segArr.length-3){
+                 quad.periphery=true;   
+                }
+                this.subCellQuads.push(quad);
+            }            
         }
     }
 }

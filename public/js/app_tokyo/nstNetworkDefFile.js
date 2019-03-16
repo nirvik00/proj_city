@@ -152,12 +152,7 @@ function nsNetworkEdge(a,b){
         geox.lineTo(qR.x-pL.x, qR.y-pL.y);
         geox.lineTo(qL.x-pL.x, qL.y-pL.y);
         geox.autoClose=true;
-        var extSettings={
-            setps:1,
-            amount:0.1,
-            bevelEnabled:false
-        }
-        var geometry=new THREE.ExtrudeBufferGeometry(geox,extSettings);
+        var extSettings;
         if(this.type==="road"){
             var material=new THREE.MeshPhongMaterial({
                 color:new THREE.Color("rgb(100,100,100)"),
@@ -165,6 +160,11 @@ function nsNetworkEdge(a,b){
                 shininess: 10,
                 flatShading: true
             });
+            extSettings={
+                setps:1,
+                amount:0.1,
+                bevelEnabled:false
+            }
         }else{
             var material=new THREE.MeshPhongMaterial({
                 color:new THREE.Color("rgb(0,255,50)"),
@@ -172,8 +172,13 @@ function nsNetworkEdge(a,b){
                 shininess: 10,
                 flatShading: true
             });
+            extSettings={
+                setps:1,
+                amount:0.15,
+                bevelEnabled:false
+            }
         }
-        
+        var geometry=new THREE.ExtrudeBufferGeometry(geox,extSettings);
         var mesh=new THREE.Mesh(geometry,material);
         mesh.position.x=pL.x;
         mesh.position.y=pL.y;

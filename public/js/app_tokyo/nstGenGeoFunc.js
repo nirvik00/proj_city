@@ -182,26 +182,19 @@ function genSiteSegments(){
       quads[j].genCells(baydepth); // cell quad in each nsQuad object of each site saved in subCellQuad array
       var cells=quads[j].subCellQuads; // cells inside the quad of the site
       for(var k=0; k<cells.length; k++){
+        if(j<2 || j>quads.length-2){
+          cells[k].periphery=true;
+        }
+      }
+      for(var k=0; k<cells.length; k++){
         cellArr.push(cells[k].genQuad(0)); // generate the quad rendered object 
       }
     }
   }
-  genCellBldgs(); // dynamically generates buildings from cells
+  genCellFromRules(); // dynamically generates buildings from cells
 }
 
-function genCellBldgs(){
-  for( var i=0; i<siteObjArr.length; i++){
-    var quads=siteObjArr[i].quadArr;    
-    for(var j=0; j<quads.length; j++){
-      var cells=quads[j].subCellQuads;
-      for(var k=0; k<cells.length; k++){
-          var cell=cells[k];
-          var mesh=genBldgFromQuad(cell);
-          superBlockForms.push(mesh);
-      }
-    }
-  }
-}
+
 
 
 
