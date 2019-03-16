@@ -68,8 +68,12 @@ function initGeometry(ALLJSONOBJS){
   genBldgGeometry(); // loaded from DB
   genParkGeometry(); // loaded from DB
   genSiteGeometry(); // loaded from DB
+  genDynamicFunc();
+}
+function genDynamicFunc(){
   genSiteSegments(); // generated - dynamic
   genCellBldgs(); // generated - dynamic from cells 
+  console.log("Dynamic functions loaded");
 }
 
 function genBldgGeometry() {
@@ -168,10 +172,10 @@ function genSiteSegments(){
   cellArr=[];
   
   var baydepth=superBlockControls.bay_depth; // from main GUI control
-  var extDepth=superBlockControls.ext_depth; // from main GUI controls
+  var extdepth=superBlockControls.ext_depth; // from main GUI controls
   for(var i=0; i<siteObjArr.length; i++){
     siteObjArr[i].getDiagonal(); // generates diagonal internal to data structure in site object superblock file
-    siteObjArr[i].setBays(baydepth,extDepth); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
+    siteObjArr[i].setBays(baydepth,extdepth); // adds diagonals to global array + generate the bay segments in zones:{top-{left,right}, bottom-{right, left}} in site object superblock file
     siteObjArr[i].processBays(baydepth); // generate the quads for each zone -{rendered quads, internal quad array} in site object superblock file
     var quads=siteObjArr[i].quadArr; // internal quads in site object in superblock file
     for(var j=1; j<quads.length; j++){
@@ -182,22 +186,18 @@ function genSiteSegments(){
       }
     }
   }
-
   genCellBldgs(); // dynamically generates buildings from cells
 }
 
 function genCellBldgs(){
   for( var i=0; i<siteObjArr.length; i++){
-    var quads=siteObjArr[i].quadArr;
+    var quads=siteObjArr[i].quadArr;    
     for(var j=0; j<quads.length; j++){
       var cells=quads[j].subCellQuads;
       for(var k=0; k<cells.length; k++){
-        var t=Math.random();
-        if(t>0.5){
           var cell=cells[k];
           var mesh=genBldgFromQuad(cell);
           superBlockForms.push(mesh);
-        }
       }
     }
   }

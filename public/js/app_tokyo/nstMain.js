@@ -16,16 +16,16 @@ var showDivisions=false; //superblock visibility of site divisions
 // START OF GUI
 var datgui = new dat.GUI({ autoPlace: true });
 var superBlockControls=new function(){
-       this.bay_Depth=0.5;
+       this.bay_depth=0.5;
        this.ext_depth=0.2;       
        this.show_diags=false;
        this.show_segs=false;
        this.show_quads=false;
-       this.show_cells=false;
+       this.show_cells=true;
        this.show_forms=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
-var bayDepth=superBlockGui.add(superBlockControls,"bay_Depth",0.15,1.0);
+var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,1.0);
 var extDepth=superBlockGui.add(superBlockControls,"ext_depth",0.05,0.5);
 var showDiags=superBlockGui.add(superBlockControls, "show_diags");
 var showSegs=superBlockGui.add(superBlockControls, "show_segs");
@@ -36,10 +36,10 @@ var showForms=superBlockGui.add(superBlockControls, "show_forms");
 var genGuiControls = new function() {
   this.show_Nodes = false;
   this.road_depth=0.1;
-  this.show_Edges = true;
+  this.show_Edges = false;
   this.show_Parks = false;
   this.show_Buildings = false;
-  this.show_Sites=true;
+  this.show_Sites=false;
   this.show_Axis = false;
 }
 
@@ -268,12 +268,15 @@ function onDocumentMouseMove( event ) {
 
 var mainLoop = function() {
        requestAnimationFrame(mainLoop);
-       guiUpdates();
        controls.update();
        stats.update();
+       guiUpdates();
        render();
 }
- function guiUpdates(){
+
+function guiUpdates(){
+       
+       // gen gui controls
        if(genGuiControls.show_Axis===true){ 
               scene.add(axes); 
        }else{
@@ -306,6 +309,22 @@ var mainLoop = function() {
               }
        }
 
+       roadDepth.onChange(function(value){
+              for (var i = 0; i < edgeMeshArr.length; i++) {
+                     edgeMeshArr[i].geometry.dispose();
+                     edgeMeshArr[i].material.dispose();
+                     scene.remove(edgeMeshArr[i]);
+              }
+              edgeMeshArr = Array();  
+              console.log(networkEdgesArr.length);
+              for(var i=0; i<networkEdgesArr.length; i++){
+                     networkEdgesArr[i].getMeshObj(value);
+              }
+              for (var i=0; i<edgeMeshArr.length ; i++){
+                     scene.add(edgeMeshArr[i]);
+              }
+       });
+
        if(genGuiControls.show_Parks===true){
               for(var i=0; i<parkArr.length; i++){
                      scene.add(parkArr[i]);
@@ -330,28 +349,13 @@ var mainLoop = function() {
               genSiteGeometry();
        });
 
+       // super block controls
        bayDepth.onChange(function(){                          
-              genSiteSegments();
-       });
-
-       roadDepth.onChange(function(value){
-              for (var i = 0; i < edgeMeshArr.length; i++) {
-                     edgeMeshArr[i].geometry.dispose();
-                     edgeMeshArr[i].material.dispose();
-                     scene.remove(edgeMeshArr[i]);
-              }
-              edgeMeshArr = Array();  
-              console.log(networkEdgesArr.length);
-              for(var i=0; i<networkEdgesArr.length; i++){
-                     networkEdgesArr[i].getMeshObj(value);
-              }
-              for (var i=0; i<edgeMeshArr.length ; i++){
-                     scene.add(edgeMeshArr[i]);
-              }
+              genDynamicFunc();
        });
 
        extDepth.onChange(function(){                          
-              genSiteSegments();
+              genDynamicFunc();
        });
 
        if(superBlockControls.show_quads===true){

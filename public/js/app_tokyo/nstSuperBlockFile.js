@@ -109,7 +109,7 @@ function nsSite(type, area, cen, pts){
         return this.diag;
     }
     
-    this.setBays=function(baydepth,extDepth){
+    this.setBays=function(baydepth,extdepth){
         this.quadArr=[];
         this.subCellQuadArr=[];
         this.segArr=[];
@@ -133,8 +133,8 @@ function nsSite(type, area, cen, pts){
             var J=segJ.q;
             if(I!==0 && J!==0){
                 var seg=new nsSeg(I,J);
-                var eI=new nsPt(I.x+(c.x-b.x)*extDepth/utilDi(b,c), I.y+(c.y-b.y)*extDepth/utilDi(b,c), 0);
-                var eJ=new nsPt(J.x+(b.x-c.x)*extDepth/utilDi(b,c), J.y+(b.y-c.y)*extDepth/utilDi(b,c), 0);
+                var eI=new nsPt(I.x+(c.x-b.x)*extdepth/utilDi(b,c), I.y+(c.y-b.y)*extdepth/utilDi(b,c), 0);
+                var eJ=new nsPt(J.x+(b.x-c.x)*extdepth/utilDi(b,c), J.y+(b.y-c.y)*extdepth/utilDi(b,c), 0);
                 var check1=ptInSeg(b,eI,c);
                 var check2=ptInSeg(b,eJ,c);
                 if(check1===true && check2===true && utilDi(eI,eJ)>baydepth/2){

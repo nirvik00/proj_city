@@ -51,6 +51,7 @@ function genBldgFromQuad(quad){
        var q=quad.q;
        var r=quad.r; //not in order: interchange r&s
        var s=quad.s; //not in order: interchange r&s
+
        var geox=new THREE.Shape();
        geox.moveTo(0,0);
        geox.lineTo(q.x-p.x, q.y-p.y);
@@ -72,7 +73,7 @@ function genBldgFromQuad(quad){
        var mesh=new THREE.Mesh(geometry, material);
        mesh.position.x=p.x;
        mesh.position.y=p.y;
-       //scene.add(mesh);
+       scene.add(mesh);
        return mesh;
 }
    
