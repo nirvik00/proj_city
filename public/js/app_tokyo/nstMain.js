@@ -4,9 +4,6 @@ var scene3d = document.getElementById("scene3d");
 var infoPara = document.getElementById("information");
 
 
-
-
-
 var init = function() {
        scene = new THREE.Scene();
        scene.background = new THREE.Color("rgb(255,255,255)");
