@@ -72,7 +72,7 @@ function initGeometry(ALLJSONOBJS){
 }
 function genDynamicFunc(){
   genSiteSegments(); // generated - dynamic
-  genCellBldgs(); // generated - dynamic from cells 
+  genCellFromRules(); // generated - dynamic from cells 
   console.log("Dynamic functions loaded");
 }
 
@@ -191,7 +191,7 @@ function genSiteSegments(){
       }
     }
   }
-  genCellFromRules(); // dynamically generates buildings from cells
+  genCellFromRules(); // dynamically generates buildings from cells super block rules files
 }
 
 

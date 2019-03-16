@@ -60,7 +60,7 @@ function genBldgFromQuad(quad){
        geox.autoClose=true;
        var extsettings={
               steps: 1,
-              amount: Math.random()+0.1,
+              amount: Math.random()/2 + 0.1,
               bevelEnabled: false
        }
        var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
