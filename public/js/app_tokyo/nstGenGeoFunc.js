@@ -191,9 +191,12 @@ function genCellBldgs(){
     for(var j=0; j<quads.length; j++){
       var cells=quads[j].subCellQuads;
       for(var k=0; k<cells.length; k++){
-        var cell=cells[k];
-        var mesh=genBldgFromQuad(cell);
-        superBlockForms.push(mesh);
+        var t=Math.random();
+        if(t>0.5){
+          var cell=cells[k];
+          var mesh=genBldgFromQuad(cell);
+          superBlockForms.push(mesh);
+        }
       }
     }
   }
