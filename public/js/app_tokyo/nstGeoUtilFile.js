@@ -63,17 +63,20 @@ function genBldgFromQuad(quad, e){
 
        var colr=new THREE.Color("rgb(0,50,0)");
        var ext=0.1;
-       if(e==="periphery"){
-              colr=new THREE.Color("rgb(255,100,75)");
-              ext=Math.random()/2 +0.25;
-       }else if(e==="building"){
-              colr=new THREE.Color("rgb(155,50,205)");
-              ext=Math.random()/2 + .5;
+       if(e==="GCN"){
+              colr=new THREE.Color("rgb(55,255,175)");
+              ext=Math.random()/2 +0.10;
+       }else if(e==="NCN"){
+              colr=new THREE.Color("rgb(175,100,5)");
+              ext=Math.random()/2 + .15;
+       }else if(e==="RCN"){
+              colr=new THREE.Color("rgb(150,150,150)");
+              ext=Math.random()/2 + .25;
        }else if(e==="park"){
               colr=new THREE.Color("rgb(0,255,0)");
               ext=0.05;
        }else{
-              colr=new THREE.Color("rgb(0,50,50)");
+              colr=new THREE.Color("rgb(250,0,0)");
               ext=Math.random()/2 + 0.35;
        }
 

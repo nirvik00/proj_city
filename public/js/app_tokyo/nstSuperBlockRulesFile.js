@@ -13,50 +13,97 @@
 //
 
 function genCellFromRules(){
-    console.clear();
-
+    
     var parkdensity=superBlockControls.park_density;
-    var parkspread=superBlockControls.park_spread;
     var baydepth=superBlockControls.bay_depth;
     
     for( var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;    
-        //set periphery and buildings
+        //set periphery as buildings for geometric reasonableness
         for(var j=0; j<quads.length; j++){
             if(j<2 || j>quads.length-3){
-                quads[j].type="periphery";
+                quads[j].class="building";
             }
             var cells=quads[j].subCellQuads;
             
             //set periphery allocation to cells
             for(var k=0; k<cells.length; k++){
-                if(k<2 || k>cells.length-1 || quads[j].type==="periphery"){
-                    cells[k].type="periphery";
-                    siteObjArr[i].quadArr[j].subCellQuads[k].type="periphery";
+                if(k<2 || k>cells.length-2 || quads[j].class==="building"){
+                    cells[k].class="building";
+                    siteObjArr[i].quadArr[j].subCellQuads[k].class="building";
+                    siteObjArr[i].quadArr[j].subCellQuads[k].type="building";
                 }
-            }
-            //set building allocation to cells
-            for(var k=0; k<cells.length; k++){
-                if(cells[k].type==="periphery"){
-                    //dont do anything
-                }else{
-                    var t=Math.random();
-                    if(t>0.5){
-                        cells[k].type="building";
-                    }
-                }
-                siteObjArr[i].quadArr[j].subCellQuads[k].type=cells[k].type;
             }
         }
     }
-    generateParkCells(parkdensity);
 }
 
+function initAllocateFunctionsCells(){
+    var baydepth=superBlockControls.bay_depth; //gui input
+    var gcnFsr=superBlockControls.GCN_fsr; // gui input 
+    var ncnFsr=superBlockControls.NCN_fsr; // gui input
+    var rcnFsr=superBlockControls.RCN_fsr; // gui input
+    var parkdensity=superBlockControls.park_density; // gui input
 
-function generateParkCells(parkdensity){
+    var res=allocateFunctionToCells(parkdensity, "park"); // allocate park function to cells return: array of site index, used
+    var fsrDensityArr=[];
     for(var i=0; i<siteObjArr.length; i++){
-        var quads=siteObjArr[i].quadArr;
+        var num = res[i][1];        
+        var numGcn = Math.floor((gcnFsr/(gcnFsr+ncnFsr+rcnFsr))*num); 
+        var numNcn = Math.floor((ncnFsr/(gcnFsr+ncnFsr+rcnFsr))*num);
+        var numRcn = Math.floor((rcnFsr/(gcnFsr+ncnFsr+rcnFsr))*num);
+        fsrDensityArr.push([numGcn, numNcn, numRcn]);
+        //console.log(res[i] +","+ numGcn+","+ numNcn +","+ numRcn);
+    }
+
+    for(var i=0; i<siteObjArr.length; i++){
+        var quads=siteObjArr[i].quadArr;   
+        var allCells=[];// use random shuffle to cells
+        var idx=[];//all ids
+        for(var j=0; j<quads.length; j++){
+            var cells=quads[j].subCellQuads;
+            for(var k=0; k<cells.length; k++){
+                allCells.push(cells[k]);
+                idx.push(j);
+            }
+        }
+        //randomly shuffle the indices of allcells
+        var tmp=[];
+        for(var j=0; j<allCells.length; j++){
+            tmp.push(j);
+        }
+        var tmp2=randomShuffle(tmp);
         
+        //allcoate the functions based on itr
+        var itr=0; //do not clear this
+        var gotNumGcn=0;
+        for(var j=0; j<allCells.length; j++){
+            if(gotNumGcn>=fsrDensityArr[i][0]){ 
+                break; 
+            }
+            var t=tmp2[itr];
+            allCells[t].type="GCN"; 
+            gotNumGcn++;
+            itr++;
+        }
+        var gotNumRcn=0;
+        var j=0
+        for(var j=0; j<allCells.length; j++){
+            if(gotNumRcn>=fsrDensityArr[i][0]){
+                break; 
+            }
+            var t=tmp2[itr];
+            allCells[t].type="RCN"; 
+            gotNumRcn++;
+            itr++;
+        }
+    }
+}
+
+function allocateFunctionToCells(density, type){
+    res=[];
+    for(var i=0; i<siteObjArr.length; i++){
+        var quads=siteObjArr[i].quadArr;        
         // use random shuffle to find cells for parks
         var allCells=[];
         for(var j=0; j<quads.length; j++){
@@ -71,36 +118,47 @@ function generateParkCells(parkdensity){
             tmp.push(j);
         }
 
-        var num=Math.floor(allCells.length*parkdensity);
+        var num=Math.floor(allCells.length*density);
         var tmp2=randomShuffle(tmp);
-        var parkCell=[];
+        var typeCell=[];
         for(var j=0; j<num; j++){
             var t=tmp2[j];
-            parkCell.push(["park", t]);
+            typeCell.push([type, t]);
         }
 
         // set the subCellQuads
         var counter=0;
+        var used=0;
         for(var j=0; j<quads.length; j++){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
                 var ty=cells[k].type;
-                for(var itr=0; itr<parkCell.length; itr++){
-                    if(itr<parkCell.length){
-                        if(parkCell[itr][0]==="park" && parkCell[itr][1]===counter){
+                for(var itr=0; itr<typeCell.length; itr++){
+                    if(itr<typeCell.length){
+                        if(typeCell[itr][0]===type && typeCell[itr][1]===counter){
                             if(siteObjArr[i].quadArr[j].subCellQuads[k].type!=="building"){
-                                siteObjArr[i].quadArr[j].subCellQuads[k].type="park";                
-                            }                            
-                        }                    
-                    }                
-                }                
+                                siteObjArr[i].quadArr[j].subCellQuads[k].type=type;
+                                used++;
+                            }
+                        }
+                    }
+                }
                 counter++;
             }
         }
+        for(var j=0; j<allCells.length; j++){
+            if(allCells[j].type!=="park"){
+                allCells[j].class="building";
+                allCells[j].type="NCN";
+            }
+        }
+        var remainingCells=allCells.length-used;
+        res.push([i, remainingCells]);
     }
-    outputCells();
+    console.log("in allocation");
+    console.log("used cells = "+used);
+    return res;
 }
-
 
 function outputCells(){
     for( var i=0; i<siteObjArr.length; i++){
@@ -114,7 +172,6 @@ function outputCells(){
             }
         }
     }
-    
     console.log("superBlockForms: "+superBlockForms.length);
 }
 

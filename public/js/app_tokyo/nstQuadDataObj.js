@@ -17,7 +17,7 @@ function nsQuad(a,b,c,d,i){
     
     // allocate type or function to celll
     this.type="";
-
+    this.class="";
     this.displayType=function(){
         var s="type: "+this.type;
         return s;

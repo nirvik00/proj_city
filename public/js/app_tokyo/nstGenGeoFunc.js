@@ -72,8 +72,11 @@ function initGeometry(ALLJSONOBJS){
 }
 
 function genDynamicFunc(){
+  console.clear();
   genSiteSegments(); // generated - dynamic
   genCellFromRules(); // dynamically generates buildings from cells super block rules files
+  initAllocateFunctionsCells(); // get user inputs and init allocate functions to cells
+  outputCells(); // generate the meshes for the super block 
   console.log("Dynamic functions loaded");
 }
 
