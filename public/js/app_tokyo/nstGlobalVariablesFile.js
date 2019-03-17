@@ -18,6 +18,11 @@ var cellArr=[]; //dynamic ->  array of cells from the quad-> bays of the site
 var siteDiagArr=[]; // dynamic -> rendered diags of site obj
 var superBlockForms=[]; // dynamic -> rendered mesh for superblocks
 
+var parkObjArr=[]; //object to store info about cell: coordinates, extrusion, color
+var gcnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
+var ncnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
+var rcnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
+
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;
 
