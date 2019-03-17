@@ -1,7 +1,8 @@
-
-
-
-
+//
+//
+// site object to implement super block generation
+//
+//
 function nsSite(type, area, cen, pts){
     this.type=type;
     this.area=area;

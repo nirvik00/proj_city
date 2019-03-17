@@ -21,6 +21,8 @@ var superBlockControls=new function(){
        this.show_quads=false;
        this.show_cells=false;
        this.show_forms=false;
+       this.park_density=0.5;
+       this.park_spread=0.2
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,1.0);
@@ -30,6 +32,8 @@ var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
 var showCells=superBlockGui.add(superBlockControls, "show_cells");
 var showForms=superBlockGui.add(superBlockControls, "show_forms");
+var parkDensity=superBlockGui.add(superBlockControls, "park_density");
+var parkSpread=superBlockGui.add(superBlockControls, "park_spread");
 
 var genGuiControls = new function() {
   this.show_Nodes = false;
@@ -219,7 +223,5 @@ function guiUpdates(){
            for(var i=0; i<superBlockForms.length; i++){
                   scene.add(superBlockForms[i]);
            }
-    }
-
-    
+    }    
 }

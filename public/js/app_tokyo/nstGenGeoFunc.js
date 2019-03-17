@@ -70,9 +70,10 @@ function initGeometry(ALLJSONOBJS){
   genSiteGeometry(); // loaded from DB
   genDynamicFunc(); // dynamic functions- once everything is loaded -> generate new diag, quad, cells, allocate, generate mesh renders
 }
+
 function genDynamicFunc(){
   genSiteSegments(); // generated - dynamic
-  genCellFromRules(); // generated - dynamic from cells 
+  genCellFromRules(); // dynamically generates buildings from cells super block rules files
   console.log("Dynamic functions loaded");
 }
 
@@ -171,6 +172,13 @@ function genSiteSegments(){
   }
   cellArr=[];
   
+  for(var i=0; i<superBlockForms.length; i++){
+      superBlockForms[i].geometry.dispose();
+      superBlockForms[i].material.dispose();
+      scene.remove(superBlockForms[i]);
+  }
+  superBlockForms=[];
+
   var baydepth=superBlockControls.bay_depth; // from main GUI control
   var extdepth=superBlockControls.ext_depth; // from main GUI controls
   for(var i=0; i<siteObjArr.length; i++){
@@ -191,7 +199,7 @@ function genSiteSegments(){
       }
     }
   }
-  genCellFromRules(); // dynamically generates buildings from cells super block rules files
+  //genCellFromRules(); // dynamically generates buildings from cells super block rules files
 }
 
 

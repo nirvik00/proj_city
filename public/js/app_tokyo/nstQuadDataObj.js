@@ -14,7 +14,14 @@ function nsQuad(a,b,c,d,i){
     this.ncnArea=0.0;
     this.rcnArea=0.0;
     this.cellArea=0.0;
-    this.periphery=false;
+    
+    // allocate type or function to celll
+    this.type="";
+
+    this.displayType=function(){
+        var s="type: "+this.type;
+        return s;
+    }
 
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
@@ -40,7 +47,8 @@ function nsQuad(a,b,c,d,i){
         var matx;
         if(this.periphery===true){
             matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(75,255,0)")});
-        }else{
+        }
+        if(this.building===true){
             matx=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(255,0,0)")});
         }        
         var Q = new THREE.Line(geox, matx);
@@ -104,3 +112,8 @@ function nsQuad(a,b,c,d,i){
         }
     }
 }
+
+
+
+
+

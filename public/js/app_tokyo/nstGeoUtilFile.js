@@ -48,26 +48,44 @@ function nsUnitVec(a,b){
        return u;
 }
 
-function genBldgFromQuad(quad){
+function genBldgFromQuad(quad, e){
        var p=quad.p; 
        var q=quad.q;
        var r=quad.r; //not in order: interchange r&s
        var s=quad.s; //not in order: interchange r&s
-
+   
        var geox=new THREE.Shape();
        geox.moveTo(0,0);
        geox.lineTo(q.x-p.x, q.y-p.y);
        geox.lineTo(s.x-p.x, s.y-p.y);
        geox.lineTo(r.x-p.x, r.y-p.y);
        geox.autoClose=true;
+
+       var colr=new THREE.Color("rgb(55,250,105)");
+       var ext=0.1;
+       if(e==="periphery"){
+              colr=new THREE.Color("rgb(255,100,75)");
+              ext=Math.random()/2 +0.25;
+       }else if(e==="building"){
+              colr=new THREE.Color("rgb(155,50,205)");
+              ext=Math.random()/2 + 1.0;
+       }else if(e==="park"){
+              colr=new THREE.Color("rgb(0,255,0)");
+              ext=0.05;
+       }else{
+              colr=new THREE.Color("rgb(0,255,0)");
+              ext=Math.random()/2 + 0.50;
+       }
+
        var extsettings={
               steps: 1,
-              amount: Math.random()/2 + 0.1,
+              amount: ext,
               bevelEnabled: false
        }
        var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
+
        var material = new THREE.MeshPhongMaterial({
-              color: 0xdddddd, 
+              color: colr, 
               specular: 0x000000, 
               shininess: 10, 
               flatShading: true
@@ -77,7 +95,8 @@ function genBldgFromQuad(quad){
        mesh.position.y=p.y;
        scene.add(mesh);
        return mesh;
-}
+   }
+   
    
 var debugSphere=function(p,r){
        var geox = new THREE.SphereGeometry(r,10,10);
