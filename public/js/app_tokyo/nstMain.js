@@ -48,40 +48,40 @@ function addPointLights(){
 
        light1 = new THREE.PointLight( c1, intensity, distance, decay );
        light1.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c1 } ) ) );
-       light1.position.z=5;
+       light1.position.z=15;
        scene.add( light1 );
 
        light2 = new THREE.PointLight( c2, intensity, distance, decay );
        light2.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c2 } ) ) );
        light2.position.x=7;
        light2.position.y=-7;
-       light2.position.z=5;
+       light2.position.z=15;
        scene.add( light2 );
 
        light3 = new THREE.PointLight( c3, intensity, distance, decay );
        light3.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c3 } ) ) );
        light3.position.y=10;
-       light3.position.z=5;
+       light3.position.z=15;
        scene.add( light3 );
 
        light4 = new THREE.PointLight( c4, intensity, distance, decay );
        light4.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c4 } ) ) );
        light4.position.y=-7;
-       light4.position.z=5;
+       light4.position.z=15;
        scene.add( light4 );
 
        light5 = new THREE.PointLight( c5, intensity, distance, decay );
        light5.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c5 } ) ) );
        light5.position.x=-7;
        light5.position.y=7;
-       light5.position.z=5;
+       light5.position.z=15;
        scene.add( light5 );
 
        light6 = new THREE.PointLight( c6, intensity, distance, decay );
        light6.add( new THREE.Mesh( sphere, new THREE.MeshBasicMaterial( { color: c6 } ) ) );
        light6.position.x=-7;
        light6.position.y=-7;
-       light6.position.z=5;
+       light6.position.z=15;
        scene.add( light6 );
 
        var dlight = new THREE.DirectionalLight( 0xffffff, 0.05 );
@@ -113,6 +113,11 @@ function onDocumentKeyDown(event){
               genNetworkGeometry();
               genParkGeometry();
               genBldgGeometry();              
+       }
+       if(event.keyCode===13){
+              console.clear();
+              infoPara.innerHTML = "";
+              genDynamicFunc(); // dynamic functions- once everything is loaded -> generate new diag, quad, cells, allocate, generate mesh renders          
        }
 }
 

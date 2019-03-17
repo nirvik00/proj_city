@@ -21,24 +21,21 @@
         <div id="scene3d"></div>
     </div>
 
-<script src="/public/js/app_tokyo/nstSuperBlockRulesFile.js"></script>
-<script src="/public/js/app_tokyo/nstSuperBlockFile.js"></script>
+<script src="/public/js/app_tokyo/nstSuperBlockRulesFile.js"></script><!--functions for rules of superblock-->
+<script src="/public/js/app_tokyo/nstSuperBlockFile.js"></script><!--functions for superblock generation-->
+<script src="/public/js/app_tokyo/nstGeoUtilFile.js"></script><!--fucntions for utility & debug-->
+<script src="/public/js/app_tokyo/nstRoutingFunc.js"></script><!--functions for routing spt mst-->
+<script src="/public/js/app_tokyo/nstNetworkFunc.js"></script><!--functions for overall generation-->
+<script src="/public/js/app_tokyo/nstNetworkDefFile.js"></script><!--dataobj for network objects-->
+<script src="/public/js/app_tokyo/nstQuadDataObj.js"></script><!--dataobj for quad-->
+<script src="/public/js/app_tokyo/nstGeoDefFile.js"></script><!--dataobj for general elements-->
+<script src="/public/js/app_tokyo/nstGenGeoFunc.js"></script><!--functions for intiating geometry-->
+<script src="/public/js/app_tokyo/nstGlobalVariablesFile.js"></script><!--all global variables are stored here-->
+<script src="/public/js/app_tokyo/nstGuiFile.js"></script><!--datGui variables and config-->
+<script src="/public/js/app_tokyo/nstMain.js"></script><!--3js setup + state machine-->
 
-<script src="/public/js/app_tokyo/nstNetworkDefFile.js"></script>
-<script src="/public/js/app_tokyo/nstGeoUtilFile.js"></script>
-<script src="/public/js/app_tokyo/nstRoutingFunc.js"></script>
-<script src="/public/js/app_tokyo/nstNetworkFunc.js"></script>
-
-<script src="/public/js/app_tokyo/nstGeoDefFile.js"></script>
-<script src="/public/js/app_tokyo/nstGenGeoFunc.js"></script>
-
-<script src="/public/js/app_tokyo/nstGlobalVariablesFile.js"></script>
-
-<script src="/public/js/app_tokyo/nstGuiFile.js"></script>
-
-<script src="/public/js/app_tokyo/nstMain.js"></script>
 <script>
     var decodedJson = decodeURIComponent("{{{encodedJson}}}");
     var jsonObj = JSON.parse(decodedJson);
     getData(jsonObj);
-</script>
+</script> <!--real init get data from handlebars and send to generative functions-->

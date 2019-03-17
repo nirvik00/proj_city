@@ -68,7 +68,7 @@ function initGeometry(ALLJSONOBJS){
   genBldgGeometry(); // loaded from DB
   genParkGeometry(); // loaded from DB
   genSiteGeometry(); // loaded from DB
-  genDynamicFunc();
+  genDynamicFunc(); // dynamic functions- once everything is loaded -> generate new diag, quad, cells, allocate, generate mesh renders
 }
 function genDynamicFunc(){
   genSiteSegments(); // generated - dynamic
