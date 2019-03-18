@@ -25,15 +25,15 @@ var superBlockControls=new function(){
        this.show_segs=false;
        this.show_quads=false;
        this.show_cells=false;
-       this.show_forms=false;
+       
        this.show_GCN=false;
        this.show_NCN=false;
        this.show_RCN=false;
        this.show_Park=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
-var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,1.0);
-var extDepth=superBlockGui.add(superBlockControls,"ext_depth",0.05,0.5);
+var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,0.75);
+var extDepth=superBlockGui.add(superBlockControls,"ext_depth",0.05,0.35);
 var parkDensity=superBlockGui.add(superBlockControls, "park_density",0.1,0.5);
 var gcn_fsr=superBlockGui.add(superBlockControls, "GCN_fsr", 0.0,5.0);
 var ncn_fsr=superBlockGui.add(superBlockControls, "NCN_fsr", 0.0,5.0);
@@ -43,7 +43,6 @@ var showDiags=superBlockGui.add(superBlockControls, "show_diags");
 var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
 var showCells=superBlockGui.add(superBlockControls, "show_cells");
-var showForms=superBlockGui.add(superBlockControls, "show_forms");
 var showPark=superBlockGui.add(superBlockControls, "show_Park");
 var showGCN=superBlockGui.add(superBlockControls, "show_GCN");
 var showNCN=superBlockGui.add(superBlockControls, "show_NCN");
@@ -57,6 +56,7 @@ var genGuiControls = new function() {
   this.show_Parks = false;
   this.show_Buildings = false;
   this.show_Sites=false;
+  this.show_Generated=-1;
   this.show_Axis = true;
   this.show_Information = false;
 }
@@ -67,6 +67,7 @@ var roadDepth=dbGuiControls.add(genGuiControls,"road_depth",0.05,0.35);
 showParks = dbGuiControls.add(genGuiControls, "show_Parks");
 showBldgs = dbGuiControls.add(genGuiControls, "show_Buildings");
 showSites = dbGuiControls.add(genGuiControls, "show_Sites");
+var showGenerated = dbGuiControls.add(genGuiControls, "show_Generated", -1, 33, 1);
 showAxes = dbGuiControls.add(genGuiControls, "show_Axis");
 dbGuiControls.add(genGuiControls, "show_Information");
 
@@ -82,7 +83,6 @@ function guiUpdates(){
               } else {
               infoPara.hidden = false;
        }
-
        // gen gui controls
        if(genGuiControls.show_Axis===true){ 
               scene.add(axes); 
@@ -155,6 +155,49 @@ function guiUpdates(){
        showSites.onChange(function(){
               genSiteGeometry();
        });
+
+       if(genGuiControls.show_Generated===true){
+              //console.clear();
+              //console.log(siteObjArr.length);
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            scene.remove(parkMeshArr[j]);
+                     }
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            scene.remove(gcnMeshArr[j]);
+                     }
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            scene.remove(ncnMeshArr[j]);
+                     }
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            scene.remove(rcnMeshArr[j]);
+                     }
+                     //console.log(i+"."+ parkMeshArr.length+ ", "+ gcnMeshArr.length+", "+ ncnMeshArr.length+ ", "+rcnMeshArr.length);
+              }
+       } else {
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            scene.add(parkMeshArr[j]);
+                     }
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            scene.add(gcnMeshArr[j]);
+                     }
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            scene.add(ncnMeshArr[j]);
+                     }
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            scene.add(rcnMeshArr[j]);
+                     }
+              }
+       }  
 
        // super block controls
        bayDepth.onChange(function(){ 
@@ -232,47 +275,7 @@ function guiUpdates(){
               }
        }
 
-       if(superBlockControls.show_forms===false){
-              for (var i=0; i<siteObjArr.length; i++){
-                     var parkMeshArr=siteObjArr[i].parkMeshArr;
-                     for(var j=0; j<parkMeshArr.length; j++){
-                            scene.remove(parkMeshArr[j]);
-                     }
-                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
-                     for(var j=0; j<gcnMeshArr.length; j++){
-                            scene.remove(gcnMeshArr[j]);
-                     }
-                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
-                     for(var j=0; j<ncnMeshArr.length; j++){
-                            scene.remove(ncnMeshArr[j]);
-                     }
-                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
-                     for(var j=0; j<rcnMeshArr.length; j++){
-                            scene.remove(rcnMeshArr[j]);
-                     }
-              }
-
-       }else{
-              for (var i=0; i<siteObjArr.length; i++){
-                     var parkMeshArr=siteObjArr[i].parkMeshArr;
-                     for(var j=0; j<parkMeshArr.length; j++){
-                            scene.add(parkMeshArr[j]);
-                     }
-                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
-                     for(var j=0; j<gcnMeshArr.length; j++){
-                            scene.add(gcnMeshArr[j]);
-                     }
-                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
-                     for(var j=0; j<ncnMeshArr.length; j++){
-                            scene.add(ncnMeshArr[j]);
-                     }
-                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
-                     for(var j=0; j<rcnMeshArr.length; j++){
-                            scene.add(rcnMeshArr[j]);
-                     }
-              }
-       }    
-
+         
 
        if(superBlockControls.show_Park===false){
               for (var i=0; i<siteObjArr.length; i++){
@@ -283,10 +286,20 @@ function guiUpdates(){
               }
        }else{
               for (var i=0; i<siteObjArr.length; i++){
-                     var parkMeshArr=siteObjArr[i].parkMeshArr;
-                     for(var j=0; j<parkMeshArr.length; j++){
-                            scene.add(parkMeshArr[j]);
-                     }
+                     var idx=genGuiControls.show_Generated;
+                     if(idx>-1){
+                            if(i===idx){
+                                   var parkMeshArr=siteObjArr[i].parkMeshArr;
+                                   for(var j=0; j<parkMeshArr.length; j++){
+                                          scene.add(parkMeshArr[j]);
+                                   }
+                            }else{
+                                   var parkMeshArr=siteObjArr[i].parkMeshArr;
+                                   for(var j=0; j<parkMeshArr.length; j++){
+                                          scene.remove(parkMeshArr[j]);
+                                   }
+                            }     
+                     }                     
               }
        } 
        
@@ -299,10 +312,20 @@ function guiUpdates(){
               }
        }else{
               for (var i=0; i<siteObjArr.length; i++){
-                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
-                     for(var j=0; j<gcnMeshArr.length; j++){
-                            scene.add(gcnMeshArr[j]);
-                     }
+                     var idx=genGuiControls.show_Generated;
+                     if(idx>-1){
+                            if(i===idx){
+                                   var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                                   for(var j=0; j<gcnMeshArr.length; j++){
+                                          scene.add(gcnMeshArr[j]);
+                                   }
+                            }else{
+                                   var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                                   for(var j=0; j<gcnMeshArr.length; j++){
+                                          scene.remove(gcnMeshArr[j]);
+                                   }
+                            }
+                     }                     
               }
        }    
        
@@ -315,10 +338,20 @@ function guiUpdates(){
               }
        }else{
               for (var i=0; i<siteObjArr.length; i++){
-                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
-                     for(var j=0; j<ncnMeshArr.length; j++){
-                            scene.add(ncnMeshArr[j]);
-                     }
+                     var idx=genGuiControls.show_Generated;
+                     if(idx>-1){
+                            if(i===idx){
+                                   var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                                   for(var j=0; j<ncnMeshArr.length; j++){
+                                          scene.add(ncnMeshArr[j]);
+                                   }
+                            }else{
+                                   var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                                   for(var j=0; j<ncnMeshArr.length; j++){
+                                          scene.remove(ncnMeshArr[j]);
+                                   }
+                            }
+                     }                     
               }
        } 
               
@@ -331,10 +364,20 @@ function guiUpdates(){
               }
        }else{
               for (var i=0; i<siteObjArr.length; i++){
-                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
-                     for(var j=0; j<rcnMeshArr.length; j++){
-                            scene.add(rcnMeshArr[j]);
-                     }
+                     var idx=genGuiControls.show_Generated;
+                     if(idx>-1){
+                            if(i===idx){
+                                   var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                                   for(var j=0; j<rcnMeshArr.length; j++){
+                                          scene.add(rcnMeshArr[j]);
+                                   }
+                            }else{
+                                   var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                                   for(var j=0; j<rcnMeshArr.length; j++){
+                                          scene.remove(rcnMeshArr[j]);
+                                   }
+                            }
+                     }                     
               }
        } 
 

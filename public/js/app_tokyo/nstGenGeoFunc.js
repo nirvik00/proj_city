@@ -146,7 +146,6 @@ function genSiteSegments(){
   }
 }
 
-
 function clearSiteMeshes(){
   for(var i=0; i<cellArr.length; i++){
       var quad=cellArr[i][0];

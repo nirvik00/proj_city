@@ -8,15 +8,16 @@ function nsSite(type, index, area, cen, pts){
     this.type=type;
     this.area=area;
     this.cen=cen;
-    this.diag;   
-    this.renderedObject;
-    this.segArr=[];
-    this.quadArr=[];
-    this.subCellQuadArr=[];
+    this.renderedObject; //outline of the site: polyline
+    this.diag; // diagonals of the site : longest line segment between the points
+    this.segArr=[]; // segments generated from the diagonal
+    this.quadArr=[]; // quads of the site
+    this.subCellQuadArr=[];//cells of the site obj
     this.parkMeshArr=[]; // rendered park objects
     this.gcnMeshArr=[]; // rendered gcn mesh objects
     this.ncnMeshArr=[]; // rendered ncn mesh objects
     this.rcnMeshArr=[]; // rendered rcn mesh objects
+    
 
     this.pts=[];
     for(var i=0; i<pts.length; i++){
@@ -37,8 +38,7 @@ function nsSite(type, index, area, cen, pts){
     }
 
     this.genGeo=function(){
-        var geox=new THREE.Shape();
-        
+        var geox=new THREE.Shape();        
         var p=pts[0];
         geox.moveTo(0,0);
         for(var i=1; i<pts.length; i++){

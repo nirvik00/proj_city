@@ -127,7 +127,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
         }
         var NUM=Math.floor(allCells.length*density);//numer of cells required to be park
         var typeCell=[];//bind the index to type="park"
-        if(parkcen===false){
+        if(allCells.length>3 && parkcen===false){
             // use random shuffle to find cells for parks
             var tmp=[];
             for(var j=0; j<allCells.length; j++){
@@ -154,7 +154,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
             var remainingCells=allCells.length-used;
             res.push([i, remainingCells]);
         }else{
-            // set central cells as park
+        // set central cells as park  '
             var CEN=cenOfArr(allCells);
             var sortable=[];
             for(var j=0; j<allCells.length; j++){
@@ -190,7 +190,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
 }
 
 function outputCells(){
-    clearSiteMeshes();
+    // clearSiteMeshes();
     for( var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;  
         for(var j=0; j<quads.length; j++){
