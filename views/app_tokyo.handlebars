@@ -38,7 +38,7 @@
 
     <div id="export"><span class="link" id="export">Generate OBJ file (for Rhino3d)</span></div>
     <br>
-    <textarea id="information" style="display:none" readonly> Information</textarea>
+    <textarea id="information" style="display:none" readonly>null</textarea>
     <input type="text" id="name" value="plugs_web">    
     <button id="button" onclick="download();">Download</button>
     <button id="button" onclick="download();">Save To DB</button>
@@ -47,6 +47,10 @@
     <script type="text/javascript">
         function download(){
             var content = document.getElementById("information").innerHTML;
+            console.log(content);
+            if(content==="null"|| content.trim()==""){
+                alert("first generate the OBJ file- option above");
+            }
             var nameOfFile=document.getElementById("name").value+"."+"obj";
             var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
             saveAs(blob, nameOfFile);
