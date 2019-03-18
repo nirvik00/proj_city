@@ -78,13 +78,13 @@ function genBldgFromQuad(siteobj, quad, e){
        var ext=0.1;
        if(e==="GCN"){
               colr=new THREE.Color("rgb(55,255,175)");
-              ext=Math.random()/2 +0.10;
+              ext=Math.random()/2 +0.30;
        }else if(e==="NCN"){
               colr=new THREE.Color("rgb(175,100,5)");
               ext=Math.random()/2 + .15;
        }else if(e==="RCN"){
               colr=new THREE.Color("rgb(150,150,150)");
-              ext=Math.random()/2 + .25;
+              ext=Math.random()/2 + .5;
        }else if(e==="park"){
               colr=new THREE.Color("rgb(0,255,0)");
               ext=0.05;

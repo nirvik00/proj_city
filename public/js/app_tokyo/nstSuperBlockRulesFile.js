@@ -253,7 +253,7 @@ function updateSiteInfo(){
         var arRcn=arrcn*100;
         s1+="\narea of park="+arPark+"\narea of GCN="+arGcn+"\narea of NCN="+arNcn+"\narea of RCN="+arRcn;
         siteObjArr[i].detailedInfo=s1;
-    }    
+    }
 }
 
 function randomShuffle(array){

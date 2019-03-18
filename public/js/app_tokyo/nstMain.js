@@ -33,10 +33,48 @@ var init = function() {
        // vertical angle control
        //controls.minPolarAngle = -Math.PI / 10;
        //controls.maxPolarAngle = Math.PI / 10;
+       
+       window.addEventListener( 'resize', onWindowResize, false );
+       window.addEventListener('click', onWindowClick, false);
+
        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
        document.addEventListener('keydown', onDocumentKeyDown, false);
        document.addEventListener('keyup', onDocumentKeyUp, false);
-       window.addEventListener( 'resize', onWindowResize, false );
+       
+       
+       exportButton=document.getElementById('export');
+       exportButton.addEventListener('click', function(){
+              exportToObj();
+       });
+       
+       floatingDiv=document.createElement('div');
+       floatingDiv.className='floating';
+       document.body.appendChild(floatingDiv);
+}
+
+function exportToObj(){
+       var exporter=new THREE.OBJExporter();
+       var result=exporter.parse(scene);
+       floatingDiv.style.display='block';
+       floatingDiv.innerHTML=result.split('\n').join('<br/>');
+
+       var objContent=result;
+       document.getElementById("information").innerHTML=objContent;
+}
+
+function onWindowClick(event){
+       var needToClose=true;
+       var target=event.target;
+       while(target!==null){
+              if(target===floatingDiv || target=== exportButton){
+                     needToClose=false;
+                     break;
+              }
+              target=target.parentElement;
+       }
+       if(needToClose){
+              floatingDiv.style.display='none'
+       }
 }
 
 function addPointLights(){
@@ -106,13 +144,6 @@ function onDocumentKeyDown(event){
        if(event.keyCode===16){
               isShiftDown=true;
               //break;
-       }
-       if(event.keyCode===82){
-              console.clear();
-              infoPara.innerHTML = "";
-              genNetworkGeometry();
-              genParkGeometry();
-              genBldgGeometry();              
        }
        if(event.keyCode===13){
               console.clear();

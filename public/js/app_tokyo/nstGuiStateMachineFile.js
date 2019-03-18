@@ -69,7 +69,7 @@ showBldgs = dbGuiControls.add(genGuiControls, "show_Buildings");
 showSites = dbGuiControls.add(genGuiControls, "show_Sites");
 
 showAxes = dbGuiControls.add(genGuiControls, "show_Axis");
-dbGuiControls.add(genGuiControls, "show_Information");
+dbGuiControls.add(genGuiControls, "show_Information").listen();
 
 var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
@@ -78,9 +78,7 @@ datgui.close();
 
 // gui update functions
 function guiUpdates(){
-       if (genGuiControls.show_Information === false) {
-              infoPara.hidden = true;
-       } else {
+       if (genGuiControls.show_Information === true) {
               var s="";
               var idx=superBlockControls.show_Generated;
               if(idx>-1 && idx<33){
@@ -99,8 +97,10 @@ function guiUpdates(){
                             s+=siteObjArr[i].detailedInfo;
                      }
               }
-              infoPara.innerHTML=s;
-              infoPara.hidden = false;
+              var objContent=s.split('\n').join('<br/>');
+              floatingDiv.style.display='block';
+              floatingDiv.innerHTML=objContent; 
+              genGuiControls.show_Information = false;
        }
        // gen gui controls
        if(genGuiControls.show_Axis===true){

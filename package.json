@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node app.js"
   },
-  "engines":{
-    "node":"10.14.1",
-    "npm":"6.4.1"
+  "engines": {
+    "node": "10.14.1",
+    "npm": "6.4.1"
   },
   "author": "nirvik saha",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
+    "file-saver": "^2.0.1",
     "method-override": "^3.0.0",
     "mongoose": "^5.4.9"
   }
