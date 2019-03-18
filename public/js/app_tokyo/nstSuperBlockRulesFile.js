@@ -186,17 +186,16 @@ function allocateParkFunctionToCells(density, type, parkcen){
 
 function outputCells(){
     for( var i=0; i<siteObjArr.length; i++){
-        var quads=siteObjArr[i].quadArr;    
+        var quads=siteObjArr[i].quadArr;  
+          
         for(var j=0; j<quads.length; j++){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
                 var cell=cells[k];
-                mesh=genBldgFromQuad(cell,cell.type); //nst geo utils file
-                superBlockForms.push(mesh);
+                mesh=genBldgFromQuad(siteObjArr[i], cell,cell.type); //nst geo utils file; global array updates for rendered object and data object
             }
         }
     }
-    console.log("superBlockForms: "+superBlockForms.length);
 }
 
 function randomShuffle(array){

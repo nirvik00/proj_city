@@ -3,7 +3,8 @@
 // site object to implement super block generation
 //
 //
-function nsSite(type, area, cen, pts){
+function nsSite(type, index, area, cen, pts){
+    this.index=index;
     this.type=type;
     this.area=area;
     this.cen=cen;
@@ -12,6 +13,10 @@ function nsSite(type, area, cen, pts){
     this.segArr=[];
     this.quadArr=[];
     this.subCellQuadArr=[];
+    this.parkMeshArr=[]; // rendered park objects
+    this.gcnMeshArr=[]; // rendered gcn mesh objects
+    this.ncnMeshArr=[]; // rendered ncn mesh objects
+    this.rcnMeshArr=[]; // rendered rcn mesh objects
 
     this.pts=[];
     for(var i=0; i<pts.length; i++){

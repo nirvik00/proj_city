@@ -9,6 +9,17 @@ var parkObjArr=[]; // park object from db
 var parkArr=[]; // park render object from db
 var bldgObjArr=[]; // bldg object from db
 var bldgArr=[]; // bldg rendered object from db
+
+// site object array contains all information
+// - diags 
+// - segs
+// - quads
+// - cells
+// - park mesh array
+// - gcn mesh array
+// - ncn mesh array
+// - rcn mesh array
+
 var siteObjArr=[]; // site object from db
 var siteArr=[]; // rendered site object from db
 
@@ -16,12 +27,6 @@ var siteSegArr=[]; // dynamic ->  segments from the diagonal to the site boundar
 var siteQuadArr=[]; // dynamic -> site split into divs and construct quad from successive seg= Arr
 var cellArr=[]; //dynamic ->  array of cells from the quad-> bays of the site
 var siteDiagArr=[]; // dynamic -> rendered diags of site obj
-var superBlockForms=[]; // dynamic -> rendered mesh for superblocks
-
-var parkObjArr=[]; //object to store info about cell: coordinates, extrusion, color
-var gcnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
-var ncnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
-var rcnObjArr=[]; //object to store info about cell: coordinates, extrusion, color
 
 // main functions about the generation
 var camera, scene, renderer, control, axes, stats;

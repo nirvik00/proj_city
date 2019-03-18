@@ -48,7 +48,7 @@ function nsUnitVec(a,b){
        return u;
 }
 
-function genBldgFromQuad(quad, e){
+function genBldgFromQuad(siteobj, quad, e){
        var p=quad.p; 
        var q=quad.q;
        var r=quad.r; //not in order: interchange r&s
@@ -96,8 +96,17 @@ function genBldgFromQuad(quad, e){
        var mesh=new THREE.Mesh(geometry, material);
        mesh.position.x=p.x;
        mesh.position.y=p.y;
-       scene.add(mesh);
-       return mesh;
+       if(e==="park"){
+              siteobj.parkMeshArr.push(mesh);
+       }else if(e==="GCN"){
+              siteobj.gcnMeshArr.push(mesh);
+       }else if(e==="NCN"){
+              siteobj.ncnMeshArr.push(mesh);
+       }else if(e==="RCN"){
+              siteobj.rcnMeshArr.push(mesh);
+       }
+       //scene.add(mesh);
+       //return mesh;
    }
    
    

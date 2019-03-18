@@ -61,7 +61,7 @@ function initGeometry(ALLJSONOBJS){
           z=0;
           ptArr.push(new THREE.Vector2(x,y));
       }
-      var siteObj=new nsSite("site", area, cen, ptArr);
+      var siteObj=new nsSite("site", i, area, cen, ptArr);
       siteObjArr.push(siteObj);
     }
   }
@@ -130,12 +130,50 @@ function genSiteSegments(){
   }
   siteSegArr=[];
 
-  for(var i=0; i<superBlockForms.length; i++){
-    superBlockForms[i].geometry.dispose();
-    superBlockForms[i].material.dispose();
-    scene.remove(superBlockForms[i]);
+  for(var i=0; i<siteObjArr.length; i++){
+    var parkMeshArr=siteObjArr[i].parkMeshArr;
+    for(var j=0; j<parkMeshArr.length; j++){
+      parkMeshArr[j].geometry.dispose();
+      parkMeshArr[j].material.dispose();
+      scene.remove(parkMeshArr[j]);
+    }
+    parkMeshArr=[];
+    var gcnMeshArr=siteObjArr[i].parkMeshArr;
+    for(var j=0; j<gcnMeshArr.length; j++){
+      gcnMeshArr[j].geometry.dispose();
+      gcnMeshArr[j].material.dispose();
+      scene.remove(gcnMeshArr[j]);
+    }
+    gcnMeshArr=[];
+    var ncnMeshArr=siteObjArr[i].parkMeshArr;
+    for(var j=0; j<ncnMeshArr.length; j++){
+      ncnMeshArr[j].geometry.dispose();
+      ncnMeshArr[j].material.dispose();
+      scene.remove(ncnMeshArr[j]);
+    }
+    ncnMeshArr=[];
+    var rcnMeshArr=siteObjArr[i].parkMeshArr;
+    for(var j=0; j<rcnMeshArr.length; j++){
+      rcnMeshArr[j].geometry.dispose();
+      rcnMeshArr[j].material.dispose();
+      scene.remove(rcnMeshArr[j]);
+    }
+    rcnMeshArr=[];
   }
-  superBlockForms=[];
+  
+  for(var i=0; i<ncnMeshArr.length; i++){
+    ncnMeshArr[i].geometry.dispose();
+    ncnMeshArr[i].material.dispose();
+    scene.remove(ncnMeshArr[i]);
+  }
+  ncnMeshArr=[];
+
+  for(var i=0; i<rcnMeshArr.length; i++){
+    rcnMeshArr[i].geometry.dispose();
+    rcnMeshArr[i].material.dispose();
+    scene.remove(rcnMeshArr[i]);
+  }
+  rcnMeshArr=[];
 
   for(var i=0; i<siteDiagArr.length; i++){
     siteDiagArr[i].geometry.dispose();
@@ -175,13 +213,6 @@ function genSiteSegments(){
   }
   cellArr=[];
   
-  for(var i=0; i<superBlockForms.length; i++){
-      superBlockForms[i].geometry.dispose();
-      superBlockForms[i].material.dispose();
-      scene.remove(superBlockForms[i]);
-  }
-  superBlockForms=[];
-
   var baydepth=superBlockControls.bay_depth; // from main GUI control
   var extdepth=superBlockControls.ext_depth; // from main GUI controls
   for(var i=0; i<siteObjArr.length; i++){
