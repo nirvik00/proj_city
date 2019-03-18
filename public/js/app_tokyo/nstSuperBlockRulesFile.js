@@ -227,10 +227,10 @@ function updateSiteInfo(){
                         ar=Ar;
                     }
                 }catch(e){
-                    console.log("\n\nerror in ar");
+                    //console.log("\n\nerror in ar");
                     ar=0.0;
                 }
-                console.log(ar);
+                //console.log(ar);
                 if(type==="park"){
                     numpark++;
                     arpark+=ar;
