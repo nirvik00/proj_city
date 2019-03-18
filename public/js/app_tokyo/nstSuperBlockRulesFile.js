@@ -178,7 +178,6 @@ function allocateParkFunctionToCells(density, type, parkcen){
             for(var j=0; j<allCells.length; j++){
                 if(allCells[j].type!=="park"){
                     allCells[j].class="building";
-                    allCells[j].type="NCN";
                 }
             }
             sortable=[];
@@ -202,6 +201,59 @@ function outputCells(){
         }
     }
     console.log("Meshes added to scene");
+}
+
+function updateSiteInfo(){
+    for(var i=0; i<siteObjArr.length; i++){
+        var quads=siteObjArr[i].quadArr;
+        var s1="";
+        var numpark=0.0; var arpark=0.0;
+        var numgcn=0.0; var argcn=0.0;
+        var numncn=0.0; var arncn=0.0;
+        var numrcn=0.0; var arrcn=0.0;
+        for(var j=0; j<quads.length; j++){
+            var cells=quads[j].subCellQuads;
+            for(var k=0; k<cells.length; k++){
+                var cell=cells[k];
+                var type=cell.type;
+                var p=cell.p;
+                var q=cell.q;
+                var r=cell.r;
+                var s=cell.s;
+                var ar;
+                try{
+                    var Ar=heronArea(p,q,r,s);
+                    if(Ar>0.0){
+                        ar=Ar;
+                    }
+                }catch(e){
+                    console.log("\n\nerror in ar");
+                    ar=0.0;
+                }
+                console.log(ar);
+                if(type==="park"){
+                    numpark++;
+                    arpark+=ar;
+                }else if(type==="GCN"){
+                    numgcn++;
+                    argcn+=ar;
+                }else if(type==="NCN"){
+                    numncn++;
+                    arncn+=ar;
+                }else if(type==="RCN"){
+                    numrcn++;
+                    arrcn+=ar;
+                }
+            }
+        }
+        //console.log(arpark, argcn, arncn, arrcn);
+        var arPark=arpark*100;
+        var arGcn=argcn*100;
+        var arNcn=arncn*100;
+        var arRcn=arrcn*100;
+        s1+="\narea of park="+arPark+"\narea of GCN="+arGcn+"\narea of NCN="+arNcn+"\narea of RCN="+arRcn;
+        siteObjArr[i].detailedInfo=s1;
+    }    
 }
 
 function randomShuffle(array){

@@ -14,7 +14,7 @@ function nsQuad(a,b,c,d,i){
     this.ncnArea=0.0;
     this.rcnArea=0.0;
     this.cellArea=0.0;
-    
+
     // allocate type or function to celll
     this.type="";
     this.class="";
@@ -27,6 +27,19 @@ function nsQuad(a,b,c,d,i){
     this.mp=function(){
         var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
         return p;
+    }
+    
+    this.area=function(){
+        var a=utilDi(this.p, this.q);
+        var b=utilDi(this.q, this.r);
+        var c=utilDi(this.r, this.s);
+        var d=utilDi(this.s, this.p);
+        var s=(a+b+c)/2;
+        var ar1=Math.sqrt(s*(s-a)*(s-b)*(s-c));
+        s=(a+d+c)/2;
+        var ar2=Math.sqrt(s*(s-a)*(s-d)*(s-c));
+        var ar=ar1+ar2;
+        return ar;
     }
 
     this.setType=function(t){
@@ -109,7 +122,7 @@ function nsQuad(a,b,c,d,i){
                  quad.periphery=true;   
                 }
                 this.subCellQuads.push(quad);
-            }            
+            }
         }
     }
 }

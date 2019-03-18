@@ -78,6 +78,7 @@ function genDynamicFunc(){
   genCellFromRules(); // dynamically generates buildings from cells super block rules files
   initAllocateFunctionsCells(); // get user inputs and init allocate functions to cells
   outputCells(); // generate the meshes for the super block 
+  updateSiteInfo();//set the information to site obj arr
   console.log("Dynamic functions loaded");
 }
 

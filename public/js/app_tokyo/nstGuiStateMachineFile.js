@@ -78,13 +78,32 @@ datgui.close();
 
 // gui update functions
 function guiUpdates(){
-       if (genGuiControls.show_Information == false) {
+       if (genGuiControls.show_Information === false) {
               infoPara.hidden = true;
-              } else {
+       } else {
+              var s="";
+              var idx=superBlockControls.show_Generated;
+              if(idx>-1 && idx<33){
+                     for(var i=0; i<siteObjArr.length; i++){
+                            if(i==idx){
+                                   s+="\n----------------\n";
+                                   s+="Site = "+i+"\n"+siteObjArr[i].info();
+                                   s+=siteObjArr[i].detailedInfo;
+                            }                            
+                     }
+              }else{
+                     //updateSiteInfo();//set the information to site obj arr
+                     for(var i=0; i<siteObjArr.length; i++){
+                            s+="\n----------------\n";
+                            s+="\nsite = "+i+"\n"+siteObjArr[i].info();
+                            s+=siteObjArr[i].detailedInfo;
+                     }
+              }
+              infoPara.innerHTML=s;
               infoPara.hidden = false;
        }
        // gen gui controls
-       if(genGuiControls.show_Axis===true){ 
+       if(genGuiControls.show_Axis===true){
               scene.add(axes); 
        }else{
               scene.remove(axes); 
@@ -232,8 +251,6 @@ function guiUpdates(){
                      scene.remove(L2);
               }
        }
-
-         
 
        if(superBlockControls.show_Park===false){
               for (var i=0; i<siteObjArr.length; i++){

@@ -48,6 +48,19 @@ function nsUnitVec(a,b){
        return u;
 }
 
+function heronArea(p,q,r,s){
+       var a=utilDi(p, q);
+       var b=utilDi(q, r);
+       var c=utilDi(r, s);
+       var d=utilDi(s, p);
+       var s=(a+b+c)/2;
+       var ar1=Math.sqrt(s*(s-a)*(s-b)*(s-c));
+       s=(a+d+c)/2;
+       var ar2=Math.sqrt(s*(s-a)*(s-d)*(s-c));
+       var ar=ar1+ar2;
+       return ar;
+}
+
 function genBldgFromQuad(siteobj, quad, e){
        var p=quad.p; 
        var q=quad.q;

@@ -17,7 +17,7 @@ function nsSite(type, index, area, cen, pts){
     this.gcnMeshArr=[]; // rendered gcn mesh objects
     this.ncnMeshArr=[]; // rendered ncn mesh objects
     this.rcnMeshArr=[]; // rendered rcn mesh objects
-    
+    this.detailedInfo="";//updated from superblockrules files
 
     this.pts=[];
     for(var i=0; i<pts.length; i++){
@@ -89,6 +89,7 @@ function nsSite(type, index, area, cen, pts){
         var s="Site area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
         return s;
     }
+    
 
     this.getDiagonal=function(){
         var diagArr=new Array();
@@ -116,9 +117,9 @@ function nsSite(type, index, area, cen, pts){
     }
     
     this.setBays=function(baydepth,extdepth){
-        this.quadArr=[];
-        this.subCellQuadArr=[];
-        this.segArr=[];
+        this.quadArr=[]; // updated dynamically
+        this.subCellQuadArr=[]; // updated dynamically
+        this.segArr=[]; // updated dynamically
         var p=this.diag.p; // point 1 on diag
         var q=this.diag.q; // point 2 on diag
         var norm=utilDi(p,q);
@@ -191,3 +192,4 @@ function nsSite(type, index, area, cen, pts){
 
 
 
+var numpark=0;
