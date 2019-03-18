@@ -61,6 +61,44 @@ function heronArea(p,q,r,s){
        return ar;
 }
 
+function randomShuffle(array){
+       for (var i = array.length - 1; i > 0; i--) {
+              var j = Math.floor(Math.random() * (i + 1));
+              var temp = array[i];
+              array[i] = array[j];
+              array[j] = temp;
+       }
+       return array;
+}
+   
+function cenOfArr(arr){
+       var sortable=[];
+       for(var i=0; i<arr.length; i++){
+              var x=arr[i].mp().x;
+              var y=arr[i].mp().y;
+              sortable.push([x,y])
+       }
+       sortable.sort(function(a,b){
+              return a[0]-b[0];
+       });
+       var minx=sortable[0][0];
+       var maxx=sortable[sortable.length-1][0];
+       var sortable2=[];
+       for(var i=0; i<arr.length; i++){
+              var x=arr[i].mp().x;
+              var y=arr[i].mp().y;
+              sortable2.push([x,y])
+       }
+       sortable2.sort(function(a,b){
+              return a[1]-b[1];
+       });
+       var miny=sortable2[0][1];
+       var maxy=sortable2[sortable.length-1][1];
+       var cen=new nsPt((minx+maxx)/2,(miny+maxy)/2,0);
+       return cen;
+}
+   
+
 function genBldgFromQuad(siteobj, quad, e){
        var p=quad.p; 
        var q=quad.q;

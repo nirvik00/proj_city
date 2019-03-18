@@ -31,6 +31,7 @@ var superBlockControls=new function(){
        this.show_Park=false;
        this.show_Generated=-1;
 }
+
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,0.75);
 var extDepth=superBlockGui.add(superBlockControls,"ext_depth",0.05,0.35);
@@ -67,9 +68,16 @@ var roadDepth=dbGuiControls.add(genGuiControls,"road_depth",0.05,0.35);
 showParks = dbGuiControls.add(genGuiControls, "show_Parks");
 showBldgs = dbGuiControls.add(genGuiControls, "show_Buildings");
 showSites = dbGuiControls.add(genGuiControls, "show_Sites");
-
 showAxes = dbGuiControls.add(genGuiControls, "show_Axis");
 dbGuiControls.add(genGuiControls, "show_Information").listen();
+
+
+var downloadControls=new function(){
+       this.filename='filename';
+       this.download=false;
+}
+datgui.add(downloadControls, "filename");
+datgui.add(downloadControls,"download").listen();
 
 var customContainer = document.getElementById("moveGUI");
 customContainer.appendChild(datgui.domElement);
@@ -78,6 +86,19 @@ datgui.close();
 
 // gui update functions
 function guiUpdates(){
+       if(downloadControls.download===true){
+              exportToObj();
+              var content = document.getElementById("information").innerHTML;
+              if(content==="null"|| content.trim()==""){
+                     alert("first generate the OBJ file- option above");
+              }else{
+                     var nameOfFile=downloadControls.filename+".obj";
+                     var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+                     saveAs(blob, nameOfFile);
+              } 
+              downloadControls.download=false;
+       }
+
        if (genGuiControls.show_Information === true) {
               var s="";
               var idx=superBlockControls.show_Generated;
@@ -93,7 +114,7 @@ function guiUpdates(){
                      //updateSiteInfo();//set the information to site obj arr
                      for(var i=0; i<siteObjArr.length; i++){
                             s+="\n----------------\n";
-                            s+="\nsite = "+i+"\n"+siteObjArr[i].info();
+                            s+="\nsite = "+i+"\n";//+siteObjArr[i].info();
                             s+=siteObjArr[i].detailedInfo;
                      }
               }
@@ -116,7 +137,7 @@ function guiUpdates(){
        }else{
               for (var i = 0; i < nodeArr.length; i++) {
                      scene.remove(nodeArr[i]);
-              }   
+              }
        }
 
        if(genGuiControls.show_Edges===true){

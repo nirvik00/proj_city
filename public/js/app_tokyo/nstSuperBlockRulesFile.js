@@ -247,52 +247,23 @@ function updateSiteInfo(){
             }
         }
         //console.log(arpark, argcn, arncn, arrcn);
-        var arPark=arpark*100;
-        var arGcn=argcn*100;
-        var arNcn=arncn*100;
-        var arRcn=arrcn*100;
-        s1+="\narea of park="+arPark+"\narea of GCN="+arGcn+"\narea of NCN="+arNcn+"\narea of RCN="+arRcn;
+        var arPark=(arpark*100).toFixed(2);
+        var arGcn=(argcn*100).toFixed(2);
+        var arNcn=(arncn*100).toFixed(2);
+        var arRcn=(arrcn*100).toFixed(2);
+        s1+="\npark="+arPark+", number="+numpark+"\nGCN area="+arGcn+", number="+numgcn+"\nNCN area="+arNcn+","+numncn+"\nRCN area="+arRcn+", number="+numrcn;
         siteObjArr[i].detailedInfo=s1;
     }
-}
 
-function randomShuffle(array){
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+    var s="";
+    for(var i=0; i<siteObjArr.length; i++){
+        s+="\n----------------\n";
+        s+="\nsite = "+i+"\n";//+siteObjArr[i].info();
+        s+=siteObjArr[i].detailedInfo;
     }
-    return array;
+    var objContents=s.split('\n').join('<br/>');
+    document.getElementById("information").innerHTML=objContents;
 }
-
-function cenOfArr(arr){
-    var sortable=[];
-    for(var i=0; i<arr.length; i++){
-        var x=arr[i].mp().x;
-        var y=arr[i].mp().y;
-        sortable.push([x,y])
-    }
-    sortable.sort(function(a,b){
-        return a[0]-b[0];
-    });
-    var minx=sortable[0][0];
-    var maxx=sortable[sortable.length-1][0];
-    var sortable2=[];
-    for(var i=0; i<arr.length; i++){
-        var x=arr[i].mp().x;
-        var y=arr[i].mp().y;
-        sortable2.push([x,y])
-    }
-    sortable2.sort(function(a,b){
-        return a[1]-b[1];
-    });
-    var miny=sortable2[0][1];
-    var maxy=sortable2[sortable.length-1][1];
-    var cen=new nsPt((minx+maxx)/2,(miny+maxy)/2,0);
-    return cen;
-}
-
 
 
 

@@ -28,12 +28,20 @@ if(process.env.NODE_ENV === 'production'){
 //load idea model
 require('./models/Idea');
 const Idea=mongoose.model('ideas');
+
 require('./models/Node');
 const Node=mongoose.model('nodes');
+
 require('./models/Edge');
 const Edge=mongoose.model('edges');
+
 require('./models/NsElement');
 const NsElement=mongoose.model('ns_elements');
+
+require('./models/GeneratedObj');
+const GeneratedObj=mongoose.model('genobjs');
+//end of loading models
+
 
 //handlebars middleware
 app.engine('handlebars', exphbs({
@@ -74,16 +82,30 @@ app.get('/concept',(req, res)=>{
   res.render('concept');
 });
 
-//Tokyo project route - get information from db
-app.get('/app_tokyo',(req, res)=>{
+//Tokyo project route - send db to generator file
+app.get('/appTokyoGenerator',(req, res)=>{
   NsElement.find({})
   .then(ns_elements =>{
-    res.render('app_tokyo',{
+    res.render('appTokyoGenerator',{
       encodedJson : encodeURIComponent(JSON.stringify(ns_elements))
     });  
   });
 });
 
+
+app.post('/appTokyoGenerator', (req, res)=>{
+  const newGenObj={
+    name:req.body.name,
+    data:req.body.data
+  }
+  new GeneratedObj(newGenObj)
+  .save()
+  .then(genobj =>{
+    console.log(genobj);
+    res.redirect('/appTokyoGenerator');
+  })
+  .catch(err=>console.log(err));
+})
 
 //ideas index page
 app.get('/ideas', (req, res)=>{
@@ -110,7 +132,6 @@ app.get('/ideas/edit/:id', (req, res)=>{
     });  
   });
 });
-
 
 //ideas index page
 app.get('/ideas', (req, res)=>{

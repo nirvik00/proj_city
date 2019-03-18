@@ -40,33 +40,26 @@ var init = function() {
        document.addEventListener( 'mousemove', onDocumentMouseMove, false );
        document.addEventListener('keydown', onDocumentKeyDown, false);
        document.addEventListener('keyup', onDocumentKeyUp, false);
-       
-       
-       exportButton=document.getElementById('export');
-       exportButton.addEventListener('click', function(){
-              exportToObj();
-       });
-       
-       floatingDiv=document.createElement('div');
-       floatingDiv.className='floating';
-       document.body.appendChild(floatingDiv);
+
+       floatingDiv=document.createElement('div');//displays information about div
+       floatingDiv.className='floating'; //looks cool
+       document.body.appendChild(floatingDiv);//done
 }
 
 function exportToObj(){
-       var exporter=new THREE.OBJExporter();
-       var result=exporter.parse(scene);
-       floatingDiv.style.display='block';
-       floatingDiv.innerHTML=result.split('\n').join('<br/>');
-
-       var objContent=result;
-       document.getElementById("information").innerHTML=objContent;
+       var exporter=new THREE.OBJExporter(); 
+       var result=exporter.parse(scene); //parse and get the results
+       floatingDiv.style.display='block'; //display in dynamic div
+       floatingDiv.innerHTML=result.split('\n').join('<br/>'); //format results
+       var objContent=result; //update invisible field
+       document.getElementById("information").innerHTML=objContent; //this is picked up for download
 }
 
 function onWindowClick(event){
        var needToClose=true;
        var target=event.target;
        while(target!==null){
-              if(target===floatingDiv || target=== exportButton){
+              if(target===floatingDiv){
                      needToClose=false;
                      break;
               }
