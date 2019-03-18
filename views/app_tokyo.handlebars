@@ -50,10 +50,11 @@
             console.log(content);
             if(content==="null"|| content.trim()==""){
                 alert("first generate the OBJ file- option above");
-            }
-            var nameOfFile=document.getElementById("name").value+"."+"obj";
-            var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, nameOfFile);
+            }else{
+                var nameOfFile=document.getElementById("name").value+"."+"obj";
+                var blob = new Blob([content], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, nameOfFile);
+            }            
         }
     </script>
     
