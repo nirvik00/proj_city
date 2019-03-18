@@ -92,20 +92,40 @@ app.get('/appTokyoGenerator',(req, res)=>{
   });
 });
 
-
+//Tokyo project route - return generated option to db
 app.post('/appTokyoGenerator', (req, res)=>{
   const newGenObj={
     name:req.body.name,
-    data:req.body.data
+    data:req.body.dbdata
   }
   new GeneratedObj(newGenObj)
   .save()
   .then(genobj =>{
-    console.log(genobj);
     res.redirect('/appTokyoGenerator');
   })
   .catch(err=>console.log(err));
 })
+
+//Tokyo project route - get generated option from db and display
+app.get('/appTokyoListObj', (req, res)=>{
+  GeneratedObj.find({})
+  .sort({date:'desc'})
+  .then(genobj=>{
+    res.render('appTokyoListObj', {genobj:genobj});
+  });
+});
+
+//Tokyo project route - display selected option
+app.get('/appTokyoViewer/:id', (req, res)=>{
+  GeneratedObj.findOne({
+    _id:req.params.id
+  })
+  .then(genobj=>{
+    res.render('appTokyoViewer',{
+      genobj:genobj
+    });
+  });
+});  
 
 //ideas index page
 app.get('/ideas', (req, res)=>{
@@ -115,6 +135,8 @@ app.get('/ideas', (req, res)=>{
     res.render('ideas/index', {ideas:ideas});  
   });  
 });
+
+
 
 //add idea form 
 app.get('/ideas/add', (req, res)=>{

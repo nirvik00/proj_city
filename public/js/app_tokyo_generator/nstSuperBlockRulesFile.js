@@ -246,7 +246,6 @@ function updateSiteInfo(){
                 }
             }
         }
-        //console.log(arpark, argcn, arncn, arrcn);
         var arPark=(arpark*100).toFixed(2);
         var arGcn=(argcn*100).toFixed(2);
         var arNcn=(arncn*100).toFixed(2);
@@ -258,14 +257,27 @@ function updateSiteInfo(){
     var s="";
     for(var i=0; i<siteObjArr.length; i++){
         s+="\n----------------\n";
-        s+="\nsite = "+i+"\n";//+siteObjArr[i].info();
         s+=siteObjArr[i].detailedInfo;
     }
     var objContents=s.split('\n').join('<br/>');
-    document.getElementById("information").innerHTML=objContents;
 }
 
 
+function updateDBInfo(){
+    var objContents="";
+    for(var i=0; i<siteObjArr.length; i++){
+        var quads=siteObjArr[i].quadArr;
+        for(var j=0; j<quads.length; j++){
+            var cells=quads[j].subCellQuads;
+            for(var k=0; k<cells.length; k++){
+                objContents+=cells[k].getDBInfo();
+
+            }
+        }
+    }
+    //console.log(objContents);
+    document.getElementById("dbinformation").innerHTML=objContents;
+}
 
 
 

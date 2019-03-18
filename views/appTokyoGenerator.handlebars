@@ -32,13 +32,13 @@
         color:skyblue;
     }
   </style>
-
+    <textarea id="objinformation" name="objdata" style="display:none" required>null</textarea>
     <br>
     <div class="card card-body">
         <form action = "/appTokyoGenerator" method="post">
             <div class="form-group">
                 <input type="text" id="name" name="name" value="filename" required>
-                <textarea id="information" name="data" style="display:none" required>null</textarea>
+                <textarea id="dbinformation" name="dbdata" style="display:none" required>null</textarea>
                 <button id="button">Save to DB</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <label style="font-size: 25px;"><b>Press Enter to generate new option</b></label>
@@ -66,18 +66,18 @@
         <div id="scene3d"></div>
     </div>
 
-<script src="/public/js/app_tokyo/nstSuperBlockRulesFile.js"></script><!--functions for rules of superblock-->
-<script src="/public/js/app_tokyo/nstSuperBlockFile.js"></script><!--functions for superblock generation-->
-<script src="/public/js/app_tokyo/nstGeoUtilFile.js"></script><!--fucntions for utility & debug-->
-<script src="/public/js/app_tokyo/nstRoutingFunc.js"></script><!--functions for routing spt mst-->
-<script src="/public/js/app_tokyo/nstNetworkFunc.js"></script><!--functions for overall generation-->
-<script src="/public/js/app_tokyo/nstNetworkDefFile.js"></script><!--dataobj for network objects-->
-<script src="/public/js/app_tokyo/nstQuadDataObj.js"></script><!--dataobj for quad-->
-<script src="/public/js/app_tokyo/nstGeoDefFile.js"></script><!--dataobj for general elements-->
-<script src="/public/js/app_tokyo/nstGenGeoFunc.js"></script><!--functions for intiating geometry-->
-<script src="/public/js/app_tokyo/nstGlobalVariablesFile.js"></script><!--all global variables are stored here-->
-<script src="/public/js/app_tokyo/nstGuiStateMachineFile.js"></script><!--datGui variables and config-->
-<script src="/public/js/app_tokyo/nstMain.js"></script><!--3js setup + state machine-->
+<script src="/public/js/app_tokyo_generator/nstSuperBlockRulesFile.js"></script><!--functions for rules of superblock-->
+<script src="/public/js/app_tokyo_generator/nstSuperBlockFile.js"></script><!--functions for superblock generation-->
+<script src="/public/js/app_tokyo_generator/nstGeoUtilFile.js"></script><!--fucntions for utility & debug-->
+<script src="/public/js/app_tokyo_generator/nstRoutingFunc.js"></script><!--functions for routing spt mst-->
+<script src="/public/js/app_tokyo_generator/nstNetworkFunc.js"></script><!--functions for overall generation-->
+<script src="/public/js/app_tokyo_generator/nstNetworkDefFile.js"></script><!--dataobj for network objects-->
+<script src="/public/js/app_tokyo_generator/nstQuadDataObj.js"></script><!--dataobj for quad-->
+<script src="/public/js/app_tokyo_generator/nstGeoDefFile.js"></script><!--dataobj for general elements-->
+<script src="/public/js/app_tokyo_generator/nstGenGeoFunc.js"></script><!--functions for intiating geometry-->
+<script src="/public/js/app_tokyo_generator/nstGlobalVariablesFile.js"></script><!--all global variables are stored here-->
+<script src="/public/js/app_tokyo_generator/nstGuiStateMachineFile.js"></script><!--datGui variables and config-->
+<script src="/public/js/app_tokyo_generator/nstMain.js"></script><!--3js setup + state machine-->
 
 <script>
     var decodedJson = decodeURIComponent("{{{encodedJson}}}");

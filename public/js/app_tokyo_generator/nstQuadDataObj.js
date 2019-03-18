@@ -45,7 +45,14 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
-
+    this.getDBInfo=function(){
+        var p=(this.p.x).toFixed(2)+","+(this.p.y).toFixed(2)+","+(this.p.z).toFixed(2);
+        var q=(this.q.x).toFixed(2)+","+(this.q.y).toFixed(2)+","+(this.q.z).toFixed(2);
+        var r=(this.r.x).toFixed(2)+","+(this.r.y).toFixed(2)+","+(this.r.z).toFixed(2);
+        var s=(this.s.x).toFixed(2)+","+(this.s.y).toFixed(2)+","+(this.s.z).toFixed(2);
+        var str=p+","+q+","+r+","+s+","+this.type+";";
+        return str;
+    }
     this.display=function(){
         //console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
     }

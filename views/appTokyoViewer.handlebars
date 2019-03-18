@@ -1,0 +1,14 @@
+welcome to viewer
+{{#each genobj}}
+    {{name}}
+{{/each}}
+
+
+<script>
+    var name={{genobj.name}};
+    var data={{genobj.data}};
+    var arr=data.split(";");
+    for(var j=0; j<arr.length; j++){
+        console.log(arr[j]);
+    }
+</script>

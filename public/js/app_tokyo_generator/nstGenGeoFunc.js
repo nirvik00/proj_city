@@ -78,7 +78,8 @@ function genDynamicFunc(){
   genCellFromRules(); // dynamically generates buildings from cells super block rules files
   initAllocateFunctionsCells(); // get user inputs and init allocate functions to cells
   outputCells(); // generate the meshes for the super block 
-  updateSiteInfo();//set the information to site obj arr
+  updateSiteInfo();//required to display information: set the information to site obj arr
+  updateDBInfo();//required for db exchange: get the coordinates and type of cells and write to textarea for db
   console.log("Dynamic functions loaded");
 }
 

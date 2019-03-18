@@ -52,7 +52,7 @@ function exportToObj(){
        floatingDiv.style.display='block'; //display in dynamic div
        floatingDiv.innerHTML=result.split('\n').join('<br/>'); //format results
        var objContent=result; //update invisible field
-       document.getElementById("information").innerHTML=objContent; //this is picked up for download
+       document.getElementById("objinformation").innerHTML=objContent; //this is picked up for download
 }
 
 function onWindowClick(event){
@@ -140,7 +140,6 @@ function onDocumentKeyDown(event){
        }
        if(event.keyCode===13){
               console.clear();
-              infoPara.innerHTML = ""
               clearSiteMeshes();
               genDynamicFunc(); // dynamic functions- once everything is loaded -> generate new diag, quad, cells, allocate, generate mesh renders          
        }

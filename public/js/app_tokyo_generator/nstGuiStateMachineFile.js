@@ -88,7 +88,7 @@ datgui.close();
 function guiUpdates(){
        if(downloadControls.download===true){
               exportToObj();
-              var content = document.getElementById("information").innerHTML;
+              var content = document.getElementById("objinformation").innerHTML;
               if(content==="null"|| content.trim()==""){
                      alert("first generate the OBJ file- option above");
               }else{
