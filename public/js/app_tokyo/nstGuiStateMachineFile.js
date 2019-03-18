@@ -245,7 +245,7 @@ function guiUpdates(){
        }else{
               for (var i=0; i<siteObjArr.length; i++){
                      var idx=superBlockControls.show_Generated;
-                     if(idx>-1){
+                     if(idx>-1 && idx<33){
                             if(i===idx){
                                    var parkMeshArr=siteObjArr[i].parkMeshArr;
                                    for(var j=0; j<parkMeshArr.length; j++){
@@ -276,7 +276,7 @@ function guiUpdates(){
        }else{
               for (var i=0; i<siteObjArr.length; i++){
                      var idx=superBlockControls.show_Generated;
-                     if(idx>-1){
+                     if(idx>-1 && idx<33){
                             if(i===idx){
                                    var gcnMeshArr=siteObjArr[i].gcnMeshArr;
                                    for(var j=0; j<gcnMeshArr.length; j++){
@@ -307,7 +307,7 @@ function guiUpdates(){
        }else{
               for (var i=0; i<siteObjArr.length; i++){
                      var idx=superBlockControls.show_Generated;
-                     if(idx>-1){
+                     if(idx>-1  && idx<33){
                             if(i===idx){
                                    var ncnMeshArr=siteObjArr[i].ncnMeshArr;
                                    for(var j=0; j<ncnMeshArr.length; j++){
@@ -338,7 +338,7 @@ function guiUpdates(){
        }else{
               for (var i=0; i<siteObjArr.length; i++){
                      var idx=superBlockControls.show_Generated;
-                     if(idx>-1){
+                     if(idx>-1 && idx<33){
                             if(i===idx){
                                    var rcnMeshArr=siteObjArr[i].rcnMeshArr;
                                    for(var j=0; j<rcnMeshArr.length; j++){
