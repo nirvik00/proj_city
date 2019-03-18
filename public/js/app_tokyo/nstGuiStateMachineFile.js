@@ -26,6 +26,10 @@ var superBlockControls=new function(){
        this.show_quads=false;
        this.show_cells=false;
        this.show_forms=false;
+       this.show_GCN=false;
+       this.show_NCN=false;
+       this.show_RCN=false;
+       this.show_Park=false;
 }
 var superBlockGui=datgui.addFolder("superBlockControls");
 var bayDepth=superBlockGui.add(superBlockControls,"bay_depth",0.15,1.0);
@@ -40,6 +44,11 @@ var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
 var showCells=superBlockGui.add(superBlockControls, "show_cells");
 var showForms=superBlockGui.add(superBlockControls, "show_forms");
+var showPark=superBlockGui.add(superBlockControls, "show_Park");
+var showGCN=superBlockGui.add(superBlockControls, "show_GCN");
+var showNCN=superBlockGui.add(superBlockControls, "show_NCN");
+var showRCN=superBlockGui.add(superBlockControls, "show_RCN");
+
 
 var genGuiControls = new function() {
   this.show_Nodes = false;
@@ -148,11 +157,13 @@ function guiUpdates(){
        });
 
        // super block controls
-       bayDepth.onChange(function(){                          
+       bayDepth.onChange(function(){ 
+              clearSiteMeshes();                         
               genDynamicFunc();
        });
 
-       extDepth.onChange(function(){                          
+       extDepth.onChange(function(){      
+              clearSiteMeshes();                    
               genDynamicFunc();
        });
 
@@ -261,4 +272,70 @@ function guiUpdates(){
                      }
               }
        }    
+
+
+       if(superBlockControls.show_Park===false){
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            scene.remove(parkMeshArr[j]);
+                     }
+              }
+       }else{
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            scene.add(parkMeshArr[j]);
+                     }
+              }
+       } 
+       
+       if(superBlockControls.show_GCN===false){
+              for (var i=0; i<siteObjArr.length; i++){
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            scene.remove(gcnMeshArr[j]);
+                     }
+              }
+       }else{
+              for (var i=0; i<siteObjArr.length; i++){
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            scene.add(gcnMeshArr[j]);
+                     }
+              }
+       }    
+       
+       if(superBlockControls.show_NCN===false){
+              for (var i=0; i<siteObjArr.length; i++){
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            scene.remove(ncnMeshArr[j]);
+                     }
+              }
+       }else{
+              for (var i=0; i<siteObjArr.length; i++){
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            scene.add(ncnMeshArr[j]);
+                     }
+              }
+       } 
+              
+       if(superBlockControls.show_RCN===false){
+              for (var i=0; i<siteObjArr.length; i++){
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            scene.remove(rcnMeshArr[j]);
+                     }
+              }
+       }else{
+              for (var i=0; i<siteObjArr.length; i++){
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            scene.add(rcnMeshArr[j]);
+                     }
+              }
+       } 
+
 }

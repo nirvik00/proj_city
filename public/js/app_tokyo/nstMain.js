@@ -116,7 +116,8 @@ function onDocumentKeyDown(event){
        }
        if(event.keyCode===13){
               console.clear();
-              infoPara.innerHTML = "";
+              infoPara.innerHTML = ""
+              clearSiteMeshes();
               genDynamicFunc(); // dynamic functions- once everything is loaded -> generate new diag, quad, cells, allocate, generate mesh renders          
        }
 }

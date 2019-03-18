@@ -105,6 +105,12 @@ function initAllocateFunctionsCells(){
             }
             itr++;
         }
+        for(var j=0; j<allCells.length; j++){
+            if(allCells[j].occupied===false){
+                allCells[j].type="NCN"; 
+                allCells[j].occupied=true;
+            }
+        }
     }
 }
 
@@ -143,7 +149,6 @@ function allocateParkFunctionToCells(density, type, parkcen){
             for(var j=0; j<allCells.length; j++){
                 if(allCells[j].type!=="park"){
                     allCells[j].class="building";
-                    allCells[j].type="NCN";
                 }
             }
             var remainingCells=allCells.length-used;
@@ -185,9 +190,9 @@ function allocateParkFunctionToCells(density, type, parkcen){
 }
 
 function outputCells(){
+    clearSiteMeshes();
     for( var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;  
-          
         for(var j=0; j<quads.length; j++){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
@@ -196,6 +201,7 @@ function outputCells(){
             }
         }
     }
+    console.log("Meshes added to scene");
 }
 
 function randomShuffle(array){

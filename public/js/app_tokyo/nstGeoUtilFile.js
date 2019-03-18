@@ -105,9 +105,7 @@ function genBldgFromQuad(siteobj, quad, e){
        }else if(e==="RCN"){
               siteobj.rcnMeshArr.push(mesh);
        }
-       //scene.add(mesh);
-       //return mesh;
-   }
+}
    
    
 var debugSphere=function(p,r){
