@@ -1,14 +1,17 @@
-welcome to viewer
-{{#each genobj}}
-    {{name}}
-{{/each}}
 
+
+
+<div id="container">
+    <div id="scene3d"></div>
+</div>
+
+<script src="/public/js/app_tokyo_viewer/nsvGeoUtilFile.js"></script> <!-- geometry object from the decoded JSON object -->
+<script src="/public/js/app_tokyo_viewer/nsvGeoObj.js"></script> <!-- geometry object from the decoded JSON object -->
+<script src="/public/js/app_tokyo_viewer/nsvMain.js"></script> <!--3js setup +state Machine -->
 
 <script>
-    var name={{genobj.name}};
-    var data={{genobj.data}};
-    var arr=data.split(";");
-    for(var j=0; j<arr.length; j++){
-        console.log(arr[j]);
-    }
+    var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+    var jsonObj = JSON.parse(decodedJson);
+    //console.log(jsonObj);
+    getData(jsonObj);
 </script>

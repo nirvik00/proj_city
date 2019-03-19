@@ -267,16 +267,16 @@ function updateDBInfo(){
     var objContents="";
     for(var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;
+        var arr=[];
         for(var j=0; j<quads.length; j++){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
                 objContents+=cells[k].getDBInfo();
-
             }
         }
     }
     //console.log(objContents);
-    document.getElementById("dbinformation").innerHTML=objContents;
+    document.getElementById("dbdata").innerHTML=objContents;
 }
 
 

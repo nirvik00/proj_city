@@ -122,10 +122,11 @@ app.get('/appTokyoViewer/:id', (req, res)=>{
   })
   .then(genobj=>{
     res.render('appTokyoViewer',{
-      genobj:genobj
-    });
-  });
-});  
+      encodedJson : encodeURIComponent(JSON.stringify(genobj))
+    })
+  })
+  .catch(err=>console.log(err));
+});
 
 //ideas index page
 app.get('/ideas', (req, res)=>{
