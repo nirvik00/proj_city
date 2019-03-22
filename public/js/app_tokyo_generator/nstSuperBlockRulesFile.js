@@ -50,12 +50,12 @@ function initAllocateFunctionsCells(){
     var res=allocateParkFunctionToCells(parkdensity, "park", parkCen); // allocate park function to cells return: array of site index, used
     var fsrDensityArr=[];
     for(var i=0; i<siteObjArr.length; i++){
+        if(res[i]===0){ continue; }
         var num = res[i][1];        
         var numGcn = Math.floor((gcnFsr/(gcnFsr+ncnFsr+rcnFsr))*num); 
         var numNcn = Math.floor((ncnFsr/(gcnFsr+ncnFsr+rcnFsr))*num);
         var numRcn = Math.floor((rcnFsr/(gcnFsr+ncnFsr+rcnFsr))*num);
         fsrDensityArr.push([numGcn, numNcn, numRcn]);
-        //console.log(res[i] +","+ numGcn+","+ numNcn +","+ numRcn);
     }
 
     for(var i=0; i<siteObjArr.length; i++){
@@ -69,13 +69,14 @@ function initAllocateFunctionsCells(){
                 idx.push(j);
             }
         }
+
         //randomly shuffle the indices of allcells
         var tmp=[];
         for(var j=0; j<allCells.length; j++){
             tmp.push(j);
         }
         var tmp2=randomShuffle(tmp);
-        
+
         //allcoate the functions based on itr
         var itr=0; //do not clear this
         var gotNumGcn=0;
@@ -84,12 +85,16 @@ function initAllocateFunctionsCells(){
                 break; 
             }
             var t=tmp2[itr];
-            if(allCells[t].occupied===false){
-                allCells[t].type="GCN";
-                allCells[t].occupied=true;
-                gotNumGcn++;
-            }
-            itr++;
+            try{
+                if(allCells[t].occupied===false){
+                    allCells[t].type="GCN";
+                    allCells[t].occupied=true;
+                    gotNumGcn++;
+                }
+                itr++;
+            }catch(e){
+                //not enough cells left
+            }            
         }
         var gotNumRcn=0;
         var j=0
@@ -98,12 +103,17 @@ function initAllocateFunctionsCells(){
                 break; 
             }
             var t=tmp2[itr];
-            if(allCells[t].occupied===false){
-                allCells[t].type="RCN"; 
-                allCells[t].occupied=true;
-                gotNumRcn++;
+            try{
+                if(allCells[t].occupied===false){
+                    allCells[t].type="RCN"; 
+                    allCells[t].occupied=true;
+                    gotNumRcn++;
+                }
+                itr++;
+            }catch(e){
+                //not enough cells left
             }
-            itr++;
+            
         }
         for(var j=0; j<allCells.length; j++){
             if(allCells[j].occupied===false){
@@ -153,7 +163,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
             }
             var remainingCells=allCells.length-used;
             res.push([i, remainingCells]);
-        }else{
+        }else if(allCells.length>3 && parkcen===true){
         // set central cells as park  '
             var CEN=cenOfArr(allCells);
             var sortable=[];
@@ -183,8 +193,11 @@ function allocateParkFunctionToCells(density, type, parkcen){
             sortable=[];
             var remainingCells=allCells.length-used;
             res.push([i, remainingCells]);
+        }else{
+            res.push([0]);
         }
     }
+
     return res;
 }
 
@@ -202,6 +215,15 @@ function outputCells(){
     }
     console.log("Meshes added to scene");
 }
+
+
+runAgentOnCells(){
+    
+}
+
+
+
+
 
 function updateSiteInfo(){
     for(var i=0; i<siteObjArr.length; i++){

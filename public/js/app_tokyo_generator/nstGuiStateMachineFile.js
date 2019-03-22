@@ -24,7 +24,8 @@ var superBlockControls=new function(){
        this.show_diags=false;
        this.show_segs=false;
        this.show_quads=false;
-       this.show_cells=false;       
+       this.show_cells=false;
+       this.gen_Random=true;       
        this.show_GCN=false;
        this.show_NCN=false;
        this.show_RCN=false;
@@ -44,6 +45,7 @@ var showDiags=superBlockGui.add(superBlockControls, "show_diags");
 var showSegs=superBlockGui.add(superBlockControls, "show_segs");
 var showQuads=superBlockGui.add(superBlockControls, "show_quads");
 var showCells=superBlockGui.add(superBlockControls, "show_cells");
+var genRandom=superBlockGui.add(superBlockControls, "gen_Random");
 var showPark=superBlockGui.add(superBlockControls, "show_Park");
 var showGCN=superBlockGui.add(superBlockControls, "show_GCN");
 var showNCN=superBlockGui.add(superBlockControls, "show_NCN");
@@ -125,6 +127,7 @@ function guiUpdates(){
               floatingDiv.innerHTML=objContent; 
               genGuiControls.show_Information = false;
        }
+
        // gen gui controls
        if(genGuiControls.show_Axis===true){
               scene.add(axes); 
@@ -275,6 +278,55 @@ function guiUpdates(){
               }
        }
 
+
+       if(superBlockControls.gen_Random===false){
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            parkMeshArr[j].geometry.dispose();
+                            parkMeshArr[j].material.dispose();
+                            scene.remove(parkMeshArr[j]);
+                     }
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            rcnMeshArr[j].geometry.dispose();
+                            rcnMeshArr[j].material.dispose();
+                            scene.remove(rcnMeshArr[j]);
+                     }
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            ncnMeshArr[j].geometry.dispose();
+                            ncnMeshArr[j].material.dispose();
+                            scene.remove(ncnMeshArr[j]);
+                     }
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            gcnMeshArr[j].geometry.dispose();
+                            gcnMeshArr[j].material.dispose();
+                            scene.remove(gcnMeshArr[j]);
+                     }
+              }
+
+              for (var i=0; i<siteObjArr.length; i++){
+                     var parkMeshArr=siteObjArr[i].parkMeshArr;
+                     for(var j=0; j<parkMeshArr.length; j++){
+                            scene.remove(parkMeshArr[j]);
+                     }
+                     var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+                     for(var j=0; j<rcnMeshArr.length; j++){
+                            scene.remove(rcnMeshArr[j]);
+                     }
+                     var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+                     for(var j=0; j<ncnMeshArr.length; j++){
+                            scene.remove(ncnMeshArr[j]);
+                     }
+                     var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+                     for(var j=0; j<gcnMeshArr.length; j++){
+                            scene.remove(gcnMeshArr[j]);
+                     }
+              }
+       }
+
        if(superBlockControls.show_Park===false){
               for (var i=0; i<siteObjArr.length; i++){
                      var parkMeshArr=siteObjArr[i].parkMeshArr;
@@ -304,7 +356,7 @@ function guiUpdates(){
                             }
                      }                     
               }
-       } 
+       }
        
        if(superBlockControls.show_GCN===false){
               for (var i=0; i<siteObjArr.length; i++){
