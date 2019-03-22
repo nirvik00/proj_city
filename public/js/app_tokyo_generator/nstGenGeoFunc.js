@@ -77,7 +77,8 @@ function genDynamicFunc(){
   genSiteSegments(); // generated - dynamic
   genPeripheralCellFromRules(); // dynamically generates peripheral cells, class:buildings from cells super block rules files
   initAllocateFunctionsCells();// deprecated // get user inputs and init allocate functions to cells
-  // do nothing, there are no cells / quads because size of bay is too great
+  
+  //runAgentonCells(); //AGENT!!!!
   
   outputCells(); // generate the meshes for the super block 
   updateSiteInfo();//required to display information: set the information to site obj arr

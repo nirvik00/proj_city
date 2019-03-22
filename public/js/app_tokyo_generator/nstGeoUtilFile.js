@@ -171,6 +171,20 @@ var debugSphere=function(p,r){
        mesh.position.z = p.z; 
        scene.add(mesh);
 }
+   
+var debugSphereZ=function(p,r,z){
+       var geox = new THREE.SphereGeometry(r,10,10);
+       var matx = new THREE.MeshBasicMaterial ({
+         color: new THREE.Color("rgb(102,153,255)"),
+         wireframe: wireframeVal
+       });
+       var mesh = new THREE.Mesh(geox, matx);
+       mesh.position.x = p.x;
+       mesh.position.y = p.y;
+       mesh.position.z = z; 
+       scene.add(mesh);
+}
+
      
 var debugQuad=function(p,q,r,s,y){
        var geox = new THREE.Geometry();

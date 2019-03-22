@@ -39,7 +39,6 @@ function genPeripheralCellFromRules(){
     }
 }
 
-//from superblock rules
 function initAllocateFunctionsCells(){
     var baydepth=superBlockControls.bay_depth; //gui input
     var gcnFsr=superBlockControls.GCN_fsr; // gui input 
@@ -51,7 +50,6 @@ function initAllocateFunctionsCells(){
     var res=allocateParkFunctionToCells(parkdensity, "park", parkCen); // allocate park function to cells return: array of site index, used
     var fsrDensityArr=[];
     for(var i=0; i<siteObjArr.length; i++){
-        if(res[i]===0){ continue; }
         var num = res[i][1];        
         var numGcn = Math.floor((gcnFsr/(gcnFsr+ncnFsr+rcnFsr))*num); 
         var numNcn = Math.floor((ncnFsr/(gcnFsr+ncnFsr+rcnFsr))*num);
@@ -71,11 +69,51 @@ function initAllocateFunctionsCells(){
                 idx.push(j);
             }
         }
-        var selCells=[];
+        //randomly shuffle the indices of allcells
+        var tmp=[];
+        for(var j=0; j<allCells.length; j++){
+            tmp.push(j);
+        }
+        var tmp2=randomShuffle(tmp);
+        
+        //allcoate the functions based on itr
+        var itr=0; //do not clear this
+        var gotNumGcn=0;
+        for(var j=0; j<allCells.length; j++){
+            if(gotNumGcn>=fsrDensityArr[i][0]){
+                break; 
+            }
+            var t=tmp2[itr];
+            if(allCells[t].occupied===false){
+                allCells[t].type="GCN";
+                allCells[t].occupied=true;
+                gotNumGcn++;
+            }
+            itr++;
+        }
+        var gotNumRcn=0;
+        var j=0
+        for(var j=0; j<allCells.length; j++){
+            if(gotNumRcn>=fsrDensityArr[i][2]){
+                break; 
+            }
+            var t=tmp2[itr];
+            if(allCells[t].occupied===false){
+                allCells[t].type="RCN"; 
+                allCells[t].occupied=true;
+                gotNumRcn++;
+            }
+            itr++;
+        }
+        for(var j=0; j<allCells.length; j++){
+            if(allCells[j].occupied===false){
+                allCells[j].type="NCN"; 
+                allCells[j].occupied=true;
+            }
+        }
     }
 }
 
-//from superblock rules
 function allocateParkFunctionToCells(density, type, parkcen){
     res=[];
     for(var i=0; i<siteObjArr.length; i++){
@@ -89,7 +127,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
         }
         var NUM=Math.floor(allCells.length*density);//numer of cells required to be park
         var typeCell=[];//bind the index to type="park"
-        if(allCells.length>5 && parkcen===false){
+        if(allCells.length>3 && parkcen===false){
             // use random shuffle to find cells for parks
             var tmp=[];
             for(var j=0; j<allCells.length; j++){
@@ -115,8 +153,8 @@ function allocateParkFunctionToCells(density, type, parkcen){
             }
             var remainingCells=allCells.length-used;
             res.push([i, remainingCells]);
-        }else if(allCells.length>5 && parkcen===true){
-        // set central cells as park
+        }else{
+        // set central cells as park  '
             var CEN=cenOfArr(allCells);
             var sortable=[];
             for(var j=0; j<allCells.length; j++){
@@ -145,13 +183,10 @@ function allocateParkFunctionToCells(density, type, parkcen){
             sortable=[];
             var remainingCells=allCells.length-used;
             res.push([i, remainingCells]);
-        }else{ 
-            res.push([0]); 
         }
     }
     return res;
 }
-
 
 function outputCells(){
     // clearSiteMeshes();
@@ -229,9 +264,7 @@ function updateSiteInfo(){
 
 
 function updateDBInfo(){
-    document.getElementById("dbdata").innerHTML="";
     var objContents="";
-    var itr=0;
     for(var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;
         var arr=[];
@@ -239,15 +272,12 @@ function updateDBInfo(){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
                 objContents+=cells[k].getDBInfo();
-                itr++;
             }
         }
     }
     //console.log(objContents);
-    console.log("number of db elements = "+ itr);
     document.getElementById("dbdata").innerHTML=objContents;
 }
-
 
 
 

@@ -53,14 +53,14 @@ var showGenerated = superBlockGui.add(superBlockControls, "show_Generated", -1, 
 var genGuiControls = new function() {
   this.show_Nodes = false;
   this.road_depth=0.1;
-  this.show_Edges = true;
+  this.show_Edges = false;
   this.show_Parks = false;
   this.show_Buildings = false;
-  this.show_Sites=false;
-  
+  this.show_Sites=true;
   this.show_Axis = true;
   this.show_Information = false;
 }
+
 var dbGuiControls=datgui.addFolder("genGuiControls");
 showNodes = dbGuiControls.add(genGuiControls, "show_Nodes");
 showEdges = dbGuiControls.add(genGuiControls, "show_Edges");
