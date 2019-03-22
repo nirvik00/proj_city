@@ -85,6 +85,8 @@ datgui.close();
 // END OF GUI
 
 // gui update functions
+
+
 function guiUpdates(){
        if(downloadControls.download===true){
               exportToObj();

@@ -12,7 +12,7 @@
 //
 //
 
-function genCellFromRules(){
+function genPeripheralCellFromRules(){
     var parkdensity=superBlockControls.park_density;
     var baydepth=superBlockControls.bay_depth;    
     for( var i=0; i<siteObjArr.length; i++){
@@ -39,6 +39,7 @@ function genCellFromRules(){
     }
 }
 
+//from superblock rules
 function initAllocateFunctionsCells(){
     var baydepth=superBlockControls.bay_depth; //gui input
     var gcnFsr=superBlockControls.GCN_fsr; // gui input 
@@ -114,6 +115,7 @@ function initAllocateFunctionsCells(){
     }
 }
 
+//from superblock rules
 function allocateParkFunctionToCells(density, type, parkcen){
     res=[];
     for(var i=0; i<siteObjArr.length; i++){
@@ -187,6 +189,7 @@ function allocateParkFunctionToCells(density, type, parkcen){
     }
     return res;
 }
+
 
 function outputCells(){
     // clearSiteMeshes();
@@ -264,7 +267,9 @@ function updateSiteInfo(){
 
 
 function updateDBInfo(){
+    document.getElementById("dbdata").innerHTML="";
     var objContents="";
+    var itr=0;
     for(var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;
         var arr=[];
@@ -272,10 +277,12 @@ function updateDBInfo(){
             var cells=quads[j].subCellQuads;
             for(var k=0; k<cells.length; k++){
                 objContents+=cells[k].getDBInfo();
+                itr++;
             }
         }
     }
     //console.log(objContents);
+    console.log("number of db elements = "+ itr);
     document.getElementById("dbdata").innerHTML=objContents;
 }
 

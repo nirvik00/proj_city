@@ -213,10 +213,10 @@ var debugQuadZ=function(p,q,r,s,z){
        //return res;
 }
 
-var debugLine=function(p,q,y){
+var debugLine=function(p,q,z){
        var geox = new THREE.Geometry();
-       geox.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
-       geox.vertices.push(new THREE.Vector3(q.x,q.y,q.z));
+       geox.vertices.push(new THREE.Vector3(p.x,p.y,z));
+       geox.vertices.push(new THREE.Vector3(q.x,q.y,z));
        var matx=new THREE.LineBasicMaterial({ 
               color: new THREE.Color("rgb(255,0,0)") 
        });

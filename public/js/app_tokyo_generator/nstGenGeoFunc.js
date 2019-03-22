@@ -75,8 +75,8 @@ function genDynamicFunc(){
   console.clear();
   clearSiteMeshes();
   genSiteSegments(); // generated - dynamic
-  genCellFromRules(); // dynamically generates buildings from cells super block rules files
-  initAllocateFunctionsCells(); // get user inputs and init allocate functions to cells
+  genPeripheralCellFromRules(); // dynamically generates peripheral cells, class:buildings from cells super block rules files
+  initAllocateFunctionsCells();// deprecated // get user inputs and init allocate functions to cells
   outputCells(); // generate the meshes for the super block 
   updateSiteInfo();//required to display information: set the information to site obj arr
   updateDBInfo();//required for db exchange: get the coordinates and type of cells and write to textarea for db
@@ -166,66 +166,66 @@ function clearSiteMeshes(){
   cellArr=[];
   
   for(var i=0; i<siteSegArr.length; i++){
-      siteSegArr[i].geometry.dispose();
-      siteSegArr[i].material.dispose();
-      scene.remove(siteSegArr[i]);
+    siteSegArr[i].geometry.dispose();
+    siteSegArr[i].material.dispose();
+    scene.remove(siteSegArr[i]);
   }
   siteSegArr=[];
 
   for(var i=0; i<siteDiagArr.length; i++){
-  siteDiagArr[i].geometry.dispose();
-  siteDiagArr[i].material.dispose();
-  scene.remove(siteDiagArr[i]);
+    siteDiagArr[i].geometry.dispose();
+    siteDiagArr[i].material.dispose();
+    scene.remove(siteDiagArr[i]);
   }
   siteDiagArr=[];
 
   for(var i=0; i<siteQuadArr.length; i++){
-  siteQuadArr[i][0].geometry.dispose();
-  siteQuadArr[i][0].material.dispose();
-  scene.remove(siteQuadArr[i][0]);
+    siteQuadArr[i][0].geometry.dispose();
+    siteQuadArr[i][0].material.dispose();
+    scene.remove(siteQuadArr[i][0]);
 
-  siteQuadArr[i][1].geometry.dispose();
-  siteQuadArr[i][1].material.dispose();
-  scene.remove(siteQuadArr[i][1]);
+    siteQuadArr[i][1].geometry.dispose();
+    siteQuadArr[i][1].material.dispose();
+    scene.remove(siteQuadArr[i][1]);
 
-  siteQuadArr[i][2].geometry.dispose();
-  siteQuadArr[i][2].material.dispose();
-  scene.remove(siteQuadArr[i][2]);
+    siteQuadArr[i][2].geometry.dispose();
+    siteQuadArr[i][2].material.dispose();
+    scene.remove(siteQuadArr[i][2]);
   }
   siteQuadArr=[];
 
   for(var i=0; i<siteObjArr.length; i++){
-      var parkMeshArr=siteObjArr[i].parkMeshArr;
-      for(var j=0; j<parkMeshArr.length; j++){
-        parkMeshArr[j].geometry.dispose();
-        parkMeshArr[j].material.dispose();
-        scene.remove(parkMeshArr[j]);
-      }
-      siteObjArr[i].parkMeshArr=[];
+    var parkMeshArr=siteObjArr[i].parkMeshArr;
+    for(var j=0; j<parkMeshArr.length; j++){
+      parkMeshArr[j].geometry.dispose();
+      parkMeshArr[j].material.dispose();
+      scene.remove(parkMeshArr[j]);
+    }
+    siteObjArr[i].parkMeshArr=[];
 
-      var gcnMeshArr=siteObjArr[i].gcnMeshArr;
-      for(var j=0; j<gcnMeshArr.length; j++){
-        gcnMeshArr[j].geometry.dispose();
-        gcnMeshArr[j].material.dispose();
-        scene.remove(gcnMeshArr[j]);
-      }
-      siteObjArr[i].gcnMeshArr=[];
+    var gcnMeshArr=siteObjArr[i].gcnMeshArr;
+    for(var j=0; j<gcnMeshArr.length; j++){
+      gcnMeshArr[j].geometry.dispose();
+      gcnMeshArr[j].material.dispose();
+      scene.remove(gcnMeshArr[j]);
+    }
+    siteObjArr[i].gcnMeshArr=[];
 
-      var ncnMeshArr=siteObjArr[i].ncnMeshArr;
-      for(var j=0; j<ncnMeshArr.length; j++){
-        ncnMeshArr[j].geometry.dispose();
-        ncnMeshArr[j].material.dispose();
-        scene.remove(ncnMeshArr[j]);
-      }
-      siteObjArr[i].ncnMeshArr=[];
+    var ncnMeshArr=siteObjArr[i].ncnMeshArr;
+    for(var j=0; j<ncnMeshArr.length; j++){
+      ncnMeshArr[j].geometry.dispose();
+      ncnMeshArr[j].material.dispose();
+      scene.remove(ncnMeshArr[j]);
+    }
+    siteObjArr[i].ncnMeshArr=[];
 
-      var rcnMeshArr=siteObjArr[i].rcnMeshArr;
-      for(var j=0; j<rcnMeshArr.length; j++){
-        rcnMeshArr[j].geometry.dispose();
-        rcnMeshArr[j].material.dispose();
-        scene.remove(rcnMeshArr[j]);
-      }
-      siteObjArr[i].rcnMeshArr=[];
+    var rcnMeshArr=siteObjArr[i].rcnMeshArr;
+    for(var j=0; j<rcnMeshArr.length; j++){
+      rcnMeshArr[j].geometry.dispose();
+      rcnMeshArr[j].material.dispose();
+      scene.remove(rcnMeshArr[j]);
+    }
+    siteObjArr[i].rcnMeshArr=[];
   }
 }
 

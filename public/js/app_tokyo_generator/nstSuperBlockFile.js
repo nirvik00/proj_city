@@ -38,7 +38,7 @@ function nsSite(type, index, area, cen, pts){
     }
 
     this.genGeo=function(){
-        var geox=new THREE.Shape();        
+        var geox=new THREE.Shape();
         var p=pts[0];
         geox.moveTo(0,0);
         for(var i=1; i<pts.length; i++){
@@ -52,7 +52,6 @@ function nsSite(type, index, area, cen, pts){
         mesh.position.x=p.x;
         mesh.position.y=p.y;
         this.renderedObject=mesh;
-        //siteArr.push(this.renderedObject);
         
         var geo2=new THREE.Geometry();
         for(var i=0; i<this.pts.length; i++){
@@ -62,7 +61,6 @@ function nsSite(type, index, area, cen, pts){
         var mat2=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(0,0,0)")});
         var lineGeo=new THREE.Line(geo2, mat2);
         siteArr.push(lineGeo);
-        //return mesh;
     }
 
     this.display=function(){
@@ -90,7 +88,6 @@ function nsSite(type, index, area, cen, pts){
         return s;
     }
     
-
     this.getDiagonal=function(){
         var diagArr=new Array();
         for(var i=0; i<this.pts.length; i++){
@@ -155,23 +152,23 @@ function nsSite(type, index, area, cen, pts){
     }
 
     this.getIntxSeg=function(R,S){
-            var I;
-            var sum1=0;
-            for(var j=0; j<this.crvSegs.length; j++){
-                    var P=this.crvSegs[j].p;
-                    var Q=this.crvSegs[j].q;
-                    I=nsIntx(P,Q,R,S);
-                    if(I.x!==0 && I.y!==0){
-                        sum1++;
-                        break;
-                    }
+        var I;
+        var sum1=0;
+        for(var j=0; j<this.crvSegs.length; j++){
+            var P=this.crvSegs[j].p;
+            var Q=this.crvSegs[j].q;
+            I=nsIntx(P,Q,R,S);
+            if(I.x!==0 && I.y!==0){
+                sum1++;
+                break;
             }
-            if(sum1>0){
-                    var s3=new nsSeg(R,I);
-                    return s3;
-            }else{
-                    return 0;
-            }
+        }
+        if(sum1>0){
+            var s3=new nsSeg(R,I);
+            return s3;
+        }else{
+            return 0;
+        }
     }
 
     this.processBays=function(baydepth){
@@ -189,7 +186,3 @@ function nsSite(type, index, area, cen, pts){
         }
     }
 }
-
-
-
-var numpark=0;

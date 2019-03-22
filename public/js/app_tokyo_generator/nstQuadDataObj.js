@@ -19,16 +19,33 @@ function nsQuad(a,b,c,d,i){
     this.type="";
     this.class="";
     this.occupied=false;
+
     this.displayType=function(){
         var s="type: "+this.type;
         return s;
     }
 
     this.mp=function(){
-        var p=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
-        return p;
+        var P=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
+        return P;
     }
-    
+    this.A=function(){
+        var P=new nsPt((this.p.x+this.q.x)/2, (this.p.y+this.q.y)/2, (this.p.z+this.q.z)/2);
+        return P;
+    }
+    this.B=function(){
+        var P=new nsPt((this.q.x+this.r.x)/2, (this.q.y+this.r.y)/2, (this.q.z+this.r.z)/2);
+        return P;
+    }
+    this.C=function(){
+        var P=new nsPt((this.r.x+this.s.x)/2, (this.r.y+this.s.y)/2, (this.r.z+this.s.z)/2);
+        return P;
+    }
+    this.D=function(){
+        var P=new nsPt((this.s.x+this.p.x)/2, (this.s.y+this.p.y)/2, (this.s.z+this.p.z)/2);
+        return P;
+    }
+
     this.area=function(){
         var a=utilDi(this.p, this.q);
         var b=utilDi(this.q, this.r);
@@ -132,6 +149,7 @@ function nsQuad(a,b,c,d,i){
             }
         }
     }
+    
 }
 
 
