@@ -80,8 +80,8 @@ function genDynamicFunc(){
     initAllocateFunctionsCells();// deprecated // get user inputs and init allocate functions to cells
   }else{
     runAgentOnCells(); //AGENT!!!!
+    //runVoronoi();
   }
-  
   
   outputCells(); // generate the meshes for the super block 
   updateSiteInfo();//required to display information: set the information to site obj arr
@@ -111,7 +111,7 @@ function genParkGeometry() {
   parkArr=[];
   for(var i=0; i<parkObjArr.length; i++) {
     parkObjArr[i].genGeo();
-  }    
+  }
 }
 
 function genSiteGeometry() {
@@ -156,18 +156,22 @@ function genSiteSegments(){
 
 function clearSiteMeshes(){
   for(var i=0; i<cellArr.length; i++){
-      var quad=cellArr[i][0];
+    var quad=cellArr[i][0];
+    quad.geometry.dispose();
+    quad.material.dispose();
+    scene.remove(quad);
+    try{
       var L1=cellArr[i][1];
       var L2=cellArr[i][2];
-      quad.geometry.dispose();
-      quad.material.dispose();
-      scene.remove(quad);
       L1.geometry.dispose();
       L1.material.dispose();
       scene.remove(L1);
       L2.geometry.dispose();
       L2.material.dispose();
-      scene.remove(L2);
+      scene.remove(L2);      
+    }catch(e){
+      //did not include the diagonals
+    }
   }
   cellArr=[];
   
@@ -234,6 +238,7 @@ function clearSiteMeshes(){
     siteObjArr[i].rcnMeshArr=[];
   }
 }
+
 
 
 

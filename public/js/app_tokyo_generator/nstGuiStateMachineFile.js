@@ -25,7 +25,7 @@ var superBlockControls=new function(){
        this.show_segs=false;
        this.show_quads=false;
        this.show_cells=false;
-       this.gen_Random=true;       
+       this.gen_Random=false;       
        this.show_GCN=false;
        this.show_NCN=false;
        this.show_RCN=false;
@@ -258,8 +258,8 @@ function guiUpdates(){
        if(superBlockControls.show_cells===true){
               for(var i=0; i<cellArr.length;i++){
                      scene.add(cellArr[i][0]);
-                     scene.add(cellArr[i][1]);
-                     scene.add(cellArr[i][2]);  
+                     //scene.add(cellArr[i][1]);
+                     //scene.add(cellArr[i][2]);  
               } 
        }else{
               for(var i=0; i<cellArr.length; i++){

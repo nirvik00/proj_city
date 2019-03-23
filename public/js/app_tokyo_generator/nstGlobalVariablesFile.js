@@ -9,6 +9,7 @@ var parkObjArr=[]; // park object from db
 var parkArr=[]; // park render object from db
 var bldgObjArr=[]; // bldg object from db
 var bldgArr=[]; // bldg rendered object from db
+var cellDirArr=[];//tensorfield
 
 // site object array contains all information
 // - diags 

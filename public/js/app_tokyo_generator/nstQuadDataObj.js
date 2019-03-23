@@ -15,6 +15,8 @@ function nsQuad(a,b,c,d,i){
     this.rcnArea=0.0;
     this.cellArea=0.0;
 
+    this.vec=new nsPt(0,0,0);
+
     // allocate type or function to celll
     this.type="";
     this.class="";
@@ -26,9 +28,15 @@ function nsQuad(a,b,c,d,i){
     }
 
     this.mp=function(){
-        var P=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.s.z)/2);
+        var P=new nsPt((this.p.x+this.r.x)/2, (this.p.y+this.r.y)/2, (this.p.z+this.r.z)/2);
         return P;
     }
+
+    this.mp2=function(){
+        var P=new nsPt((this.p.x+this.s.x)/2, (this.p.y+this.s.y)/2, (this.p.z+this.s.z)/2);
+        return P;
+    }
+
     this.A=function(){
         var P=new nsPt((this.p.x+this.q.x)/2, (this.p.y+this.q.y)/2, (this.p.z+this.q.z)/2);
         return P;
@@ -62,6 +70,7 @@ function nsQuad(a,b,c,d,i){
     this.setType=function(t){
         this.type=t;
     }
+
     this.getDBInfo=function(){
         var p=(this.p.x).toFixed(2)+","+(this.p.y).toFixed(2)+","+(this.p.z).toFixed(2);
         var q=(this.q.x).toFixed(2)+","+(this.q.y).toFixed(2)+","+(this.q.z).toFixed(2);
@@ -70,6 +79,7 @@ function nsQuad(a,b,c,d,i){
         var str=p+","+q+","+r+","+s+","+this.type+";";
         return str;
     }
+
     this.display=function(){
         //console.log("nsQuad type= " +this.type + "; Cell ar= "+ this.cellArea + ", gcn=" + this.gcnArea+", ncn="+this.ncnArea+", rcn="+this.rcnArea);
     }
@@ -78,8 +88,8 @@ function nsQuad(a,b,c,d,i){
         var geox = new THREE.Geometry();
         geox.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
         geox.vertices.push(new THREE.Vector3(this.q.x,this.q.y,t));
-        geox.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
         geox.vertices.push(new THREE.Vector3(this.s.x,this.s.y,t));
+        geox.vertices.push(new THREE.Vector3(this.r.x,this.r.y,t));
         geox.vertices.push(new THREE.Vector3(this.p.x,this.p.y,t));
         
         var matx;
@@ -102,6 +112,7 @@ function nsQuad(a,b,c,d,i){
         var L2=new THREE.Line(N,matx);
 
         var res=[Q,L1,L2];
+
 
         return res;
     } 

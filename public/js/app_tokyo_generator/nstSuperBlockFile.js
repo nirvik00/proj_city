@@ -10,6 +10,7 @@ function nsSite(type, index, area, cen, pts){
     this.cen=cen;
     this.renderedObject; //outline of the site: polyline
     this.diag; // diagonals of the site : longest line segment between the points
+    this.bb;//bounding box of site
     this.segArr=[]; // segments generated from the diagonal
     this.quadArr=[]; // quads of the site
     this.subCellQuadArr=[];//cells of the site obj
@@ -113,6 +114,42 @@ function nsSite(type, index, area, cen, pts){
         return this.diag;
     }
     
+    this.genBB=function(){
+        var sortable=[];
+        for(var i=0; i<this.pts.length-1; i++){
+            var x=parseFloat(this.pts[i].x);
+            var y=parseFloat(this.pts[i].y);
+            var z=parseFloat(this.pts[i].z);
+            sortable.push([x,y,z]);
+        }
+        sortable.sort(function(a,b){
+            return a[0]-b[0];
+        });
+        var minx=sortable[0][0];
+        var maxx=sortable[sortable.length-1][0];
+        sortable.sort(function(a,b){
+            return a[1]-b[1];
+        });
+        var miny=sortable[0][1];
+        var maxy=sortable[sortable.length-1][1];
+        var p=new nsPt(minx,miny,0); //in order p-q-r-s //debugSphereZ(p,0.1,1);
+        var q=new nsPt(maxx,miny,0); //in order p-q-r-s //
+        var r=new nsPt(maxx,maxy,0); //in order p-q-r-s // debugSphereZ(r,0.2,1);
+        var s=new nsPt(minx,maxy,0); //in order p-q-r-s //
+        this.bb=new nsQuad(p,q,r,s);
+        var sortable=[];
+        sortable.push([utilDi(p,q)]);
+        sortable.push([utilDi(q,r)]);
+        sortable.push([utilDi(r,s)]);
+        sortable.push([utilDi(s,p)]);
+        sortable.sort(function(a,b){
+            return a-b;
+        })
+        var minDi=sortable[0];
+        var maxDi=sortable[sortable.length-1];
+        return [this.bb,minDi,maxDi];
+    }
+
     this.setBays=function(baydepth,extdepth){
         this.quadArr=[]; // updated dynamically
         this.subCellQuadArr=[]; // updated dynamically

@@ -1,15 +1,15 @@
+
+
 function runAgentOnCells(){
+    var siteBB=[];
+    var minDi=100000; var maxDi=-1000000;
     for(var i=0; i<siteObjArr.length; i++){
-        var allcells=[];
-        var quads=siteObjArr[i].quadArr;
-        for(var j=0; j<quads.length; j++){
-            var cells=quads[j].subCellQuads;
-            for(var k=0; k<cells.length; k++){
-                allcells.push(cells[k]);
-            }
-        }
-        var t=Math.floor(Math.random()*allcells.length - 1);
-        var c=allcells[t].mp();
-        debugSphere(c,1);
+        var ret=siteObjArr[i].genBB();
+        siteBB.push(ret[0]);
+        var mindi=ret[1];
+        if(mindi<minDi) { minDi=mindi; }
+        var maxdi=ret[2];
+        if(maxdi>maxDi){ maxDi=maxdi; }
     }
+    console.log(minDi, maxDi);
 }

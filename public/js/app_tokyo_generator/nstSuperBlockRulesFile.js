@@ -216,11 +216,6 @@ function outputCells(){
     console.log("Meshes added to scene");
 }
 
-
-
-
-
-
 function updateSiteInfo(){
     for(var i=0; i<siteObjArr.length; i++){
         var quads=siteObjArr[i].quadArr;
@@ -279,7 +274,6 @@ function updateSiteInfo(){
     }
     var objContents=s.split('\n').join('<br/>');
 }
-
 
 function updateDBInfo(){
     var objContents="";
