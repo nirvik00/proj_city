@@ -20,6 +20,15 @@ function nsSite(type, index, area, cen, pts){
     this.rcnMeshArr=[]; // rendered rcn mesh objects
     this.detailedInfo="";//updated from superblockrules files
 
+    this.interpPts=[];//store interpolated points inside the site
+    this.interpDiff=0.0; // distance between interpolated points in site
+    this.genDir=function(){
+        this.U=new nsPt((this.bb.s.x-this.bb.p.x)/utilDi(this.bb.s,this.bb.p),(this.bb.s.y-this.bb.p.y)/utilDi(this.bb.s,this.bb.p),0);
+        this.V=new nsPt(-this.U.x, -this.U.y, 0);
+        this.W=new nsPt(-this.U.y, this.U.x, 0);
+        this.X=new nsPt(this.U.y, -this.U.x, 0);
+    }    
+
     this.pts=[];
     for(var i=0; i<pts.length; i++){
         var x=pts[i].x;

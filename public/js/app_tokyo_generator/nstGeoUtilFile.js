@@ -25,10 +25,10 @@ var ptInSeg=function(p,q,r){
 
 var interpPts=function(p,q,num){
        var pts=[];
-       var u=new nsPt(q.x-p.x, q.y-p.y, q.z-p.z);
-       var diff=1.0/num;
-       for(var i=0.0; i<1.0; i+=diff){
-              var r=new nsPt(p.x+u.x*i,p.y+u.y*i,p.z+u.z*i);
+       var u=new nsPt((q.x-p.x)/utilDi(p,q), (q.y-p.y)/utilDi(p,q), (q.z-p.z)/utilDi(p,q));
+       var diff=utilDi(p,q)/(num-1);
+       for(var i=0; i<num; i++){
+              var r=new nsPt(p.x+u.x*diff*i,p.y+u.y*diff*i,p.z+u.z*diff*i);
               pts.push(r);
        }
        return pts;
@@ -161,7 +161,7 @@ function nsIntx(p,q,r,s){
        var ip=utilDi(p,I); var iq=utilDi(q,I); var pq=utilDi(p,q);
        var ir=utilDi(r,I); var is=utilDi(s,I); var rs=utilDi(r,s);
    
-       if(Math.abs(ip+iq-pq)<.1 && Math.abs(ir+is-rs)<.1){
+       if(Math.abs(ip+iq-pq)<0.01 && Math.abs(ir+is-rs)<0.01){
            return I;
        }else{
            return new nsPt(0,0,0);
@@ -196,7 +196,58 @@ function ptInCell(a, cell){
               return false;// pt not in poly
        }
 }
-   
+
+function ptInPoly(p, pts){
+       var extreme=new nsPt(p.x+10000, p.y+100, 0);
+       var count=0;
+       for(var i=0; i<pts.length; i++){
+              var a,b;
+              if(i===0){
+                     a=pts[pts.length-1];
+                     b=pts[0];
+              }else{
+                     a=pts[i-1];
+                     b=pts[i];
+              }
+              var T=findIntx(a,b,p,extreme);
+              if(T===true){
+                     count++;
+              }
+       }
+       if(count>0){
+              if(count%2 === 0){
+                     return false;
+              }else{
+                     return true;
+              }
+       }else{
+              return false;
+       }
+}
+
+var findIntx=function(p,q,r,s){
+       var T=false;
+       var a1=q.y-p.y; var b1=p.x-q.x; var c1=(a1*q.x)+(b1*q.y);
+       var a2=s.y-r.y; var b2=r.x-s.x; var c2=(a2*s.x)+(b2*s.y);
+
+       var det=(a1*b2)-(a2*b1);
+       var x=((c1*b2)-(c2*b1))/det;
+       var y=((c2*a1)-(c1*a2))/det;
+       var I=new nsPt(x,y,0);
+       var iD0=utilDi(I,p);
+       var iD1=utilDi(I,q);
+       var iD2=utilDi(I,r);
+       var iD3=utilDi(I,s);
+       var L=utilDi(p,q);
+       var M=utilDi(r,s);
+       if(Math.abs(L-(iD0+iD1))<0.01 && Math.abs(M-(iD2+iD3))<0.01 ){
+              T=true;
+       }else{
+              T=false;
+       }
+       return T;
+}
+
 var debugSphere=function(p,r){
        var geox = new THREE.SphereGeometry(r,10,10);
        var matx = new THREE.MeshBasicMaterial ({

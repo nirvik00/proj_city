@@ -3,6 +3,9 @@ function nsPt(a,b,c){
     this.x=a;
     this.y=b;
     this.z=c;
+
+    
+
 }
 
 function nsEdge(a,b){

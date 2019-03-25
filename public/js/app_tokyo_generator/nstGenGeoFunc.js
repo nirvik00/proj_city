@@ -81,8 +81,7 @@ function genDynamicFunc(){
   }else{
     runAgentOnCells(); //AGENT!!!!
     //runVoronoi();
-  }
-  
+  }  
   outputCells(); // generate the meshes for the super block 
   updateSiteInfo();//required to display information: set the information to site obj arr
   updateDBInfo();//required for db exchange: get the coordinates and type of cells and write to textarea for db
