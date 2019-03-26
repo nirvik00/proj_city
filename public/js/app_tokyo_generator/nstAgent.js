@@ -54,6 +54,7 @@ function runAgentOnCells(){
     }//end of grid points in site
 
     for(var i=0; i<siteObjArr.length; i++){
+        //if(i!==28) { continue; }
         moveAgent(siteObjArr[i]);
     }
 }
@@ -64,17 +65,8 @@ var moveAgent=function(site){
     site.genDir();
     for(var i=0; i<site.interpPts.length; i++){
         debugSphereZ(site.interpPts[i], 0.1, 0);//inter p points inside the site
-    }            
-    var moverAgentArr=[];
-    var idx= Math.floor(Math.random()*(site.interpPts.length-1));  
-    var pts=site.interpPts;
-    var idx= Math.floor(Math.random()*(this.interpPts.length-1));  
-    this.P=this.interpPts[idx];
-    var A=new moverAgent(p,site.interpPts,site.U,site.V,site.W,site.X,site.interpDiffX,site.interpDiffY);
-    var b=A.move(0);
-    if(b.x===-1 && b.y===-1 && b.z===-1){
-        
-    }
+    } 
+    var A=new moverAgent(site);
 }
 
 
