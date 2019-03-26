@@ -49,7 +49,8 @@ function runAgentOnCells(){
             }
         }
         siteObjArr[i].interpPts=tmpPts;//directly update field in superblock
-        siteObjArr[i].interpDiff=utilDi(P,Q)/(NUM-1);//directly update field in superblock
+        siteObjArr[i].interpDiffX=utilDi(P,Q)/(NUM-1);//directly update field in superblock
+        siteObjArr[i].interpDiffY=utilDi(P,S)/(NUM-1);//directly update field in superblock
     }//end of grid points in site
 
     for(var i=0; i<siteObjArr.length; i++){
@@ -59,22 +60,21 @@ function runAgentOnCells(){
 
 //this is inside of iteration of site array (i)
 var moveAgent=function(site){
+    //debugQuadZ(site.bb.p, site.bb.q, site.bb.r, site.bb.s, 0);//bounding box of each site
     site.genDir();
-    
-    debugQuadZ(site.bb.p, site.bb.q, site.bb.r, site.bb.s, 0);//bounding box of each site
-    
-    var pts=site.interpPts;
-    for(var i=0; i<pts.length; i++){
-        debugSphereZ(pts[i], 0.1, 0);//inter p points inside the site
-    }        
-    
+    for(var i=0; i<site.interpPts.length; i++){
+        debugSphereZ(site.interpPts[i], 0.1, 0);//inter p points inside the site
+    }            
     var moverAgentArr=[];
-    var idx= Math.floor(Math.random()*(pts.length-1));  
-    var p=pts[idx];
-    var A=new moverAgent(p,site.interpPts,site.U,site.V,site.W,site.X,site.interpDiff);
+    var idx= Math.floor(Math.random()*(site.interpPts.length-1));  
+    var pts=site.interpPts;
+    var idx= Math.floor(Math.random()*(this.interpPts.length-1));  
+    this.P=this.interpPts[idx];
+    var A=new moverAgent(p,site.interpPts,site.U,site.V,site.W,site.X,site.interpDiffX,site.interpDiffY);
     var b=A.move(0);
-    debugLine(p, b);
-    debugSphereZ(b,0.15,0);
+    if(b.x===-1 && b.y===-1 && b.z===-1){
+        
+    }
 }
 
 

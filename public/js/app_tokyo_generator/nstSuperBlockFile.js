@@ -21,7 +21,8 @@ function nsSite(type, index, area, cen, pts){
     this.detailedInfo="";//updated from superblockrules files
 
     this.interpPts=[];//store interpolated points inside the site
-    this.interpDiff=0.0; // distance between interpolated points in site
+    this.interpDiffX=0.0; // distance X pq between interpolated points in site
+    this.interpDiffY=0.0; // distance Y ps between interpolated points in site
     this.genDir=function(){
         this.U=new nsPt((this.bb.s.x-this.bb.p.x)/utilDi(this.bb.s,this.bb.p),(this.bb.s.y-this.bb.p.y)/utilDi(this.bb.s,this.bb.p),0);
         this.V=new nsPt(-this.U.x, -this.U.y, 0);

@@ -198,7 +198,7 @@ function ptInCell(a, cell){
 }
 
 function ptInPoly(p, pts){
-       var extreme=new nsPt(p.x+10000, p.y+100, 0);
+       var extreme=new nsPt(p.x+100000, p.y, 0);
        var count=0;
        for(var i=0; i<pts.length; i++){
               var a,b;
@@ -240,7 +240,7 @@ var findIntx=function(p,q,r,s){
        var iD3=utilDi(I,s);
        var L=utilDi(p,q);
        var M=utilDi(r,s);
-       if(Math.abs(L-(iD0+iD1))<0.01 && Math.abs(M-(iD2+iD3))<0.01 ){
+       if(Math.abs(L-(iD0+iD1))<0.001 && Math.abs(M-(iD2+iD3))<0.001 ){
               T=true;
        }else{
               T=false;
