@@ -75,13 +75,13 @@ function genDynamicFunc(){
   console.clear();
   clearSiteMeshes();
   genSiteSegments(); // generated - dynamic
-  //if(superBlockControls.gen_Random===true){
+  if(superBlockControls.gen_Random===true){
     genPeripheralCellFromRules(); // dynamically generates peripheral cells, class:buildings from cells super block rules files
     initAllocateFunctionsCells();// deprecated // get user inputs and init allocate functions to cells
-  //}else{
-    //runAgentOnCells(); //AGENT!!!!
+  }else{
+    runAgentOnCells(); //AGENT!!!!
     //runVoronoi();
-  //}  
+  }  
   outputCells(); // generate the meshes for the super block 
   updateSiteInfo();//required to display information: set the information to site obj arr
   updateDBInfo();//required for db exchange: get the coordinates and type of cells and write to textarea for db

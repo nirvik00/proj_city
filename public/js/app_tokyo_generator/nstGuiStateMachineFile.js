@@ -26,10 +26,10 @@ var superBlockControls=new function(){
        this.show_quads=false;
        this.show_cells=false;
        this.gen_Random=false;       
-       this.show_GCN=false;
-       this.show_NCN=false;
-       this.show_RCN=false;
-       this.show_Park=false;
+       this.show_GCN=true;
+       this.show_NCN=true;
+       this.show_RCN=true;
+       this.show_Park=true;
        this.show_Generated=-1;
 }
 
