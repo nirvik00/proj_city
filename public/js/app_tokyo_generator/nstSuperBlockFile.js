@@ -232,4 +232,6 @@ function nsSite(type, index, area, cen, pts){
             siteQuadArr.push(Q);//global array for rendering
         }
     }
+
+
 }

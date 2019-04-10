@@ -92,13 +92,30 @@ function cenOfArr(arr){
        var cen=new nsPt((minx+maxx)/2,(miny+maxy)/2,0);
        return cen;
 }
-   
+
+function offsetPt(p,q,r){
+       var norm_pq=utilDi(p,q);
+       var norm_pr=utilDi(p,r);
+       var sc1=0.075;// - 0.10
+       var sc2=0.075;
+       var u=new nsPt(p.x + (q.x-p.x)*sc1/norm_pq, p.y + (q.y-p.y)*sc1/norm_pq, 0);
+       var v=new nsPt(u.x + (r.x-p.x)*sc2/norm_pr, u.y + (r.y-p.y)*sc2/norm_pr, 0);
+       return v;
+}
+
 function genBldgFromQuad(siteobj, quad, e){
        var p=quad.p; 
        var q=quad.q;
        var r=quad.r; //not in order: interchange r&s
        var s=quad.s; //not in order: interchange r&s
-   
+
+       var p1=offsetPt(p,q,r);
+       var q1=offsetPt(q,p,s);
+       var r1=offsetPt(s,q,r);
+       var s1=offsetPt(r,p,s);
+       //debugQuadZ(p1,q1,r1,s1,3);
+       p=p1; q=q1;s=r1;r=s1; // change this line to remove offset
+
        var geox=new THREE.Shape();
        geox.moveTo(0,0);
        geox.lineTo(q.x-p.x, q.y-p.y);
