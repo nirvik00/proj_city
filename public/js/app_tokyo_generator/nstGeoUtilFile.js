@@ -96,8 +96,8 @@ function cenOfArr(arr){
 function offsetPt(p,q,r){
        var norm_pq=utilDi(p,q);
        var norm_pr=utilDi(p,r);
-       var sc1=0.075;// - 0.10
-       var sc2=0.075;
+       var sc1=0.035;// - 0.10
+       var sc2=0.035;
        var u=new nsPt(p.x + (q.x-p.x)*sc1/norm_pq, p.y + (q.y-p.y)*sc1/norm_pq, 0);
        var v=new nsPt(u.x + (r.x-p.x)*sc2/norm_pr, u.y + (r.y-p.y)*sc2/norm_pr, 0);
        return v;
