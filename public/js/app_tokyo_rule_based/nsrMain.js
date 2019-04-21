@@ -90,7 +90,7 @@ function addPointLights(){
 var getData=function(allobjs){
     var ALLJSONOBJS=allobjs;
     initGeometry(ALLJSONOBJS);
-    //console.log(allobjs);
+    initNetwork(ALLJSONOBJS);
 }
 
 init();
