@@ -95,9 +95,9 @@ function genBldgGeometry() {
     scene.remove(bldgArr[i]);
   }
   bldgArr=[];
-    for(var i=0; i<bldgObjArr.length; i++){
-      bldgObjArr[i].genGeo();
-    }
+  for(var i=0; i<bldgObjArr.length; i++){
+    bldgObjArr[i].genGeo();
+  }
 }
 
 function genParkGeometry() {

@@ -1,4 +1,3 @@
-
 function nsPt(a,b,c){
     this.x=a;
     this.y=b;
@@ -11,26 +10,26 @@ function nsEdge(a,b){
 }
 
 function nsSeg(a,b){
-    this.p=new nsPt(parseFloat(a.x), parseFloat(a.y), 0);
-    this.q=new nsPt(parseFloat(b.x), parseFloat(b.y), 0);
+    this.p=new nsPt(parseFloat(a.x), this.parseFloat(a.y), 0);
+    this.q=new nsPt(parseFloat(a.x), this.parseFloat(a.y), 0);
     this.le=utilDi(this.p, this.q);
-    this.mp=new nsPt((this.p.x+this.q.x)/2, (this.p.y+this.q.y)/2, 0);
+    this.mp=new nsPt((this.p.x+this.q.x)/2,(this.p.y+this.q.y)/2,(this.p.z+this.q.z)/2);
     this.renderedObject;
     this.getObj=function(){
-        var path= new THREE.Geometry();
+        var path=new THREE.Geometry();
         path.vertices.push(new THREE.Vector3(this.p.x, this.p.y, 0));
         path.vertices.push(new THREE.Vector3(this.q.x, this.q.y, 0));
-        var material = getPathMaterialFromType({color:new THREE.Color("rgb(0,0,255)")});
-        this.renderedObject = new THREE.Line(path, material);
+        var material=getPathMaterialFromType({color:new THREE.Color("rgb(0,0,255)")});
+        this.renderedObject=new THREE.Line(path, material);
         return this.renderedObject;
-    }
+    }    
     this.display=function(){
-        console.log("\nsegment: ")
-        console.log(this.p,this.q);
+        console.log("\nsegment: ");
+        console.log(this.p, this.q);
     }
 }
 
-//from db
+//plot park from db
 function nsPark(type, area, cen, pts){
     this.type=type;
     this.area=area;
@@ -41,19 +40,18 @@ function nsPark(type, area, cen, pts){
         var geox=new THREE.Shape();
         var p=pts[0];
         geox.moveTo(0,0);
-        for(var i=1; i<pts.length; i++){
+        for(var i=0; i<pts.length; i++){
             var q=pts[i];
             geox.lineTo(q.x-p.x,q.y-p.y);
         }
-        geox.autoClose=true;
+        geox.autoClose();
         var geometry=new THREE.ShapeGeometry(geox);
-        var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(0,255,70)"), side:THREE.DoubleSide});
+        var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(0,255,0)")});
         var mesh=new THREE.Mesh(geometry, material);
         mesh.position.x=p.x;
         mesh.position.y=p.y;
         this.renderedObject=mesh;
         parkArr.push(this.renderedObject);
-        //return mesh;
     }
     this.display=function(){
         var sp="";
@@ -61,7 +59,7 @@ function nsPark(type, area, cen, pts){
             var x=this.pts[i].x;
             var y=this.pts[i].y;
             var z=0;
-            sp+=x+","+y+","+z+"\n";
+            sp+=x+","+y+","+z;
         }
         var s="Park area: "+this.area+"\ncenter: "+this.cen+"\npoints: \n"+sp;
         console.log(s);
@@ -78,6 +76,7 @@ function nsPark(type, area, cen, pts){
         return s;
     }
 }
+
 
 //from db
 function nsBldg(type, area, cen, pts){
@@ -187,3 +186,6 @@ function setPath(quad, name, ht){
     }
 }
 
+function utilDi(p,q){
+    return Math.sqrt((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y) + (p.z-q.z)*(p.z-q.z));
+}
