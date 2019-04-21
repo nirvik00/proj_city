@@ -44,7 +44,7 @@ function nsPark(type, area, cen, pts){
             var q=pts[i];
             geox.lineTo(q.x-p.x,q.y-p.y);
         }
-        geox.autoClose();
+        geox.autoClose=true;
         var geometry=new THREE.ShapeGeometry(geox);
         var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(0,255,0)")});
         var mesh=new THREE.Mesh(geometry, material);
@@ -77,7 +77,6 @@ function nsPark(type, area, cen, pts){
     }
 }
 
-
 //from db
 function nsBldg(type, area, cen, pts){
     this.type=type;
@@ -94,7 +93,6 @@ function nsBldg(type, area, cen, pts){
             geox.lineTo(q.x-p.x,q.y-p.y);
         }
         geox.autoClose=true;
-        //var geometry=new THREE.ShapeGeometry(geox);
         var extsettings={
             steps: 1,
             amount: Math.random()+0.1,
@@ -137,7 +135,6 @@ function nsBldg(type, area, cen, pts){
         return s;
     }
 }
-
 
 function setPath(quad, name, ht){
     this.quad=quad;
@@ -188,4 +185,37 @@ function setPath(quad, name, ht){
 
 function utilDi(p,q){
     return Math.sqrt((p.x-q.x)*(p.x-q.x) + (p.y-q.y)*(p.y-q.y) + (p.z-q.z)*(p.z-q.z));
+}
+
+function nsSite(type, index, area, cen, pts){
+    this.type=type;
+    this.index=index;
+    this.area=area;
+    this.cen=cen;
+    this.pts=pts;
+    this.genGeo=function(){
+        var geox=new THREE.Shape();
+        var p=pts[0];
+        geox.moveTo(0,0);
+        for(var i=1; i<pts.length; i++){
+            var q=pts[i];
+            geox.lineTo(q.x-p.x, q.y-p.y);
+        }
+        geox.autoClose=true;
+        var geometry=new THREE.ShapeGeometry(geox);
+        var material=new THREE.MeshPhongMaterial({color:new THREE.Color("rgb(200,0,0)")});
+        var mesh=new THREE.Mesh(geometry, material);
+        mesh.position.x=p.x;
+        mesh.position.y=p.y;
+        this.renderedObject=mesh;
+
+        var geo2=new THREE.Geometry();
+        for(var i=0; i<this.pts.length; i++){
+            var p=this.pts[i];
+            geo2.vertices.push(new THREE.Vector3(p.x,p.y,p.z));
+        }
+        var mat2=new THREE.LineBasicMaterial({color: new THREE.Color("rgb(0,0,0)")});
+        var lineGeo=new THREE.Line(geo2, mat2);
+        siteArr.push(lineGeo);
+    }
 }

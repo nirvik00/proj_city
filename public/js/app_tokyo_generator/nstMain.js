@@ -13,7 +13,8 @@ var init = function() {
        camera.position.x = 0;
        camera.position.y = -20;
        camera.position.z = 20;
-       camera.rotation.x=Math.PI/6;       
+       //camera.rotation.x=Math.PI/6;     
+       camera.up=new THREE.Vector3(0,0,1);
        addPointLights();
        renderer = new THREE.WebGLRenderer();
        renderer.setPixelRatio(window.devicePixelRatio);
@@ -27,8 +28,8 @@ var init = function() {
        controls.addEventListener("change", render);
        controls.enableZoom = true;
        // horizontally angle control
-       controls.minAzimuthAngle = 0;// -Math.PI / 10;
-       controls.maxAzimuthAngle = 0;// Math.PI / 10;
+       //controls.minAzimuthAngle = 0;// -Math.PI / 10;
+       //controls.maxAzimuthAngle = 0;// Math.PI / 10;
        controls.zoomSpeed=4;
        // vertical angle control
        //controls.minPolarAngle = -Math.PI / 10;

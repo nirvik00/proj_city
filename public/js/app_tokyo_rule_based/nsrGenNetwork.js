@@ -12,7 +12,11 @@ function initGeometry(ALLJSONOBJS){
                 var p=coords[j].split(",");
                 var x=p[0];
                 var y=p[1];
+                var z=0;
+                ptArr.push(new THREE.Vector2(x,y));
             }
+            var bldgObj=new nsBldg("bldg",area, cen, ptArr);
+            bldgObjArr.push(bldgObj);
         }
     }
     //parks
@@ -87,6 +91,9 @@ function genParkGeometry() {
     for(var i=0; i<parkObjArr.length; i++) {
         parkObjArr[i].genGeo();
     }
+    for(var i=0; i<parkArr.length; i++){
+        scene.add(parkArr[i]);
+    }
 }
   
 function genSiteGeometry() {
@@ -96,13 +103,13 @@ function genSiteGeometry() {
         scene.remove(siteArr[i]);
     }
     siteArr=[];
-    if(genGuiControls.show_Sites===true){
+    //if(genGuiControls.show_Sites===true){
         for(var i=0; i<siteObjArr.length; i++) {
             siteObjArr[i].genGeo();
         }
         for(var i=0; i<siteArr.length; i++){
             scene.add(siteArr[i]);
         }
-    }
+    //}
 }
   

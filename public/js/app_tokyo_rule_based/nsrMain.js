@@ -24,12 +24,11 @@ var init=function(){
     controls=new THREE.OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', render);
     controls.enableZoom=true;
-
-
 }
 
 var mainLoop=function(){
     requestAnimationFrame(mainLoop);
+    guiUpdates();
     render();
 }
 
