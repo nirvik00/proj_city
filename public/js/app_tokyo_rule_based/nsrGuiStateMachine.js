@@ -3,9 +3,9 @@
 
 var datgui=new dat.GUI({autoPlace:false});
 var genGuiControls=new function(){
-    this.show_Parks=false;
+    this.show_Parks=true;
     this.show_Buildings=false;
-    this.show_Axes=true;
+    this.show_Axes=false;
 }
 
 var guiControls=datgui.addFolder("genGuiControls");

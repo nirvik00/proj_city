@@ -18,5 +18,5 @@ var camera, scene, renderer, controls, axes, stats; //required to render 3.js sc
 
 
 var showBldgs=false;
-var showParks=false;
+var showParks=true;
 var showAxes=false;
