@@ -1,0 +1,42 @@
+<h1>Rule based FSR Distribution</h1>
+    <style>
+        #container {
+            position: relative;
+        }
+        #container scene3d, #moveGUI {
+            position: absolute;
+        }
+        scene3d {
+            border: 1px solid black;
+        }
+        div.floating {
+            color : #ffffff;
+            background : #000000;
+            opacity : 0.8;
+            width : 80%;
+            height : 80%;
+            position : absolute;
+            left : 10%;
+            top : 10%;
+            border : 1px solid #555555;
+            padding : 10px;
+            display : none;
+            overflow : auto;
+            z-index: 100;
+        }
+        span.link{
+            color:black;
+            cursor:pointer;
+            text-decoration:underline;
+        }
+        a{
+            color:skyblue;
+        }
+    </style>
+
+    <script src="/public/js/app_tokyo_rule_based/nsrMain.js"></script><!--3js setup + state machine-->
+    <script>
+        var decodedJson = decodeURIComponent("{{{encodedJson}}}");
+        var jsonObj = JSON.parse(decodedJson);
+        getData(jsonObj);
+    </script> <!--real init get data from handlebars and send to generative functions-->

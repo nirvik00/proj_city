@@ -78,7 +78,10 @@ app.get('/explanation', (req, res)=>{
 
 //concept route
 app.get('/concept',(req, res)=>{
-  res.render('concept');
+  NsElement.find({})
+  .then(ns_elements=>{
+    res.render('concept');
+  });  
 });
 
 //Tokyo project route - send db to generator file
@@ -88,7 +91,17 @@ app.get('/appTokyoGenerator',(req, res)=>{
     res.render('appTokyoGenerator',{
       encodedJson : encodeURIComponent(JSON.stringify(ns_elements))
     });  
-  });
+  }).catch(err=>console.log("error in db"));
+});
+
+//Tokyo rule- project route - send nodes, edges & polylines to generator file
+app.get('/appTokyoRuleBased', (req,res)=>{
+  NsElement.find({})
+  .then(ns_elements =>{
+    res.render('appTokyoRuleBased',{
+      encodedJson : encodeURIComponent(JSON.stringify(ns_elements))
+    });  
+  }).catch(err=>console.log("error in db"));
 });
 
 //Tokyo project route - return generated option to db
@@ -105,7 +118,8 @@ app.post('/appTokyoGenerator', (req, res)=>{
   .catch(err=>console.log(err));
 })
 
-//Tokyo project route - get generated option from db and display
+// Tokyo project route - get generated option from db and display
+// Display a generated set of meshes
 app.get('/appTokyoListObj', (req, res)=>{
   GeneratedObj.find({})
   .sort({date:'desc'})
@@ -127,6 +141,8 @@ app.get('/appTokyoViewer/:id', (req, res)=>{
   .catch(err=>console.log(err));
 });
 
+
+
 //ideas index page
 app.get('/ideas', (req, res)=>{
   Idea.find({})
@@ -135,8 +151,6 @@ app.get('/ideas', (req, res)=>{
     res.render('ideas/index', {ideas:ideas});  
   });  
 });
-
-
 
 //add idea form 
 app.get('/ideas/add', (req, res)=>{
@@ -218,9 +232,7 @@ app.delete('/ideas/:id', (req, res) =>{
 });
 
 
-app.get('/user/login', (req, res)=>{
-  
-});
+app.get('/user/login', (req, res)=>{});
 
 const port=  process.env.PORT || 5000;
 app.listen(port, ()=>{
