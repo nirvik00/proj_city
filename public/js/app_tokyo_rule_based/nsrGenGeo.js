@@ -178,19 +178,20 @@ function genBldgGeometry() {
     var num1=0.0;
     var num2=0.0;
     var num3=0.0;
+    var coeff=false;
     for(var i=0; i<bldgObjArr.length; i++){
         //console.log(bldgObjArr[i].quartile);
         if(bldgObjArr[i].quartile===0){
             //NCN: commerce
             var colr1=new THREE.Color("rgb(255,150,0)");
-            var ret1=extrBldg(bldgObjArr[i],0,colr1);
+            var ret1=extrBldg(bldgObjArr[i],0,colr1, true);
             var mesh1=ret1[0];
             var ht1=ret1[1];
             ncnBldgArr.push(mesh1);
 
             //GCN: green
             var colr2=new THREE.Color("rgb(50,250,150)");
-            var ret2=extrBldg(bldgObjArr[i],ht1,colr2);
+            var ret2=extrBldg(bldgObjArr[i],ht1,colr2, coeff);
             var mesh2=ret2[0];
             var ht1=ret2[1];
             gcnBldgArr.push(mesh2);
@@ -199,21 +200,21 @@ function genBldgGeometry() {
         }else if(bldgObjArr[i].quartile===1){
             //GCN: green
             var colr2=new THREE.Color("rgb(50,250,150)");
-            var ret2=extrBldg(bldgObjArr[i],0,colr2);
+            var ret2=extrBldg(bldgObjArr[i],0,colr2, coeff);
             var mesh2=ret2[0];
             var ht1=ret2[1];
             gcnBldgArr.push(mesh2);
 
             //RCN: office
             var colr0=new THREE.Color("rgb(150,150,150)");
-            var ret0=extrBldg(bldgObjArr[i],ht1,colr0);
+            var ret0=extrBldg(bldgObjArr[i],ht1,colr0, coeff);
             var mesh0=ret0[0];
             rcnBldgArr.push(mesh0);        
             num1++;
         }else if(bldgObjArr[i].quartile===2){
             //RCN: office
             var colr0=new THREE.Color("rgb(150,150,150)");
-            var ret0=extrBldg(bldgObjArr[i],0,colr0);
+            var ret0=extrBldg(bldgObjArr[i],0,colr0, coeff);
             var mesh0=ret0[0];
             var ht0=ret0[1];
             rcnBldgArr.push(mesh0);   
@@ -221,14 +222,14 @@ function genBldgGeometry() {
         }else{
             //NCN: commerce
             var colr1=new THREE.Color("rgb(255,150,0)");
-            var ret1=extrBldg(bldgObjArr[i],0,colr1);
+            var ret1=extrBldg(bldgObjArr[i],0,colr1, coeff);
             var mesh1=ret1[0];
             var ht1=ret1[1];
             ncnBldgArr.push(mesh1);
 
             //RCN: office
             var colr0=new THREE.Color("rgb(150,150,150)");
-            var ret0=extrBldg(bldgObjArr[i],ht1,colr0);
+            var ret0=extrBldg(bldgObjArr[i],ht1,colr0, true);
             var mesh0=ret0[0];
             var ht2=ret0[1]+ht1;
             rcnBldgArr.push(mesh0);  
@@ -236,7 +237,7 @@ function genBldgGeometry() {
 
             //GCN: green
             var colr2=new THREE.Color("rgb(50,250,150)");
-            var ret2=extrBldg(bldgObjArr[i],ht2,colr2);
+            var ret2=extrBldg(bldgObjArr[i],ht2,colr2, coeff);
             var mesh2=ret2[0];
             var ht2=ret2[1];
             gcnBldgArr.push(mesh2);
@@ -247,7 +248,7 @@ function genBldgGeometry() {
     console.log(num0, num1, num2, num3);
 }
 
-function extrBldg(bldgObj, pushZ, colr){
+function extrBldg(bldgObj, pushZ, colr, coeff){
     var pts=bldgObj.pts;
     var p=pts[0];
     var diRa=bldgObj.diRa;
@@ -261,10 +262,18 @@ function extrBldg(bldgObj, pushZ, colr){
     }
     geox.autoClose=true;
     var extSettings;
-    extSettings={
+    if(coeff===true){
+        extSettings={
         steps:1,
-        amount:(genGuiControls.ht_coeff)*bldgObj.diRa/5.0,
+        amount:(2*(genGuiControls.ht_coeff)*bldgObj.diRa/5.0) + 0.15,
         bevelEnabled:false
+        }
+    }else{
+        extSettings={
+            steps:1,
+            amount:(genGuiControls.ht_coeff)*bldgObj.diRa/5.0,
+            bevelEnabled:false
+        }
     }
     
     var geometry=new THREE.ExtrudeBufferGeometry(geox, extSettings);
