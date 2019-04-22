@@ -89,8 +89,8 @@ function addPointLights(){
 
 var getData=function(allobjs){
     var ALLJSONOBJS=allobjs;
-    initGeometry(ALLJSONOBJS);
     initNetwork(ALLJSONOBJS);
+    initGeometry(ALLJSONOBJS);
 }
 
 init();

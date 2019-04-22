@@ -2,6 +2,7 @@
 function initNetwork(ALLJSONOBJS){
     networkEdgesArr = [];
     networkNodesArr = [];
+    greenNodeLoc=[];
     console.log("got the data!!!!");
     //network nodes
     for (var i = 0; i < ALLJSONOBJS.length; i++) {
@@ -10,7 +11,10 @@ function initNetwork(ALLJSONOBJS){
             var node = new nsNetworkNode(obj.x, obj.y, obj.z, obj.nsId);
             node.type=obj.t;
             networkNodesArr.push(node);
-            //console.log(obj.x, obj.z, obj.y, obj.nsId);
+            if(obj.t==='GCN'){
+                var p=new nsPt(obj.x,obj.y,obj.z);
+                greenNodeLoc.push(p);
+            }
         }
     }
     //network edges
@@ -82,13 +86,4 @@ function genNetworkGeometry() {
       networkEdgesArr[i].getMeshObj(roaddepth);// adds network edges Mesh directly to global array
     }
     console.log("INIT COMPLETE...scene rendered" + nodeArr.length + ", " +edgeArr.length);
-
-
-    for(var i=0; i<nodeArr.length; i++){
-        scene.add(nodeArr[i]);
-    }
-
-    for(var i=0; i<edgeArr.length; i++){
-        scene.add(edgeArr[i]);
-    }
 }

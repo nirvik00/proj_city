@@ -11,6 +11,8 @@ var parkArr=[]; // park render object from db
 var bldgObjArr=[]; // bldg object from db
 var bldgArr=[]; // bldg rendered object from db
 
+var greenNodeLoc=[];//points of the green nodes
+
 var siteObjArr=[]; // site object from db
 var siteArr=[]; // rendered site object from db
 

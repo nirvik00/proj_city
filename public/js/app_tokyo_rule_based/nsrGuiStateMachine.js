@@ -4,13 +4,15 @@
 var datgui=new dat.GUI({autoPlace:false});
 var genGuiControls=new function(){
     this.show_Parks=true;
-    this.show_Buildings=false;
+    this.show_Buildings=true;
+    this.show_Network=false;
     this.show_Axes=false;
 }
 
 var guiControls=datgui.addFolder("genGuiControls");
 showBldgs=guiControls.add(genGuiControls, "show_Buildings");
 showParks=guiControls.add(genGuiControls, "show_Parks");
+showBldgs=guiControls.add(genGuiControls, "show_Network");
 showAxes=guiControls.add(genGuiControls, "show_Axes");
 
 var customContainer=document.getElementById("moveGui");
@@ -41,5 +43,20 @@ function guiUpdates(){
         scene.add(axes);
     }else{
         scene.remove(axes);
+    }
+    if(genGuiControls.show_Network===true){
+        for(var i=0; i<nodeArr.length; i++){
+            scene.add(nodeArr[i]);
+        }    
+        for(var i=0; i<edgeArr.length; i++){
+            scene.add(edgeArr[i]);
+        }
+    }else{
+        for(var i=0; i<nodeArr.length; i++){
+            scene.remove(nodeArr[i]);
+        }    
+        for(var i=0; i<edgeArr.length; i++){
+            scene.remove(edgeArr[i]);
+        }
     }
 }

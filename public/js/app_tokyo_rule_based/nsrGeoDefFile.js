@@ -83,6 +83,7 @@ function nsBldg(type, area, cen, pts){
     this.area=area;
     this.cen=cen;
     this.pts=pts;
+    this.diRa=1.0;
     this.renderedObject;
     this.genGeo=function(){
         var p=pts[0];
@@ -99,7 +100,6 @@ function nsBldg(type, area, cen, pts){
             bevelEnabled: false
         }
         var geometry=new THREE.ExtrudeBufferGeometry(geox, extsettings);
-        
         var material = new THREE.MeshPhongMaterial({
             color: 0xdddddd, specular: 0x000000, shininess: 10, flatShading: true 
         });
