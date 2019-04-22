@@ -16,6 +16,8 @@ var greenNodeLoc=[];//points of the green nodes
 var siteObjArr=[]; // site object from db
 var siteArr=[]; // rendered site object from db
 
+var debugArr=[]; //debug geometries
+
 var camera, scene, renderer, controls, axes, stats; //required to render 3.js scene
 
 

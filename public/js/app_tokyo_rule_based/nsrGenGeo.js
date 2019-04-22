@@ -102,6 +102,11 @@ function genSiteGeometry() {
 }
 
 function genDynamicFunc(){
+    for(var i=0; i<debugArr.length; i++){
+        scene.remove(debugArr[i].goemetry);
+        scene.remove(debugArr[i].material);
+    }
+    debugArr=[];
     var line_seg=[];
     var di_arr=[];    
     for(var i=0; i<bldgObjArr.length; i++){
@@ -151,7 +156,7 @@ function genBldgGeometry() {
         scene.add(mesh0);
 
         //NCN: commerce
-        var colr1=new THREE.Color("rgb(155,150,0)");
+        var colr1=new THREE.Color("rgb(255,150,0)");
         ret1=extrBldg(bldgObjArr[i],ht0,colr1);
         var mesh1=ret1[0];
         var ht1=ret1[1]+ht0;
@@ -169,6 +174,7 @@ function genBldgGeometry() {
 function extrBldg(bldgObj, pushZ, colr){
     var pts=bldgObj.pts;
     var p=pts[0];
+    var diRa=bldgObj.diRa;
     //base 
     var geox=new THREE.Shape();
     geox.moveTo(0,0);
@@ -179,7 +185,7 @@ function extrBldg(bldgObj, pushZ, colr){
     geox.autoClose=true;
     var extSettings={
         steps:1,
-        amount:Math.random()+0.1,
+        amount:Math.random()*diRa,
         bevelEnabled:false
     }
     var geometry=new THREE.ExtrudeBufferGeometry(geox, extSettings);

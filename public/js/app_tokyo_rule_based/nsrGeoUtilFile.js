@@ -351,7 +351,8 @@ var debugLineZ=function(p,q,z){
            color: new THREE.Color("rgb(255,0,0)") 
     });
     var line = new THREE.Line( geox, matx);
-    scene.add(line);
+    //scene.add(line);
+    debugArr.push(line);
 }
 
 var debugSeg=function(seg){
