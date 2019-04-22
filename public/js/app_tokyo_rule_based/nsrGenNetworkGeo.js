@@ -79,11 +79,14 @@ function genNetworkGeometry() {
       // networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
     }
     
-    var roaddepth=1;//enGuiControls.road_depth;
+    var roaddepth=genGuiControls.road_Depth;//genGuiControls.road_depth;
   
     for (var i = 0; i < networkEdgesArr.length; i++) {
       //networkEdgesArr[i].getLineObj();// adds network edges Line directly to global array
       networkEdgesArr[i].getMeshObj(roaddepth);// adds network edges Mesh directly to global array
+    }
+    for(var i=0; i<edgeMeshArr.length; i++){
+        scene.add(edgeMeshArr[i]);
     }
     console.log("INIT COMPLETE...scene rendered" + nodeArr.length + ", " +edgeArr.length);
 }

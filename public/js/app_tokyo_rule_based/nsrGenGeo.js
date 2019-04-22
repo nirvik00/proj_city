@@ -130,9 +130,13 @@ function genDynamicFunc(){
     });
     MIN=di_arr[0];
     MAX=di_arr[di_arr.length-1];
-    var q0=MIN;
-    var q1=MIN+0.33*(MAX-MIN)/MAX;
-    var q2=MIN+0.66*(MAX-MIN)/MAX;    
+    //var sumQuartile=QUARTILE0+QUARTILE1+QUARTILE2;
+    //var Q0=QUARTILE0/sumQuartile;
+    //var Q1=Q0+(QUARTILE1/sumQuartile);
+    //var Q2=Q0+Q1+(QUARTILE2/sumQuartile);
+    var q0=MIN//+(Q0)*(MAX-MIN)/MAX;
+    var q1=MIN+(0.33)*(MAX-MIN)/MAX;
+    var q2=MIN+(0.66)*(MAX-MIN)/MAX;    
     QUARTILES={q0,q1,q2};
     for(var i=0; i<line_seg.length; i++){
         var p=line_seg[i][0];
@@ -233,7 +237,6 @@ function genBldgGeometry() {
             var mesh0=ret0[0];
             var ht2=ret0[1]+ht1;
             rcnBldgArr.push(mesh0);  
-
 
             //GCN: green
             var colr2=new THREE.Color("rgb(50,250,150)");
