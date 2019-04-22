@@ -130,11 +130,7 @@ function genDynamicFunc(){
     });
     MIN=di_arr[0];
     MAX=di_arr[di_arr.length-1];
-    //var sumQuartile=QUARTILE0+QUARTILE1+QUARTILE2;
-    //var Q0=QUARTILE0/sumQuartile;
-    //var Q1=Q0+(QUARTILE1/sumQuartile);
-    //var Q2=Q0+Q1+(QUARTILE2/sumQuartile);
-    var q0=MIN//+(Q0)*(MAX-MIN)/MAX;
+    var q0=MIN
     var q1=MIN+(0.33)*(MAX-MIN)/MAX;
     var q2=MIN+(0.66)*(MAX-MIN)/MAX;    
     QUARTILES={q0,q1,q2};
