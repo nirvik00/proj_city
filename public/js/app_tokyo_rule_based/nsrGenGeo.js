@@ -141,33 +141,50 @@ function genDynamicFunc(){
 }
 
 function genBldgGeometry() {
-    for(var i=0; i<bldgArr.length; i++){
-        bldgArr[i].geometry.dispose();
-        bldgArr[i].material.dispose();
-        scene.remove(bldgArr[i]);
+    for(var i=0; i<ncnBldgArr.length; i++){
+        ncnBldgArr[i].geometry.dispose();
+        ncnBldgArr[i].material.dispose();
+        scene.remove(ncnBldgArr[i]);
     }
-    bldgArr=[];
+    ncnBldgArr=[];
+    for(var i=0; i<rcnBldgArr.length; i++){
+        rcnBldgArr[i].geometry.dispose();
+        rcnBldgArr[i].material.dispose();
+        scene.remove(ncnBldgArr[i]);
+    }
+    rcnBldgArr=[];
+    for(var i=0; i<gcnBldgArr.length; i++){
+        gcnBldgArr[i].geometry.dispose();
+        gcnBldgArr[i].material.dispose();
+        scene.remove(ncnBldgArr[i]);
+    }
+    gcnBldgArr=[];
+
+
     for(var i=0; i<bldgObjArr.length; i++){        
         //RCN: office
         var colr0=new THREE.Color("rgb(150,150,150)");
         ret0=extrBldg(bldgObjArr[i],0,colr0);
         var mesh0=ret0[0];
         var ht0=ret0[1];
-        scene.add(mesh0);
+        //scene.add(mesh0);
+        rcnBldgArr.push(mesh0);
 
         //NCN: commerce
         var colr1=new THREE.Color("rgb(255,150,0)");
         ret1=extrBldg(bldgObjArr[i],ht0,colr1);
         var mesh1=ret1[0];
         var ht1=ret1[1]+ht0;
-        scene.add(mesh1);
+        //scene.add(mesh1);
+        ncnBldgArr.push(mesh1);
 
         //GCN: green
         var colr2=new THREE.Color("rgb(50,250,150)");
         ret2=extrBldg(bldgObjArr[i],ht1,colr2);
         var mesh2=ret2[0];
         var ht2=ret2[1]+ht1+ht0;
-        scene.add(mesh2);
+        //scene.add(mesh2);
+        gcnBldgArr.push(mesh2);
     }
 }
 
@@ -185,7 +202,7 @@ function extrBldg(bldgObj, pushZ, colr){
     geox.autoClose=true;
     var extSettings={
         steps:1,
-        amount:Math.random()*diRa,
+        amount:diRa,
         bevelEnabled:false
     }
     var geometry=new THREE.ExtrudeBufferGeometry(geox, extSettings);
@@ -201,3 +218,4 @@ function extrBldg(bldgObj, pushZ, colr){
     mesh.position.z=pushZ;
     return [mesh, extSettings.amount];
 }
+

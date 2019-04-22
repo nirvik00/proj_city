@@ -9,14 +9,16 @@ var edgeMeshArr=[]; // network edge Mesh render object from db
 var parkObjArr=[]; // park object from db
 var parkArr=[]; // park render object from db
 var bldgObjArr=[]; // bldg object from db
-var bldgArr=[]; // bldg rendered object from db
 
 var greenNodeLoc=[];//points of the green nodes
 
+var debugArr=[]; //debug geometries
+var ncnBldgArr=[]; //array to hold ncn 
+var gcnBldgArr=[]; //array to hold gcn 
+var rcnBldgArr=[]; //array to hold rcn 
+
 var siteObjArr=[]; // site object from db
 var siteArr=[]; // rendered site object from db
-
-var debugArr=[]; //debug geometries
 
 var camera, scene, renderer, controls, axes, stats; //required to render 3.js scene
 

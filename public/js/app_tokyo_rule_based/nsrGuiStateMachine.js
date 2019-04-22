@@ -4,14 +4,18 @@
 var datgui=new dat.GUI({autoPlace:false});
 var genGuiControls=new function(){
     this.show_Parks=true;
-    this.show_Buildings=true;
+    this.show_GCN_Bldg=true;
+    this.show_NCN_Bldg=true;
+    this.show_RCN_Bldg=true;
     this.show_Debug=false;
     this.show_Network=false;
     this.show_Axes=false;
 }
 
 var guiControls=datgui.addFolder("genGuiControls");
-showBldgs=guiControls.add(genGuiControls, "show_Buildings");
+showGcnBldgs=guiControls.add(genGuiControls, "show_GCN_Bldg");
+showNcnBldgs=guiControls.add(genGuiControls, "show_NCN_Bldg");
+showRcnBldgs=guiControls.add(genGuiControls, "show_RCN_Bldg");
 showParks=guiControls.add(genGuiControls, "show_Parks");
 showBldgs=guiControls.add(genGuiControls, "show_Network");
 showAxes=guiControls.add(genGuiControls, "show_Axes");
@@ -23,15 +27,35 @@ datgui.close();
 
 
 function guiUpdates(){
-    if(genGuiControls.show_Buildings===true){
-        for(var i=0; i<bldgArr.length; i++){
-            scene.add(bldgArr[i]);
+    if(genGuiControls.show_GCN_Bldg===true){
+        for(var i=0; i<gcnBldgArr.length; i++){
+            scene.add(gcnBldgArr[i]);
         }
     }else{
-        for(var i=0; i<bldgArr.length; i++){
-            scene.remove(bldgArr[i]);
+        for(var i=0; i<gcnBldgArr.length; i++){
+            scene.remove(gcnBldgArr[i]);
         }
     }
+    if(genGuiControls.show_NCN_Bldg===true){
+        for(var i=0; i<ncnBldgArr.length; i++){
+            scene.add(ncnBldgArr[i]);
+        }
+    }else{
+        for(var i=0; i<ncnBldgArr.length; i++){
+            scene.remove(ncnBldgArr[i]);
+        }
+    }
+    if(genGuiControls.show_RCN_Bldg===true){
+        for(var i=0; i<rcnBldgArr.length; i++){
+            scene.add(rcnBldgArr[i]);
+        }
+    }else{
+        for(var i=0; i<rcnBldgArr.length; i++){
+            scene.remove(rcnBldgArr[i]);
+        }
+    }
+
+    
     if(genGuiControls.show_Parks===true){
         for(var i=0; i<parkArr.length; i++){
             scene.add(parkArr[i]);
