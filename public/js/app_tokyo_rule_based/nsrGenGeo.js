@@ -122,7 +122,7 @@ function genDynamicFunc(){
         sortable.sort(function(a,b){
             return a[2]-b[2];
         });
-        line_seg.push(sortable[0]);
+        line_seg.push(sortable[0]); 
         di_arr.push(sortable[0][2]);
     }
     di_arr.sort(function(a,b){
