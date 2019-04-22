@@ -131,10 +131,9 @@ function genDynamicFunc(){
     MIN=di_arr[0];
     MAX=di_arr[di_arr.length-1];
     var q0=MIN;
-    var q1=MIN+0.25*(MAX-MIN)/MAX;
-    var q2=MIN+0.50*(MAX-MIN)/MAX;
-    var q3=MIN+0.75*(MAX-MIN)/MAX;
-    QUARTILES={q0,q1,q2,q3};
+    var q1=MIN+0.33*(MAX-MIN)/MAX;
+    var q2=MIN+0.66*(MAX-MIN)/MAX;    
+    QUARTILES={q0,q1,q2};
     for(var i=0; i<line_seg.length; i++){
         var p=line_seg[i][0];
         var q=line_seg[i][1];
@@ -142,13 +141,13 @@ function genDynamicFunc(){
         var r=(d-MIN)/(MAX-MIN);
         var thisCase=-1;
         if(r<q0){
-            thisCase=parseInt(0.75);
+            thisCase=parseInt(0);
         }else if(r>=q0 && r<q1){
-            thisCase=parseInt(1.75);
+            thisCase=parseInt(1);
         }else if(r>=q1 && r<q2){
-            thisCase=parseInt(2.00);
+            thisCase=parseInt(2);
         }else{
-            thisCase=parseInt(3.25);
+            thisCase=parseInt(3);
         }
         bldgObjArr[i].diRa=r;
         bldgObjArr[i].quartile=thisCase;
@@ -175,29 +174,77 @@ function genBldgGeometry() {
         scene.remove(ncnBldgArr[i]);
     }
     gcnBldgArr=[];
-
+    var num0=0.0;
+    var num1=0.0;
+    var num2=0.0;
+    var num3=0.0;
     for(var i=0; i<bldgObjArr.length; i++){
-        //RCN: office
-        var colr0=new THREE.Color("rgb(150,150,150)");
-        ret0=extrBldg(bldgObjArr[i],0,colr0);
-        var mesh0=ret0[0];
-        var ht0=ret0[1];
-        rcnBldgArr.push(mesh0);
+        //console.log(bldgObjArr[i].quartile);
+        if(bldgObjArr[i].quartile===0){
+            //NCN: commerce
+            var colr1=new THREE.Color("rgb(255,150,0)");
+            var ret1=extrBldg(bldgObjArr[i],0,colr1);
+            var mesh1=ret1[0];
+            var ht1=ret1[1];
+            ncnBldgArr.push(mesh1);
 
-        //NCN: commerce
-        var colr1=new THREE.Color("rgb(255,150,0)");
-        ret1=extrBldg(bldgObjArr[i],ht0,colr1);
-        var mesh1=ret1[0];
-        var ht1=ret1[1]+ht0;
-        ncnBldgArr.push(mesh1);
+            //GCN: green
+            var colr2=new THREE.Color("rgb(50,250,150)");
+            var ret2=extrBldg(bldgObjArr[i],ht1,colr2);
+            var mesh2=ret2[0];
+            var ht1=ret2[1];
+            gcnBldgArr.push(mesh2);
+            
+            num0++;
+        }else if(bldgObjArr[i].quartile===1){
+            //GCN: green
+            var colr2=new THREE.Color("rgb(50,250,150)");
+            var ret2=extrBldg(bldgObjArr[i],0,colr2);
+            var mesh2=ret2[0];
+            var ht1=ret2[1];
+            gcnBldgArr.push(mesh2);
 
-        //GCN: green
-        var colr2=new THREE.Color("rgb(50,250,150)");
-        ret2=extrBldg(bldgObjArr[i],ht1,colr2);
-        var mesh2=ret2[0];
-        var ht2=ret2[1]+ht1+ht0;
-        gcnBldgArr.push(mesh2);
+            //RCN: office
+            var colr0=new THREE.Color("rgb(150,150,150)");
+            var ret0=extrBldg(bldgObjArr[i],ht1,colr0);
+            var mesh0=ret0[0];
+            rcnBldgArr.push(mesh0);        
+            num1++;
+        }else if(bldgObjArr[i].quartile===2){
+            //RCN: office
+            var colr0=new THREE.Color("rgb(150,150,150)");
+            var ret0=extrBldg(bldgObjArr[i],0,colr0);
+            var mesh0=ret0[0];
+            var ht0=ret0[1];
+            rcnBldgArr.push(mesh0);   
+            num2++;     
+        }else{
+            //NCN: commerce
+            var colr1=new THREE.Color("rgb(255,150,0)");
+            var ret1=extrBldg(bldgObjArr[i],0,colr1);
+            var mesh1=ret1[0];
+            var ht1=ret1[1];
+            ncnBldgArr.push(mesh1);
+
+            //RCN: office
+            var colr0=new THREE.Color("rgb(150,150,150)");
+            var ret0=extrBldg(bldgObjArr[i],ht1,colr0);
+            var mesh0=ret0[0];
+            var ht2=ret0[1]+ht1;
+            rcnBldgArr.push(mesh0);  
+
+
+            //GCN: green
+            var colr2=new THREE.Color("rgb(50,250,150)");
+            var ret2=extrBldg(bldgObjArr[i],ht2,colr2);
+            var mesh2=ret2[0];
+            var ht2=ret2[1];
+            gcnBldgArr.push(mesh2);
+
+            num3++;
+        }
     }
+    console.log(num0, num1, num2, num3);
 }
 
 function extrBldg(bldgObj, pushZ, colr){
@@ -233,5 +280,7 @@ function extrBldg(bldgObj, pushZ, colr){
     mesh.position.z=pushZ;
     return [mesh, extSettings.amount];
 }
+
+
 
 
