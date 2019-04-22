@@ -84,6 +84,7 @@ function nsBldg(type, area, cen, pts){
     this.cen=cen;
     this.pts=pts;
     this.diRa=1.0;
+    this.quartile=0;
     this.renderedObject;
     this.genGeo=function(){
         var p=pts[0];

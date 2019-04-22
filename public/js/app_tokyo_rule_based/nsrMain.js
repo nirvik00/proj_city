@@ -24,6 +24,8 @@ var init=function(){
     controls=new THREE.OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', render);
     controls.enableZoom=true;
+    window.addEventListener( 'resize', onWindowResize, false );
+    document.addEventListener('keydown', onDocumentKeyDown, false);
 }
 
 var mainLoop=function(){
@@ -86,12 +88,26 @@ function addPointLights(){
     scene.add( dlight );
 }
 
-
 var getData=function(allobjs){
-    var ALLJSONOBJS=allobjs;
+    ALLJSONOBJS=allobjs;
     initNetwork(ALLJSONOBJS);
     initGeometry(ALLJSONOBJS);
 }
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+function onDocumentKeyDown(event){
+    if(event.keyCode===13){
+           console.clear();
+           console.log("ht coefficient: "+genGuiControls.ht_coeff);
+           initNetwork(ALLJSONOBJS);
+           initGeometry(ALLJSONOBJS);
+    }
+}
+
 
 init();
 mainLoop();

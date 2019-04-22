@@ -22,6 +22,7 @@ var siteArr=[]; // rendered site object from db
 
 var camera, scene, renderer, controls, axes, stats; //required to render 3.js scene
 
+var MIN, MAX, QUARTILES;
 
 var showBldgs=false;
 var showParks=true;

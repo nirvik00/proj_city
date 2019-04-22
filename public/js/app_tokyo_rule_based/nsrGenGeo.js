@@ -128,15 +128,31 @@ function genDynamicFunc(){
     di_arr.sort(function(a,b){
         return a-b;
     });
-    var min=di_arr[0];
-    var max=di_arr[di_arr.length-1];
+    MIN=di_arr[0];
+    MAX=di_arr[di_arr.length-1];
+    var q0=MIN;
+    var q1=MIN+0.25*(MAX-MIN)/MAX;
+    var q2=MIN+0.50*(MAX-MIN)/MAX;
+    var q3=MIN+0.75*(MAX-MIN)/MAX;
+    QUARTILES={q0,q1,q2,q3};
     for(var i=0; i<line_seg.length; i++){
         var p=line_seg[i][0];
         var q=line_seg[i][1];
         var d=line_seg[i][2];
-        var r=(d-min)/(max-min);
+        var r=(d-MIN)/(MAX-MIN);
+        var thisCase=-1;
+        if(r<q0){
+            thisCase=parseInt(0.75);
+        }else if(r>=q0 && r<q1){
+            thisCase=parseInt(1.75);
+        }else if(r>=q1 && r<q2){
+            thisCase=parseInt(2.00);
+        }else{
+            thisCase=parseInt(3.25);
+        }
         bldgObjArr[i].diRa=r;
-        debugLineZ(p,q,0);
+        bldgObjArr[i].quartile=thisCase;
+        debugLineZ(p,q,r);
     }
 }
 
@@ -160,14 +176,12 @@ function genBldgGeometry() {
     }
     gcnBldgArr=[];
 
-
-    for(var i=0; i<bldgObjArr.length; i++){        
+    for(var i=0; i<bldgObjArr.length; i++){
         //RCN: office
         var colr0=new THREE.Color("rgb(150,150,150)");
         ret0=extrBldg(bldgObjArr[i],0,colr0);
         var mesh0=ret0[0];
         var ht0=ret0[1];
-        //scene.add(mesh0);
         rcnBldgArr.push(mesh0);
 
         //NCN: commerce
@@ -175,7 +189,6 @@ function genBldgGeometry() {
         ret1=extrBldg(bldgObjArr[i],ht0,colr1);
         var mesh1=ret1[0];
         var ht1=ret1[1]+ht0;
-        //scene.add(mesh1);
         ncnBldgArr.push(mesh1);
 
         //GCN: green
@@ -183,7 +196,6 @@ function genBldgGeometry() {
         ret2=extrBldg(bldgObjArr[i],ht1,colr2);
         var mesh2=ret2[0];
         var ht2=ret2[1]+ht1+ht0;
-        //scene.add(mesh2);
         gcnBldgArr.push(mesh2);
     }
 }
@@ -192,6 +204,7 @@ function extrBldg(bldgObj, pushZ, colr){
     var pts=bldgObj.pts;
     var p=pts[0];
     var diRa=bldgObj.diRa;
+    
     //base 
     var geox=new THREE.Shape();
     geox.moveTo(0,0);
@@ -200,11 +213,13 @@ function extrBldg(bldgObj, pushZ, colr){
         geox.lineTo(q.x-p.x,q.y-p.y);
     }
     geox.autoClose=true;
-    var extSettings={
+    var extSettings;
+    extSettings={
         steps:1,
-        amount:diRa,
+        amount:(genGuiControls.ht_coeff)*bldgObj.diRa/5.0,
         bevelEnabled:false
     }
+    
     var geometry=new THREE.ExtrudeBufferGeometry(geox, extSettings);
     var material=new THREE.MeshPhongMaterial({
         color:colr,
@@ -218,4 +233,5 @@ function extrBldg(bldgObj, pushZ, colr){
     mesh.position.z=pushZ;
     return [mesh, extSettings.amount];
 }
+
 

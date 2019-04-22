@@ -7,6 +7,7 @@ var genGuiControls=new function(){
     this.show_GCN_Bldg=true;
     this.show_NCN_Bldg=true;
     this.show_RCN_Bldg=true;
+    this.ht_coeff=2.0;
     this.show_Debug=false;
     this.show_Network=false;
     this.show_Axes=false;
@@ -16,6 +17,7 @@ var guiControls=datgui.addFolder("genGuiControls");
 showGcnBldgs=guiControls.add(genGuiControls, "show_GCN_Bldg");
 showNcnBldgs=guiControls.add(genGuiControls, "show_NCN_Bldg");
 showRcnBldgs=guiControls.add(genGuiControls, "show_RCN_Bldg");
+var HT_COEFF=guiControls.add(genGuiControls, "ht_coeff", 0.50,5.00);
 showParks=guiControls.add(genGuiControls, "show_Parks");
 showBldgs=guiControls.add(genGuiControls, "show_Network");
 showAxes=guiControls.add(genGuiControls, "show_Axes");
@@ -94,4 +96,12 @@ function guiUpdates(){
             scene.remove(debugArr[i]);
         }
     }
+    /*
+    HT_COEFF.onChange(function(){
+        console.clear();
+        console.log("ht coefficient: "+genGuiControls.ht_coeff);
+        initNetwork(ALLJSONOBJS);
+        initGeometry(ALLJSONOBJS);
+    });
+    */
 }

@@ -76,13 +76,13 @@ function genNetworkGeometry() {
     edgeMeshArr=[];
   
     for (var i = 0; i < networkNodesArr.length; i++) {
-      networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
+      // networkNodesArr[i].getObj();// adds netwrok nodes directly to global array
     }
     
     var roaddepth=1;//enGuiControls.road_depth;
   
     for (var i = 0; i < networkEdgesArr.length; i++) {
-      networkEdgesArr[i].getLineObj();// adds network edges Line directly to global array
+      //networkEdgesArr[i].getLineObj();// adds network edges Line directly to global array
       networkEdgesArr[i].getMeshObj(roaddepth);// adds network edges Mesh directly to global array
     }
     console.log("INIT COMPLETE...scene rendered" + nodeArr.length + ", " +edgeArr.length);
