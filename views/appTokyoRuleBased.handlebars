@@ -1,41 +1,18 @@
 <h1>Rule based FSR Distribution</h1>
     <style>
-        #container {
-            position: relative;
-        }
-        #container scene3d, #moveGUI {
-            position: absolute;
-        }
-        scene3d {
-            border: 1px solid black;
-        }
-        div.floating {
-            color : #ffffff;
-            background : #000000;
-            opacity : 0.8;
-            width : 80%;
-            height : 80%;
-            position : absolute;
-            left : 10%;
-            top : 10%;
-            border : 1px solid #555555;
-            padding : 10px;
-            display : none;
-            overflow : auto;
-            z-index: 100;
-        }
-        span.link{
-            color:black;
-            cursor:pointer;
-            text-decoration:underline;
-        }
-        a{
-            color:skyblue;
-        }
+    #container {
+        position: relative;
+    }
+    #container scene3d, #moveGUI, #informationDiv {
+        position: absolute;
+    }
+    scene3d {
+        border: 1px solid black;
+    }
     </style>
 
-    <div id="container">
-        <div id="moveGui" style="position: absolute, left: 0px; top:25px"></div>
+    <div id="container" >
+        <div id="moveGUI"  style="position: absolute; left:ss 0px; top:25px; "></div> 
         <div id="scene3d"></div>
     </div>
     <script src="/public/js/app_tokyo_rule_based/nsrGeoUtilFile.js"></script>

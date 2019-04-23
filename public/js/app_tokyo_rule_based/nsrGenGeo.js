@@ -155,7 +155,7 @@ function genDynamicFunc(){
     }
 }
 
-function genBldgGeometry() {
+function genBldgGeometry2() {
     for(var i=0; i<ncnBldgArr.length; i++){
         ncnBldgArr[i].geometry.dispose();
         ncnBldgArr[i].material.dispose();
@@ -247,7 +247,76 @@ function genBldgGeometry() {
     console.log(num0, num1, num2, num3);
 }
 
-function extrBldg(bldgObj, pushZ, colr, coeff){
+function genBldgGeometry() {
+    for(var i=0; i<ncnBldgArr.length; i++){
+        ncnBldgArr[i].geometry.dispose();
+        ncnBldgArr[i].material.dispose();
+        scene.remove(ncnBldgArr[i]);
+    }
+    ncnBldgArr=[];
+    
+    for(var i=0; i<rcnBldgArr.length; i++){
+        rcnBldgArr[i].geometry.dispose();
+        rcnBldgArr[i].material.dispose();
+        scene.remove(rcnBldgArr[i]);
+    }
+    rcnBldgArr=[];
+
+    for(var i=0; i<gcnBldgArr.length; i++){
+        gcnBldgArr[i].geometry.dispose();
+        gcnBldgArr[i].material.dispose();
+        scene.remove(gcnBldgArr[i]);
+    }
+    gcnBldgArr=[];
+    var num0=0.0;
+    var num1=0.0;
+    var num2=0.0;
+    var num3=0.0;
+    var coeff=false;
+    for(var i=0; i<bldgObjArr.length; i++){
+        var htExt_gcn, htExt_ncn, htExt_rcn;
+        //console.log(bldgObjArr[i].quartile);
+        if(bldgObjArr[i].quartile===0){
+            htExt_gcn=genGuiControls.Q0_GCN;
+            htExt_ncn=genGuiControls.Q0_NCN;
+            htExt_rcn=genGuiControls.Q0_RCN;
+        }else if(bldgObjArr[i].quartile===1){
+            htExt_gcn=genGuiControls.Q1_GCN;
+            htExt_ncn=genGuiControls.Q1_NCN;
+            htExt_rcn=genGuiControls.Q1_RCN;
+        }else if(bldgObjArr[i].quartile===2){
+            htExt_gcn=genGuiControls.Q2_GCN;
+            htExt_ncn=genGuiControls.Q2_NCN;
+            htExt_rcn=genGuiControls.Q2_RCN;
+        }else{
+            htExt_gcn=genGuiControls.Q3_GCN;
+            htExt_ncn=genGuiControls.Q3_NCN;
+            htExt_rcn=genGuiControls.Q3_RCN;
+        }
+        //NCN: commerce
+        var colr0=new THREE.Color("rgb(255,150,0)");
+        var ret0=extrBldg(bldgObjArr[i],0,colr0, coeff, htExt_ncn);
+        var mesh0=ret0[0];
+        var ht0=ret0[1];
+        ncnBldgArr.push(mesh0);
+
+        //RCN: office
+        var colr1=new THREE.Color("rgb(150,150,150)");
+        var ret1=extrBldg(bldgObjArr[i], ht0, colr1, coeff, htExt_rcn);
+        var mesh1=ret1[0];        
+        var ht1=ret1[1]+ht0;        
+        rcnBldgArr.push(mesh1);  
+
+        //GCN: green
+        var colr2=new THREE.Color("rgb(50,250,150)");
+        var ret2=extrBldg(bldgObjArr[i], ht1, colr2, coeff, htExt_gcn);
+        var mesh2=ret2[0];
+        gcnBldgArr.push(mesh2);
+    }
+    console.log(num0, num1, num2, num3);
+}
+
+function extrBldg(bldgObj, pushZ, colr, coeff, htExt){
     var pts=bldgObj.pts;
     var p=pts[0];
     var diRa=bldgObj.diRa;
@@ -260,19 +329,10 @@ function extrBldg(bldgObj, pushZ, colr, coeff){
         geox.lineTo(q.x-p.x,q.y-p.y);
     }
     geox.autoClose=true;
-    var extSettings;
-    if(coeff===true){
-        extSettings={
+    var extSettings={
         steps:1,
-        amount:(2*(genGuiControls.ht_coeff)*bldgObj.diRa/5.0) + 0.15,
+        amount:(htExt)*bldgObj.diRa/5.0,
         bevelEnabled:false
-        }
-    }else{
-        extSettings={
-            steps:1,
-            amount:(genGuiControls.ht_coeff)*bldgObj.diRa/5.0,
-            bevelEnabled:false
-        }
     }
     
     var geometry=new THREE.ExtrudeBufferGeometry(geox, extSettings);
